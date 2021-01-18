@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+    {% include './common/head.html' %}
+    <body>
+        <main class="flex flex-col">
+            {% block content %}
+            {% endblock %}
+        </main>
+    </body>
+</html>

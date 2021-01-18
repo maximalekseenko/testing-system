@@ -1,0 +1,18 @@
+.test{
+    background-color: aquamarine;
+    width: 300px;
+}
+body {
+    font-family: Arial;
+    background-position:center;
+    background-image: url(/static/images/bg.png);
+    background-repeat: repeat;
+}
+main {
+    background-color: #AAAAAA;
+    width: 60%;
+    min-height:100%;
+    margin: auto;
+    padding: 10px 50px;
+    flex:1 1 0;
+}
