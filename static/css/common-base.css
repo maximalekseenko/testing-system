@@ -1,0 +1,23 @@
+body {
+    margin: auto;
+    width: 60%;
+    min-height:100%;
+    background-color: white;
+}
+html {
+    font-family: Arial;
+    background-color: grey;
+    background-position:center;
+    height:100%;
+    background-image: url(/static/images/bg.png);
+    background-repeat: repeat;
+}
+main {
+    background-color: #AAAAAA;
+    padding: 10px 50px;
+    flex:1 1 0;
+}
+footer, header {
+    background-color: gray;
+    padding: 10px 50px;
+}

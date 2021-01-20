@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-    {% include './common/head.html' %}
-    <body>
-        <main class="flex flex-col">
+    {% include './head.html' %}
+    <body class="flex flex-col">
+        {% include './header.html' %}
+        <main>
             {% block content %}
             {% endblock %}
         </main>
+        {% include './footer.html' %}
     </body>
 </html>
