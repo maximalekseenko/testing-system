@@ -4,7 +4,7 @@
 <h2>Register</h2>
 <form method="post">
     {% csrf_token %}
-    <div class="flex flex-col">
+    <div class="flex flex-col box">
         {% for field in form %}
         <div class="flex">
             {{ field.label_tag }}
