@@ -12,6 +12,9 @@ html {
     background-image: url(/static/images/bg.png);
     background-repeat: repeat;
 }
+html a {
+    text-decoration: none;
+}
 main {
     background-color: #aaaaaa;
     padding: 10px 50px;
@@ -20,4 +23,11 @@ main {
 footer, header {
     background-color: gray;
     padding: 10px 50px;
+
+}
+footer a:any-link, header a:any-link {
+    color:aqua
+}
+footer a:focus, header a:focus{
+    color:blueviolet
 }
