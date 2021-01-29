@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from main.models import test1
 
 def HomeView(request):
     is_teacher = True
@@ -6,4 +7,11 @@ def HomeView(request):
     return render(request, 'home.html', args)
 
 def HeresyoneView(request):
-    return  render(request, 'heresypage1.html')
+    test = test1.objects.first()
+
+    args={
+        "test" : test,
+        "TEST" : "TEST",
+    }
+
+    return render(request, 'heresypage1.html', args)

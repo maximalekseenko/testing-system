@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class test1(models.Model):
+    val1 = models.IntegerField(default = 0)
+    val2 = models.BooleanField(default = False)
