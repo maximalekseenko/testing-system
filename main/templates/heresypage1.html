@@ -1,8 +1,15 @@
 {% extends './base.html' %}
 {% block content %}
-<div class="flex flex-sb">
-    <h1 class="test">A</h1>
-</div>
-{{test.val2}}
-{{test.val1}}
+<body class="flex flex-col">
+    <form>
+        <input readonly type="number" name="i0" id="i0_val" value=3>
+        <input readonly type="number" name="i1" id="i1_val" value=7>
+        <input readonly type="number" name="i2" id="i2_val" value=1>
+        
+    </form>
+    <button id="i0_btn">Первая кнопка</button>
+    <button id="i1_btn">Вторая кнопка</button>
+    <button id="i2_btn">Третья кнопка</button>
+</body>
+<script src="../static/javascript/herese.js"></script>
 {% endblock %}

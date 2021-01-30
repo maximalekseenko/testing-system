@@ -1,32 +1,31 @@
 body {
     margin: auto;
-    width: 60%;
+    width: 80%;
     min-height:100%;
     background-color: white;
 }
 html {
     font-family: Arial;
-    background-color: grey;
+    background-color:#808080;
     background-position:center;
     height:100%;
-    background-image: url(/static/images/bg.png);
     background-repeat: repeat;
 }
 html a {
     text-decoration: none;
 }
 main {
-    background-color: #aaaaaa;
+    background-color:white;
     padding: 10px 50px;
     flex:1 1 0;
 }
 footer, header {
-    background-color: gray;
+    background-color: white;
     padding: 10px 50px;
 
 }
 footer a:any-link, header a:any-link {
-    color:aqua
+    color:blue
 }
 footer a:focus, header a:focus{
     color:blueviolet

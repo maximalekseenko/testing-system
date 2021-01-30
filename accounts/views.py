@@ -19,3 +19,7 @@ def RegisterView(request):
 
     args = {'form': form, 'button': 'register'}
     return render(request, 'registration/register.html', args)
+
+
+def AccoutView(request):
+    return render(request, 'account.html')
