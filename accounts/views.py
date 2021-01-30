@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from accounts.forms import RegisrationForm
 from django.contrib.auth import login, authenticate
+from django.contrib.auth.forms import UserCreationForm
 
 def RegisterView(request):
     if request.method == 'POST':
-        form = RegisrationForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             #login
@@ -15,7 +15,7 @@ def RegisterView(request):
             #login-end
             return redirect('/')
     else:
-        form = RegisrationForm()
+        form = UserCreationForm()
 
     args = {'form': form, 'button': 'register'}
     return render(request, 'registration/register.html', args)

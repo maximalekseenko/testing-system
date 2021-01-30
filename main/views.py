@@ -1,9 +1,10 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render
-from main.models import test1
+from .models import test1
 
 def HomeView(request):
-    is_teacher = True
-    args={"is_teacher": is_teacher}
+    user_data = User.objects.get(username=request.user).UserProfile
+    args={"user_data": user_data}
     return render(request, 'home.html', args)
 
 def HeresyoneView(request):
