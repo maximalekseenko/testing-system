@@ -27,6 +27,7 @@ def CreateTaskView(request):
         addform = AddTaskForm(request.POST)
         if addform.is_valid():
             new_task = Task(
+                user=request.user,
                 name=addform.data['name'],
                 content=addform.data['content'],
                 # creation_date=datetime.datetime.now(),
@@ -34,7 +35,7 @@ def CreateTaskView(request):
             new_task.save()
             id = new_task.id
             # messages.add_message(request, messages.SUCCESS, "Задание успешно добавлено")
-            return redirect('showtask/', id=id)
+            return redirect(f'/showtask/{id}/')
         else:
             # messages.add_message(request, messages.ERROR, "Некорректные данные в форме")
             return redirect('taskcreation/')
@@ -54,10 +55,10 @@ def EditTaskView(request):
         task = Task(name=request.POST.get("name"), content=request.POST.get("content"))
         task.save()
         return redirect("/")
-    return render(request, 'createtask.html')
+    return render(request, 'showtask.html')
 
 
-def ShowTaskView(request):
+def ShowTaskView(request, id):
     context = get_base_context(request, 'Просмотр задания')
     try:
         show_task = Task.objects.get(id=id)
@@ -70,4 +71,4 @@ def ShowTaskView(request):
         )
     except Task.DoesNotExist:
         raise Http404
-    return render(request, '.html', context)
+    return render(request, 'showtask.html', context)

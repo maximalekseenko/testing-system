@@ -1,0 +1,12 @@
+{% extends './base.html' %}
+{% block content %}
+<h1 align="center">Просмотрие теста</h1>
+<form class="flex-col">
+    <fieldset disabled>
+    {{ addform.name.label }}: {{ addform.name }}
+    {{ addform.user.label }}: {{ addform.user }}
+    {{ addform.content.label }}: {{ addform.content }}
+    </fieldset>
+</form>
+
+{% endblock %}

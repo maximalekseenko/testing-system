@@ -11,7 +11,8 @@
 {%if user.userprofile.user_type == "teacher"%}
 <p>Вы учитель</p>
 <a href='/taskcreation/'>Создать задание</a>
-<a href='/taskedition/'>Создать задание</a>
+<a href='/taskedition/'>Редактировать задание</a>
+<a href='/showtask/'>Просмотреть задания</a> <!-- Добавить id -->
 {%else%}
 <p>Вы студент</p>
 {%endif%}
