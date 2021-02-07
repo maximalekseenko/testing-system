@@ -1,5 +1,7 @@
 from django.db import models
 
-class test1(models.Model):
-    val1 = models.IntegerField(default = 0)
-    val2 = models.BooleanField(default = False)
+class Task(models.Model): 
+    name = models.CharField(max_length=64, default = "Задание")
+    content = models.CharField(max_length=512, default = "")
+    options = []
+    answers = []

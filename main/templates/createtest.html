@@ -1,0 +1,11 @@
+{% extends './base.html' %}
+{% block content %}
+<h1 align="center">Создатьние теста</h1>
+<form method="POST" class="flex-col">
+    {% csrf_token %}
+    <input name="name" type="text" style="width: 200px;">
+    <textarea name="content" style="width: 200px; height: 300px; resize: none;" cols="40" rows="5"></textarea>
+    <input type="submit" value="create">
+</form>
+
+{% endblock %}

@@ -1,4 +1,4 @@
 from django.contrib import admin
-from main.models import test1
+from .models import Task
 
-admin.site.register(test1)
+admin.site.register(Task)

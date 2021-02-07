@@ -1,7 +1,10 @@
 from django.conf.urls import url, include
-from main.views import HomeView, HeresyoneView
+from . import views
 
 urlpatterns = [
-    url('heresyone/', HeresyoneView),
-    url('', HomeView),
+    url('heresyone/', views.HeresyoneView),
+    url('taskcreation/', views.CreateTaskView),
+    url('taskedition/', views.EditTaskView),
+    url('showtask/<int:id>', views.ShowTaskView, name='view_task'),
+    url('', views.HomeView),
 ]
