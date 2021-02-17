@@ -3,12 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import Http404
 from .models import Task, Module
 from .form import AddTaskForm
-
-def get_base_context(request, pagename):
-    return {
-        'pagename': pagename,
-        'user': request.user,
-    }
+from static.py.view import get_base_context
 
 
 def CreateTaskView(request):
@@ -23,7 +18,7 @@ def CreateTaskView(request):
                 # creation_date=datetime.datetime.now(),
             )
             new_task.save()
-            Module.objects.get(id=int(addform.data['module'])).tasks.add(new_task)  #???????????????
+            Module.objects.get(id=int(addform.data['module'])).tasks.add(new_task)
             id = new_task.id
             # messages.add_message(request, messages.SUCCESS, "Задание успешно добавлено")
             return redirect(f'/show/{id}/')
@@ -54,7 +49,7 @@ def ShowTaskView(request, id):
     context = get_base_context(request, 'Просмотр задания')
     try:
         show_task = Task.objects.get(id=id)
-        context['addform'] = AddTaskForm(    # ????????????????????
+        context['addform'] = AddTaskForm(
             initial={
                 'user': show_task.user if show_task.user else 'AnonymousUser',
                 'name': show_task.name,

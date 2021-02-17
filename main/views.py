@@ -1,19 +1,7 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-
-def get_base_context(request, pagename):
-    return {
-        'pagename': pagename,
-        'user': request.user,
-    }
+from static.py.view import get_base_context
 
 
 def HomeView(request):
     context = get_base_context(request, "Главная")
     return render(request, 'home.html', context)
-
-
-def HeresyoneView(request):
-    context = get_base_context(request, "ы")
-    return render(request, 'heresypage1.html', context)
-
