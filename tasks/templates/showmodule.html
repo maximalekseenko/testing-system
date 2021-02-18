@@ -1,0 +1,20 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+    <form method="POST" class="flex-col">
+        {% csrf_token %}
+        <fieldset disabled> 
+            {{ form.name.label }}: {{ form.name }}
+            {{ form.author.label }}: {{ form.author }}
+            {{ form.assigned_to.label }}: {{ form.assigned_to }}
+            {{ form.tasks.label }}: {{ form.tasks }}
+        </fieldset>
+        
+        {% if True %}
+        <input type="submit" value="edit">
+        {% else %}
+        <input type="submit" value="do">
+        {% endif %}
+    </form>
+{% endblock %}

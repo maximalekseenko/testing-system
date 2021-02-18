@@ -17,10 +17,10 @@ urlpatterns = [
     #module
     path('tasks/',                       tasks.ListView),
     path('tasks/create/',                tasks.CreateModuleView),
-    path('tasks/<int:id>/',              tasks.ShowModuleView),
-    #task
-    path('tasks/<int:id>/create/',       tasks.CreateTaskView),
-    path('tasks/<int:id>/<int:id>/',     tasks.ShowTaskView),
+    # path('tasks/<int:id>/',              tasks.ShowModuleView),
+    # #task
+    # path('tasks/<int:id>/create/',       tasks.CreateTaskView),
+    # path('tasks/<int:id>/<int:id>/',     tasks.ShowTaskView),
 #main
     path('' ,                            main.HomeView),
     ]

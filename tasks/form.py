@@ -1,6 +1,45 @@
 from django import forms
 from .models import Module
 
+
+class ModuleForm(forms.Form):
+
+    name = forms.CharField(
+        label='Название',
+        max_length=32,
+        widget=forms.TextInput(
+            attrs={} ) )
+    #name-end
+
+    author = forms.CharField(
+        label='Автор',
+        max_length=32,
+        widget=forms.TextInput(
+            attrs={
+                'disabled': '',
+            } ),
+        required=False )
+    #author-end
+
+    assigned_to = forms.CharField(
+        label='ASSIGN',
+        max_length=1024,
+        widget=forms.Textarea(
+            attrs={
+                'style': 'resize: none',
+            } ) )
+    #assigned_to-end
+
+    tasks = forms.CharField(
+        label='TASKS',
+        max_length=1024,
+        widget=forms.Textarea(
+            attrs={
+                'style': 'resize: none',
+            } ) )
+    #tasks-end
+
+
 class AddTaskForm(forms.Form):
     name = forms.CharField(
         label='Название',
@@ -29,7 +68,7 @@ class AddTaskForm(forms.Form):
             }
         )
     )
-    module = forms.ChoiceField(
-        choices=enumerate([m.name for m in Module.objects.all()])
-    )
+    # module = forms.ChoiceField(
+    #     choices=enumerate([m.name for m in Module.objects.all()])
+    # )
 

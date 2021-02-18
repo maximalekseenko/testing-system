@@ -1,10 +1,63 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.http import Http404
-from .models import Task, Module
-from .form import AddTaskForm
-from static.py.view import get_base_context
 
+from static.py.view import get_base_context
+from .form import   AddTaskForm,    ModuleForm
+from .models import Task,           Module
+
+def ListView(request):
+    context = get_base_context(request, ' ')
+    context['list'] = list(filter(lambda m: request.user in m.assigned_to.all(), Module.objects.all()))
+    return render(request, 'module.html', context)
+
+def CreateModuleView(request):
+    context = get_base_context(request, '')
+    context['list'] = list(filter(lambda m:request.user in m.assigned_to.all(), Module.objects.all()))
+
+    if request.method == 'POST':
+        form = ModuleForm(request.POST)
+        if not form.is_valid():
+            return redirect('/tasks/create/')
+
+        new_module = Module(
+            name   = form.data['name'],
+            author = request.user,
+        )
+        new_module.save()
+        id = new_module.id
+        return redirect(f'/tasks/show/{id}/')
+    #if POST-end
+    context['form'] = ModuleForm(
+        initial={
+            'name':         "",
+            'author':       request.user,
+            'assigned_to':  "None",
+            'tasks':        "None",
+        } )
+    return render(request, 'createmodule.html', context)
+#CreateModuleView-end
+
+
+def ShowModuleView(request, id):
+    context = get_base_context(request, 'Просмотр задания')
+    try:
+        show_module = Task.objects.get(id=id)
+        context['form'] = ModuleForm(
+            initial={
+                'name':         show_module.user,
+                'author':       show_module.author,
+                'assigned_to':  show_module.assigned_to,
+                'tasks':        show_module.tasks,
+            }
+        )
+    except Task.DoesNotExist:
+        raise Http404
+    return render(request, 'showmodule.html', context) 
+
+    # #task
+    # path('tasks/<int:id>/create/',       tasks.CreateTaskView),
+    # path('tasks/<int:id>/<int:id>/',     tasks.ShowTaskView),
 
 def CreateTaskView(request):
     context = get_base_context(request, 'Добавление нового задания')

@@ -1,5 +1,4 @@
 from django.db import models
-# from django.contrib.postgres.fields import ArrayField
 from django.contrib.auth.models import User
 
 
@@ -15,12 +14,12 @@ class Answer(models.Model):
 
 
 class Task(models.Model):
-    title           = models.CharField(max_length=64, default = "Задание")
-    author          = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True) 
-    content         = models.CharField(max_length=512, default = "")
-    # answers
-    correct_answer  = models.CharField(max_length=32, default = "")
-    answer_type     = models.CharField(max_length=32, default = "")
+    title           = models.CharField(max_length=64, default = "Имя")
+    author          = models.ForeignKey(to=User, on_delete=models.CASCADE) 
+    content         = models.CharField(max_length=512, default = "Условие")
+    #answers
+    correct_answer  = models.CharField(max_length=32, default = "-1")
+    answer_type     = models.CharField(max_length=32, default = "option")
     options_answer  = models.ManyToManyField(Answer)
     marks           = models.ManyToManyField(Mark)
     #other
@@ -29,6 +28,8 @@ class Task(models.Model):
 
 class Module(models.Model):
     name            = models.CharField(max_length=64, default="Новый модуль")
-    tasks           = models.ManyToManyField(Task)
+    author          = models.ForeignKey(to=User, related_name="author_id", on_delete=models.CASCADE)
+    tasks           = models.ManyToManyField(to=Task, related_name="tasks_id")
+    assigned_to     = models.ManyToManyField(to=User, related_name="assigned_to_id")
     
     
