@@ -1,0 +1,29 @@
+<div class="box flex-col">
+    <p class="component2">active modules:</p>
+    {% if not active_modules %}
+        <p class="component">no modules here</p>
+    {% endif %}
+    {% for module in active_modules %}
+        <a class="component" href="/tasks/{{module.id}}">{{module.name}}</a>
+    {% endfor %}
+</div>
+
+<div class="box flex-col">
+    <p class="component2">ur modules:</p>
+    {% if not my_modules %}
+        <p class="component">no modules here</p>
+    {% endif %}
+    {% for module in my_modules %}
+        <a class="component" href="/tasks/{{module.id}}">{{module.name}}</a>
+    {% endfor %}
+</div>
+
+<div class="box flex-col">
+    <p class="component2">all modules:</p>
+    {% if not all_modules %}
+        <p class="component">no modules here</p>
+    {% endif %}
+    {% for module in all_modules %}
+        <a class="component" href="/tasks/{{module.id}}">{{module.name}}</a>
+    {% endfor %}
+</div>

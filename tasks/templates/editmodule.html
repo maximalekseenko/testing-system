@@ -1,0 +1,49 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+    <form method="POST" class="flex-col">
+        {% csrf_token %}
+        
+        Name:   <input type="text" value="{{module.name}}">
+        Author: <input type="text" value="{{module.author}}" disabled>
+        Assigned to: <textarea disabled style="resize: none; height: 150px;" id="ass_textarea">{{module.assigned_to}}</textarea>
+        <div class="flex">
+            <select id="ass_select">
+                {% for group in my_groups %}
+                    <option value="{{group.name}}">{{group.name}}</option>
+                {% endfor %}
+            </select>
+            <input type="button" value="add" onclick="ass_add_btn_click()">
+            <input type="button" value="remove" name="ass_edit_btn">
+        </div>
+        Tasks: <textarea disabled style="resize: none; height: 150px;" id="ass_textarea">{{module.tasks}}</textarea>
+        <div class="flex">
+            <select id="ass_select">
+                {% for group in my_groups %}
+                    <option value="{{group.name}}">{{group.name}}</option>
+                {% endfor %}
+            </select>
+            <input type="button" value="add" onclick="ass_add_btn_click()">
+            <input type="button" value="remove" name="ass_edit_btn">
+        </div>
+        <input type="submit" value="save">
+    </form>
+
+    <script>
+        let ass_textarea = document.getElementById("ass_textarea")
+        let ass_select = document.getElementById("ass_select")
+        function ass_add_btn_click(){
+            var ass_select_val = ass_select.options[ass_select.selectedIndex].text;
+            ass_textarea.value += "\n" + ass_select_val
+        }
+
+        let ass_textarea = document.getElementById("ass_textarea")
+        let ass_select = document.getElementById("ass_select")
+        function ass_add_btn_click(){
+            var ass_select_val = ass_select.options[ass_select.selectedIndex].text;
+            ass_textarea.value += "\n" + ass_select_val
+        }
+    </script>
+{% endblock %}
+

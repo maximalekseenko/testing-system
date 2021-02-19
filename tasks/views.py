@@ -5,28 +5,26 @@ from django.http import Http404
 from static.py.view import get_base_context
 from .form import   AddTaskForm,    ModuleForm
 from .models import Task,           Module
+from main.models import Group
 
-def ListView(request):
-    context = get_base_context(request, ' ')
-    context['list'] = list(filter(lambda m: request.user in m.assigned_to.all(), Module.objects.all()))
+def ListModuleView(request):
+    context = get_base_context(request, 'Modules')
     return render(request, 'module.html', context)
 
 def CreateModuleView(request):
     context = get_base_context(request, '')
-    context['list'] = list(filter(lambda m:request.user in m.assigned_to.all(), Module.objects.all()))
 
     if request.method == 'POST':
         form = ModuleForm(request.POST)
         if not form.is_valid():
             return redirect('/tasks/create/')
-
         new_module = Module(
             name   = form.data['name'],
             author = request.user,
         )
         new_module.save()
         id = new_module.id
-        return redirect(f'/tasks/show/{id}/')
+        return redirect(f'/tasks/{id}/')
     #if POST-end
     context['form'] = ModuleForm(
         initial={
@@ -40,24 +38,41 @@ def CreateModuleView(request):
 
 
 def ShowModuleView(request, id):
-    context = get_base_context(request, 'Просмотр задания')
+    context = get_base_context(request, 'show Module')
     try:
-        show_module = Task.objects.get(id=id)
-        context['form'] = ModuleForm(
-            initial={
-                'name':         show_module.user,
-                'author':       show_module.author,
-                'assigned_to':  show_module.assigned_to,
-                'tasks':        show_module.tasks,
-            }
-        )
+        context['module'] = Module.objects.get(id=id)
     except Task.DoesNotExist:
         raise Http404
+    #try find module-end
+    if request.method == 'POST':
+        if context['user'] == context['module'].author:
+            return redirect(f'/tasks/{id}/edit')
+        else:
+            return redirect(f'/tasks/{id}/do')
+    #if POST-end
     return render(request, 'showmodule.html', context) 
+#ShowModuleView-end
+
+
+def EditModuleView(request, id):
+    context = get_base_context(request, 'Edit Module')
+    try:
+        context['module'] = Module.objects.get(id=id)
+    except Task.DoesNotExist:
+        raise Http404
+    if request.method == 'POST':
+        if context['user'] == context['module'].author:
+            return redirect(f'/tasks/{id}/edit')
+        else:
+            return redirect(f'/tasks/{id}/do')
+    return render(request, 'editmodule.html', context) 
+#EditModuleView-end
+
 
     # #task
     # path('tasks/<int:id>/create/',       tasks.CreateTaskView),
     # path('tasks/<int:id>/<int:id>/',     tasks.ShowTaskView),
+
 
 def CreateTaskView(request):
     context = get_base_context(request, 'Добавление нового задания')

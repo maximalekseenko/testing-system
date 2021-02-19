@@ -6,7 +6,7 @@ class ModuleForm(forms.Form):
 
     name = forms.CharField(
         label='Название',
-        max_length=32,
+        max_length=64,
         widget=forms.TextInput(
             attrs={} ) )
     #name-end
@@ -21,23 +21,23 @@ class ModuleForm(forms.Form):
         required=False )
     #author-end
 
-    assigned_to = forms.CharField(
-        label='ASSIGN',
-        max_length=1024,
-        widget=forms.Textarea(
-            attrs={
-                'style': 'resize: none',
-            } ) )
-    #assigned_to-end
+    # assigned_to = forms.CharField(
+    #     label='ASSIGN',
+    #     max_length=1024,
+    #     widget=forms.Textarea(
+    #         attrs={
+    #             'style': 'resize: none',
+    #         } ) )
+    # #assigned_to-end
 
-    tasks = forms.CharField(
-        label='TASKS',
-        max_length=1024,
-        widget=forms.Textarea(
-            attrs={
-                'style': 'resize: none',
-            } ) )
-    #tasks-end
+    # tasks = forms.CharField(
+    #     label='TASKS',
+    #     max_length=1024,
+    #     widget=forms.Textarea(
+    #         attrs={
+    #             'style': 'resize: none',
+    #         } ) )
+    # #tasks-end
 
 
 class AddTaskForm(forms.Form):

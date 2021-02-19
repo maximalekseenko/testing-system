@@ -1,10 +1,11 @@
-<header class="flex flex-sb">
-    <a href="/">Homepage</a>
-    {% if request.user.is_authenticated %}
-        <a href="/accounts/">{{request.user}}</a>
-        <a href="/accounts/logout/">Quit</a>
-    {% else %}
-        <a href="/accounts/login/">Sign in</a>
-        <a href="/accounts/register/">Register</a>
-    {% endif %}
-</header>
+<a href="/">Homepage</a>
+<a href="/tasks/">modules</a>
+<a href="/groups/">groups</a>
+
+{% if request.user.is_authenticated %}
+    <a href="/accounts/">{{user}}</a>
+    <a href="/accounts/logout/">Quit</a>
+{% else %}
+    <a href="/accounts/login/">Sign in</a>
+    <a href="/accounts/register/">Register</a>
+{% endif %}

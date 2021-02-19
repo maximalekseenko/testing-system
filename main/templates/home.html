@@ -2,21 +2,19 @@
 
 
 {% block content %}
-<h1 align="center">Тестирующая система Inanis occisor.</h1>
-<h2>Мои группы(для учителей и для студентов, для админов нужно будет придумать другое):</h2>
-<div class="box", style="margin-left: 50px;">
-    <p> -группа учителя по биологии</p>
-    <p> -группа учителя по математике</p>
-    <p> -группа учителя по английскому языку</p>
+<h1 style="text-align: center;">Тестирующая система Inanis occisor.</h1>
+<div class="flex" style="margin-left: 10%; margin-right: 10%;">
+    <div class="box" style="width: 300px;">
+        <p class="component2" style="text-align: center;">Задачи</p>
+        <p class="component">Задачи - это</p>
+    </div>
+    <div class="box" style="width: 300px;">
+        <p class="component2" style="text-align: center;">Модули</p>
+        <p class="component">Модули - это </p>
+    </div>
+    <div class="box" style="width: 300px;">
+        <p class="component2" style="text-align: center;">Группы</p>
+        <p class="component">Группы - это</p>
+    </div>
 </div>
-*Здесь будут ссылки на группы. При нажатии будет переход на другую страницу. На этой странице нужно реализовать, конечно же, список работ по этому предмету
-{%if user.userprofile.user_type == "teacher"%}
-<p>Вы учитель</p>
-<a href='/tasks/create/'>Создать задание</a>
-<a href='/tasks/edit/'>Редактировать задание</a>
-<a href='/tasks/show/'>Просмотреть задания</a> <!-- Добавить id -->
-{%else%}
-<p>Вы студент</p>
-{%endif%}
-<a href='/heresyone/'>Yes</a>
 {% endblock %}

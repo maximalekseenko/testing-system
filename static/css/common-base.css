@@ -2,31 +2,28 @@ body {
     margin: auto;
     width: 80%;
     min-height:100%;
-    background-color: white;
 }
 html {
     font-family: Arial;
     background-color:#808080;
-    background-position:center;
     height:100%;
-    background-repeat: repeat;
 }
 html a {
     text-decoration: none;
 }
 main {
-    background-color:white;
-    padding: 10px 50px;
+    width: 100%;
+    background-color:#F0F0F0;
     flex:1 1 0;
 }
 footer, header {
-    background-color: white;
+    background-color: #A0A0A0;
     padding: 10px 50px;
 
 }
-footer a:any-link, header a:any-link {
+a:any-link, footer a:any-link, header a:any-link {
     color:blue
 }
-footer a:focus, header a:focus{
+a:any-link, footer a:focus, header a:focus{
     color:blueviolet
 }

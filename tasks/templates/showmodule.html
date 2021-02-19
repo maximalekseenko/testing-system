@@ -4,14 +4,12 @@
     <h1 align="center">{{pagename}}</h1>
     <form method="POST" class="flex-col">
         {% csrf_token %}
-        <fieldset disabled> 
-            {{ form.name.label }}: {{ form.name }}
-            {{ form.author.label }}: {{ form.author }}
-            {{ form.assigned_to.label }}: {{ form.assigned_to }}
-            {{ form.tasks.label }}: {{ form.tasks }}
-        </fieldset>
+        Name: <input type="text" value="{{module.name}}" disabled>
+        Author: <input type="text" value="{{module.author}}" disabled>
+        Assigned to: <textarea disabled style="resize: none;">{{module.assigned_to}}</textarea>
+        Tasks: <textarea disabled style="resize: none;">{{module.tasks}}</textarea>
         
-        {% if True %}
+        {% if user == module.author %}
         <input type="submit" value="edit">
         {% else %}
         <input type="submit" value="do">

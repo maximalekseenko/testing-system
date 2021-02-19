@@ -9,18 +9,26 @@ import  main.views      as  main,\
 urlpatterns = [
     path('admin/', admin.site.urls),
 #accounts
-    path('accounts/login/',              LoginView.as_view()),
-    path('accounts/logout/',             LogoutView.as_view()),
-    path('accounts/register/',           accounts.RegisterView),
-    path('accounts/',                    accounts.AccoutView),
+    path('accounts/login/',             LoginView.as_view()),
+    path('accounts/logout/',            LogoutView.as_view()),
+    path('accounts/register/',          accounts.RegisterView),
+    path('accounts/',                   accounts.AccoutView),
 #tasks
     #module
-    path('tasks/',                       tasks.ListView),
-    path('tasks/create/',                tasks.CreateModuleView),
-    # path('tasks/<int:id>/',              tasks.ShowModuleView),
-    # #task
-    # path('tasks/<int:id>/create/',       tasks.CreateTaskView),
-    # path('tasks/<int:id>/<int:id>/',     tasks.ShowTaskView),
+    path('tasks/',                      tasks.ListModuleView),
+    path('tasks/create/',               tasks.CreateModuleView),
+    path('tasks/<int:id>/',             tasks.ShowModuleView),
+    path('tasks/<int:id>/edit',         tasks.EditModuleView),
+    #task
+    # path('tasks/<int:id>/create/',      tasks.CreateTaskView),
+    # path('tasks/<int:id>/<int:AAA>/',    tasks.ShowTaskView),
 #main
-    path('' ,                            main.HomeView),
-    ]
+    #groups
+    path('groups/',                     main.ListGroupView),
+    path('groups/create/',              main.CreateGroupView),
+    path('groups/<int:id>/',            main.ShowGroupView),
+    path('groups/<int:id>/edit',        main.EditGroupView),
+    #home
+    path('' ,                           main.HomeView),
+
+]

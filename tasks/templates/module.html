@@ -1,0 +1,21 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+
+    <div class="flex-sb">
+        <a href="/tasks/create">Create module</a>
+        <a href="/tasks/find">find module</a>
+    </div>
+
+    <p>Active modules</p>
+    {% for module in active_modules %}
+        <a href="/tasks/{{module.id}}">A{{module.name}}</a>
+    {% endfor %}
+
+
+
+    <form method="POST" class="flex-col">
+        {% csrf_token %}
+    </form>
+{% endblock %}
