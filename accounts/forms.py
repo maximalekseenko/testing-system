@@ -18,3 +18,26 @@ class RegisrationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class AccountForm(forms.Form):
+    username = forms.CharField(
+        label='username',
+        max_length=64,
+        widget=forms.TextInput(attrs={'disabled': ''})
+    )#username-end
+    status = forms.CharField(
+        label='Status',
+        max_length=64,
+        widget=forms.TextInput()
+    )#status-end
+    bio = forms.CharField(
+        label='Bio',
+        max_length=64,
+        widget=forms.TextInput()
+    )#bio-end
+    metall = forms.CharField(
+        label='Metall',
+        max_length=64,
+        widget=forms.TextInput()
+    )#metall-end

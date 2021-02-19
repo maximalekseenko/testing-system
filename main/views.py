@@ -3,7 +3,7 @@ from static.py.view import get_base_context
 
 
 def HomeView(request):
-    context = get_base_context(request, "Главная")
+    context = get_base_context(request, "Главная страница")
     return render(request, 'home.html', context)
 #HomeView-end
 

@@ -1,11 +1,18 @@
-<a href="/">Homepage</a>
-<a href="/tasks/">modules</a>
-<a href="/groups/">groups</a>
+<div class="box" style="margin-left: 5%;">
+    <a class="component2" href="/">Домашняя страница</a>
+</div>
 
-{% if request.user.is_authenticated %}
-    <a href="/accounts/">{{user}}</a>
-    <a href="/accounts/logout/">Quit</a>
-{% else %}
-    <a href="/accounts/login/">Sign in</a>
-    <a href="/accounts/register/">Register</a>
-{% endif %}
+<div class="box">
+    <a class="component2" href="/tasks/">Модули</a>
+    <a class="component2" href="/groups/">Группы</a>
+</div>
+
+<div class="box" style="margin-right: 20%;">
+        {% if request.user.is_authenticated %}
+        <a class="component2" href="/accounts/">{{user}}</a>
+        <a class="component2" href="/accounts/logout/">Выйти</a>
+        {% else %}
+        <a class="component2" href="/accounts/login/">Войти</a>
+        <a class="component2" href="/accounts/register/">Регистрация</a>
+        {% endif %}
+</div>
