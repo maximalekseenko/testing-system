@@ -2,20 +2,76 @@
 
 {% block content %}
     <h1 align="center">{{pagename}}</h1>
-
-    <div class="flex-sb">
-        <a href="/tasks/create">Create module</a>
-        <a href="/tasks/find">find module</a>
-    </div>
-
-    <p>Active modules</p>
-    {% for module in active_modules %}
-        <a href="/tasks/{{module.id}}">{{module.name}}</a>
-    {% endfor %}
-
-
-
-    <form method="POST" class="flex-col">
+    <form method="POST" onsubmit="return on_submit();">
         {% csrf_token %}
+
+        <div class="flex flex-col box" style="margin: auto; width: 500px;">
+            <div class="flex component2">
+                {{ form.author.label }}: 
+                {{ form.author }}
+            </div>
+
+            <div class="flex component2">
+                {{ form.name.label }}: 
+                {{ form.name }}
+            </div>
+
+            <div class="flex-col component2">
+                {{ form.members.label }}: 
+                {{ form.members }}
+                {% if action == "create" or action == "edit" %}
+                <div class="flex" id="mem_edit_div">
+                    <select id="mem_select">
+                        {% for user in all_users %}
+                        <option value="{{user.username}}">{{user.username}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="add" onclick="mem_add_btn_click()">
+                    <input type="button" value="remove" onclick="mem_rem_btn_click()">
+                </div>
+                {% endif %}
+            </div>
+            {% if action == "create" or action == "edit" %}
+            <button type="submit" style="margin: 0% 30%;">{{buttonname}}</button>
+            {% endif %}
+        </div>
     </form>
+
+
+    <script>    
+        let mem_name = document.getElementById("mem_name")
+        let mem_author = document.getElementById("mem_author")
+        let mem_edit_div = document.getElementById("mem_edit_div")
+        let mem_members = document.getElementById("mem_members")
+        let mem_select = document.getElementById("mem_select")
+        let mem_data = "{{members}}".split(" ")
+        //edit
+        if ("{{user.username}}" == "{{group.author.username}}" || "{{action}}" == "create"){
+            mem_name.disabled = false
+        }
+        //submit
+        function on_submit() {
+            mem_members.disabled = false
+            return true
+        }
+        //members_val
+        function set_mem_members_val() {
+            mem_members.value=""
+            for (let i=0;i<mem_data.length;i++)
+                mem_members.value += mem_data[i]+"\n"
+        }
+        function mem_add_btn_click(){
+            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
+            if (!mem_data.includes(mem_select_val)){
+                mem_data.push(mem_select_val)
+                set_mem_members_val()
+        }}
+        function mem_rem_btn_click(){
+            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
+            if (mem_data.includes(mem_select_val) && mem_select_val != "{{user.username}}"){
+                mem_data.splice(mem_data.indexOf(mem_select_val),1)
+                set_mem_members_val()
+        }}
+    </script>
+
 {% endblock %}

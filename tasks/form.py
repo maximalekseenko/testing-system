@@ -7,38 +7,43 @@ class ModuleForm(forms.Form):
     name = forms.CharField(
         label='Название',
         max_length=64,
-        widget=forms.TextInput(
-            attrs={} ) )
-    #name-end
-
+        widget=forms.TextInput(attrs={
+                'disabled': '',
+                'id':       'name',
+    }))#name-end
     author = forms.CharField(
         label='Автор',
-        max_length=32,
-        widget=forms.TextInput(
-            attrs={
+        max_length=64,
+        widget=forms.TextInput(attrs={
                 'disabled': '',
-            } ),
-        required=False )
-    #author-end
-
-    # assigned_to = forms.CharField(
-    #     label='ASSIGN',
-    #     max_length=1024,
-    #     widget=forms.Textarea(
-    #         attrs={
-    #             'style': 'resize: none',
-    #         } ) )
-    # #assigned_to-end
-
-    # tasks = forms.CharField(
-    #     label='TASKS',
-    #     max_length=1024,
-    #     widget=forms.Textarea(
-    #         attrs={
-    #             'style': 'resize: none',
-    #         } ) )
-    # #tasks-end
-
+                'id':       'author',
+    }))#name-end
+    tasks = forms.CharField(
+        label='Участники',
+        max_length=32,
+        widget=forms.Textarea(attrs={
+                'disabled': '',
+                'style':    'resize: none; height: 150px;',
+                'id':       'tasks',
+    }))#tasks-end
+    assigned_to = forms.CharField(
+        label='Участники',
+        max_length=32,
+        widget=forms.Textarea(attrs={
+                'disabled': '',
+                'style':    'resize: none; height: 150px;',
+                'id':       'assigned_to',
+    }))#assigned_to-end
+    creation_date = forms.CharField(
+        label='Название',
+        max_length=64,
+        widget=forms.TextInput(attrs={
+                'disabled': '',
+                'id':       'date',
+    }))#name-end
+    #bool
+    is_active           = models.BooleanField(default=True)
+    is_public           = models.BooleanField(default=False)
 
 class AddTaskForm(forms.Form):
     name = forms.CharField(
