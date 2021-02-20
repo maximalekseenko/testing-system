@@ -1,13 +1,16 @@
-
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
+
 # UserData
 class UserProfile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    user_type = models.CharField(max_length=20, default='guest')
-    desription = models.CharField(max_length=100, default="no description... yet.")
+    user        = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_type   = models.CharField(max_length=32)
+    status      = models.CharField(max_length=64, default='exist')
+    bio         = models.CharField(max_length=64, default='is weak')
+    metall      = models.CharField(max_length=64, default='is strong')
+    
 def create_profile(sender,**kwargs):
     if kwargs['created']:
         user_profile = UserProfile.objects.create(user=kwargs['instance'])

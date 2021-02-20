@@ -1,22 +1,22 @@
 {% extends '../base.html' %}
 
 {% block content %}
-<form method="POST">
+<h1 style="text-align: center;">Войти</h1>
+<form method="post">
     {% csrf_token %}
-    <div>
-        {{ form.username.label_tag }}
-        <br>
-        {{ form.username }}
-    </div>
-    <br>
-    <div>
-        {{ form.password.label_tag }}
-        <br>
-        {{ form.password }}
-    </div>
-    <br>
-    <div>
-        <input type="submit" value="Sign in" />
+
+    <div class="flex flex-col box" style="margin: auto; width: 500px;">
+        {% for field in form %}
+        <div class="flex component2">
+            {{field.label_tag}}
+            {{field}}
+            {% for error in field.errors %}
+            <a style="font-size:14px; color: red">{{error}}</a>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        <button type="submit" style="margin: 0% 30%;">Войти</button>
     </div>
 </form>
 {% endblock %}

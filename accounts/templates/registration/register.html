@@ -1,22 +1,22 @@
 {% extends '../base.html' %}
 {% block content %}
 
-<h2>Register</h2>
+<h1 style="text-align: center;">{{pagename}}</h1>
 <form method="post">
     {% csrf_token %}
-    <div class="flex flex-col box">
+
+    <div class="flex flex-col box" style="margin: auto; width: 500px;">
         {% for field in form %}
-        <div class="flex">
-            {{ field.label_tag }}
-            {{ field }}
+        <div class="flex component2">
+            {{field.label_tag}}
+            {{field}}
             {% for error in field.errors %}
-            <a style="font-size:14px; color: red">{{ error }}</a>
+            <a style="font-size:14px; color: red">{{error}}</a>
             {% endfor %}
         </div>
         {% endfor %}
-        <div>
-            <button type="submit">{{button}}</button>
-        </div>
+
+        <button type="submit" style="margin: 0% 30%;">Зарегистрироваться</button>
     </div>
 </form>
 

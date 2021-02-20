@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
-    {% include './head.html' %}
+    <head>
+        {% include './head.html' %}
+        {% block head %}
+        {% endblock %}
+    </head>
+
     <body class="flex flex-col">
-        {% include './header.html' %}
-        <main>
-            {% block content %}
+        <header class="flex-sb">
+            {% include './header.html' %}
+            {% block header %}
             {% endblock %}
+        </header>
+
+        <main class="flex-sb">
+            <div id="content">
+                {% block content %}
+                {% endblock %}
+            </div>
+            <div id="sider" class="flex-col">
+                {% include './sider.html' %}
+                {% block sider %}
+                {% endblock %}
+            </div>
         </main>
-        {% include './footer.html' %}
+            
+        <footer class="flex-sb">
+            {% include './footer.html' %}
+            {% block footer %}
+            {% endblock %}
+        </footer>
     </body>
 </html>

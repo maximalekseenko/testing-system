@@ -1,4 +1,20 @@
 {% extends './base.html' %}
 {% block content %}
-<h1>Это ваш профиль. У вас нет прав!</h1>
+<h1 style="text-align: center;">{{user}}</h1>
+<form method="post">
+    {% csrf_token %}
+
+    <div class="flex flex-col box" style="margin: auto; width: 500px;">
+        {% for field in form %}
+        <div class="flex component2">
+            {{field.label_tag}}
+            {{field}}
+            {% for error in field.errors %}
+            <a style="font-size:14px; color: red">{{error}}</a>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        <button type="submit" style="margin: 0% 30%;">Сохранить</button>
+    </div>
+</form>
 {% endblock %}

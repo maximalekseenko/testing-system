@@ -2,31 +2,47 @@ body {
     margin: auto;
     width: 80%;
     min-height:100%;
-    background-color: white;
 }
 html {
     font-family: Arial;
     background-color:#808080;
-    background-position:center;
     height:100%;
-    background-repeat: repeat;
-}
-html a {
-    text-decoration: none;
 }
 main {
-    background-color:white;
-    padding: 10px 50px;
+    width: 100%;
     flex:1 1 0;
-}
-footer, header {
-    background-color: white;
-    padding: 10px 50px;
+}/*big-end*/
 
+
+button {
+    background-color: #F0F0F0;
+    border-radius: 4px;
+    border-color: #D0D0D0;
+    padding: 5px;
+}
+
+
+footer, header {
+    background-color: #A0A0A0;
+    padding: 10px 50px;
 }
 footer a:any-link, header a:any-link {
-    color:blue
+    color:#000000
 }
 footer a:focus, header a:focus{
-    color:blueviolet
+    color:#300030
+}/*footer, header-end*/
+
+
+a:any-link {
+    color:#5000F0
 }
+a:any-link:focus {
+    color:#A000A0
+}
+a {
+    text-decoration: none;
+}/*a-end*/
+
+
+

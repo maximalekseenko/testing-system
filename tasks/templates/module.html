@@ -1,0 +1,111 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+    <form method="POST" onsubmit="return on_submit();">
+        {% csrf_token %}
+
+        <div class="flex flex-col box" style="margin: auto; width: 500px;">
+            <div class="flex component2">
+                {{ form.author.label }}: 
+                {{ form.author }}
+            </div>
+
+            <div class="flex component2">
+                {{ form.name.label }}: 
+                {{ form.name }}
+            </div>
+
+            {% if action == "edit" %}
+            <div class="flex-col component2">
+                {{ form.tasks.label }}: 
+                {{ form.tasks }}
+                <div class="flex">
+                    <select id="mem_select">
+                        {% for user in all_users %}
+                        <option value="{{user.username}}">{{user.username}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="add" onclick="mem_add_btn_click()">
+                    <input type="button" value="remove" onclick="mem_rem_btn_click()">
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="flex-col component2">
+                {{ form.assigned_to.label }}: 
+                {{ form.assigned_to }}
+                {% if action == "create" or action == "edit" %}
+                <div class="flex">
+                    <select id="assigned_to_select">
+                        {% for group in my_groups %}
+                        <option value="{{group.name}}">{{group.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="add" onclick="assigned_to_add_btn_click()">
+                    <input type="button" value="remove" onclick="assigned_to_rem_btn_click()">
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="flex component2">
+                {{ form.is_active.label }}: 
+                {{ form.is_active }}
+            </div>
+
+            <div class="flex component2">
+                {{ form.is_public.label }}: 
+                {{ form.is_public }}
+            </div>
+
+            {% if action == "create" or action == "edit" %}
+            <button type="submit" style="margin: 0% 30%;">{{buttonname}}</button>
+            {% endif %}
+        </div>
+    </form>
+
+
+    <script>    
+        let name                = document.getElementById("name")
+        let author              = document.getElementById("author")
+        let tasks               = document.getElementById("tasks")
+        let assigned_to         = document.getElementById("assigned_to")
+        let is_public           = document.getElementById("is_public")
+        let is_active           = document.getElementById("is_active")
+
+        let assigned_to_select  = document.getElementById("assigned_to_select")
+        let ass_data 
+        if ("{{assigned_to}}"=="") ass_data = []
+        else ass_data ="{{assigned_to}}".split(" ")
+        //edit
+        if ("{{action}}" == "edit" || "{{action}}" == "create"){
+            name.disabled = false
+            is_public.disabled = false
+            is_active.disabled = false
+        }
+        //submit
+        function on_submit() {
+            assigned_to.disabled = false
+            return true
+        }
+        //assigned_to_val
+        function set_assigned_to_val() {
+            assigned_to.value=""
+            for (let i=0;i<ass_data.length;i++)
+                assigned_to.value += ass_data[i]+"\n"
+        }
+        function assigned_to_add_btn_click(){
+            var assigned_to_select_val = assigned_to_select.options[assigned_to_select.selectedIndex].text;
+            if (!ass_data.includes(assigned_to_select_val)){
+                ass_data.push(assigned_to_select_val)
+                set_assigned_to_val()
+        }}
+        function assigned_to_rem_btn_click(){
+            var assigned_to_select_val = assigned_to_select.options[assigned_to_select.selectedIndex].text;
+            if (ass_data.includes(assigned_to_select_val)){
+                ass_data.splice(ass_data.indexOf(assigned_to_select_val),1)
+                set_assigned_to_val()
+        }}
+    </script>
+
+{% endblock %}
