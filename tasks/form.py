@@ -17,9 +17,9 @@ class ModuleForm(forms.Form):
         widget=forms.TextInput(attrs={
                 'disabled': '',
                 'id':       'author',
-    }))#name-end
+    }))#author-end
     tasks = forms.CharField(
-        label='Участники',
+        label='Задачи',
         max_length=32,
         widget=forms.Textarea(attrs={
                 'disabled': '',
@@ -27,23 +27,28 @@ class ModuleForm(forms.Form):
                 'id':       'tasks',
     }))#tasks-end
     assigned_to = forms.CharField(
-        label='Участники',
+        label='Группы',
         max_length=32,
         widget=forms.Textarea(attrs={
                 'disabled': '',
                 'style':    'resize: none; height: 150px;',
                 'id':       'assigned_to',
     }))#assigned_to-end
-    creation_date = forms.CharField(
-        label='Название',
-        max_length=64,
-        widget=forms.TextInput(attrs={
+    is_active = forms.BooleanField(
+        label='Активен',
+        widget=forms.CheckboxInput(attrs={
                 'disabled': '',
-                'id':       'date',
-    }))#name-end
-    #bool
-    is_active           = models.BooleanField(default=True)
-    is_public           = models.BooleanField(default=False)
+                'id':       'is_active',
+    }), required=False,initial=True
+    )#is_active-end
+    is_public = forms.BooleanField(
+        label='Публичен',
+        widget=forms.CheckboxInput(attrs={
+                'disabled': '',
+                'id':       'is_public',
+    }), required=False,initial=True
+    )#name-end
+
 
 class AddTaskForm(forms.Form):
     name = forms.CharField(

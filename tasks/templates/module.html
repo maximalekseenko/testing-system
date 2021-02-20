@@ -16,11 +16,11 @@
                 {{ form.name }}
             </div>
 
+            {% if action == "edit" %}
             <div class="flex-col component2">
-                {{ form.members.label }}: 
-                {{ form.members }}
-                {% if action == "create" or action == "edit" %}
-                <div class="flex" id="mem_edit_div">
+                {{ form.tasks.label }}: 
+                {{ form.tasks }}
+                <div class="flex">
                     <select id="mem_select">
                         {% for user in all_users %}
                         <option value="{{user.username}}">{{user.username}}</option>
@@ -29,8 +29,35 @@
                     <input type="button" value="add" onclick="mem_add_btn_click()">
                     <input type="button" value="remove" onclick="mem_rem_btn_click()">
                 </div>
+            </div>
+            {% endif %}
+
+            <div class="flex-col component2">
+                {{ form.assigned_to.label }}: 
+                {{ form.assigned_to }}
+                {% if action == "create" or action == "edit" %}
+                <div class="flex">
+                    <select id="assigned_to_select">
+                        {% for group in my_groups %}
+                        <option value="{{group.name}}">{{group.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="add" onclick="assigned_to_add_btn_click()">
+                    <input type="button" value="remove" onclick="assigned_to_rem_btn_click()">
+                </div>
                 {% endif %}
             </div>
+
+            <div class="flex component2">
+                {{ form.is_active.label }}: 
+                {{ form.is_active }}
+            </div>
+
+            <div class="flex component2">
+                {{ form.is_public.label }}: 
+                {{ form.is_public }}
+            </div>
+
             {% if action == "create" or action == "edit" %}
             <button type="submit" style="margin: 0% 30%;">{{buttonname}}</button>
             {% endif %}
@@ -39,38 +66,45 @@
 
 
     <script>    
-        let mem_name = document.getElementById("mem_name")
-        let mem_author = document.getElementById("mem_author")
-        let mem_edit_div = document.getElementById("mem_edit_div")
-        let mem_members = document.getElementById("mem_members")
-        let mem_select = document.getElementById("mem_select")
-        let mem_data = "{{members}}".split(" ")
+        let name                = document.getElementById("name")
+        let author              = document.getElementById("author")
+        let tasks               = document.getElementById("tasks")
+        let assigned_to         = document.getElementById("assigned_to")
+        let is_public           = document.getElementById("is_public")
+        let is_active           = document.getElementById("is_active")
+
+        let assigned_to_select  = document.getElementById("assigned_to_select")
+        let ass_data 
+        if ("{{assigned_to}}"=="") ass_data = []
+        else ass_data ="{{assigned_to}}".split(" ")
         //edit
-        if ("{{user.username}}" == "{{group.author.username}}" || "{{action}}" == "create"){
-            mem_name.disabled = false
+        if ("{{action}}" == "edit" || "{{action}}" == "create"){
+            name.disabled = false
+            is_public.disabled = false
+            is_active.disabled = false
         }
         //submit
         function on_submit() {
-            mem_members.disabled = false
+            assigned_to.disabled = false
             return true
         }
-        //members_val
-        function set_mem_members_val() {
-            mem_members.value=""
-            for (let i=0;i<mem_data.length;i++)
-                mem_members.value += mem_data[i]+"\n"
+        //assigned_to_val
+        function set_assigned_to_val() {
+            assigned_to.value=""
+            for (let i=0;i<ass_data.length;i++)
+                assigned_to.value += ass_data[i]+"\n"
         }
-        function mem_add_btn_click(){
-            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
-            if (!mem_data.includes(mem_select_val)){
-                mem_data.push(mem_select_val)
-                set_mem_members_val()
+        function assigned_to_add_btn_click(){
+            var assigned_to_select_val = assigned_to_select.options[assigned_to_select.selectedIndex].text;
+            if (!ass_data.includes(assigned_to_select_val)){
+                ass_data.push(assigned_to_select_val)
+                set_assigned_to_val()
         }}
-        function mem_rem_btn_click(){
-            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
-            if (mem_data.includes(mem_select_val) && mem_select_val != "{{user.username}}"){
-                mem_data.splice(mem_data.indexOf(mem_select_val),1)
-                set_mem_members_val()
+        function assigned_to_rem_btn_click(){
+            var assigned_to_select_val = assigned_to_select.options[assigned_to_select.selectedIndex].text;
+            if (ass_data.includes(assigned_to_select_val)){
+                ass_data.splice(ass_data.indexOf(assigned_to_select_val),1)
+                set_assigned_to_val()
         }}
     </script>
 
