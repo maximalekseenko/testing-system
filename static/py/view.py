@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from tasks.models import Module
 from main.models import Group
 
+
 def get_base_context(request, pagename):
     is_auth = request.user.is_authenticated
     return {

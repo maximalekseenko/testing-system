@@ -27,3 +27,13 @@
         <a class="component" href="/tasks/{{module.id}}">{{module.name}}</a>
     {% endfor %}
 </div>
+
+<div class="flex-col box" style="width: 300px;">
+    <p class="component2">Ваши группы:</p>
+    {% if not my_groups %}
+        <p class="component">Пусто...</p>
+    {% endif %}
+    {% for group in my_groups %}
+        <a class="component" href="/groups/{{group.id}}">{{group.name}}</a>
+    {% endfor %}
+</div>

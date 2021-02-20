@@ -1,0 +1,62 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+    <form method="POST" onsubmit="return on_submit();">
+        {% csrf_token %}
+
+        <div class="flex flex-col box" style="margin: auto; width: 500px;">
+            <div class="flex component2">
+                {{ form.name.label }}: 
+                {{ form.name }}
+            </div>
+            <div class="flex-col component2">
+                {{ form.members.label }}: 
+                {{ form.members }}
+                <div class="flex">
+                    <select id="mem_select">
+                        {% for user in all_users %}
+                        <option value="{{user.username}}">{{user.username}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="add" onclick="mem_add_btn_click()">
+                    <input type="button" value="remove" onclick="mem_rem_btn_click()">
+                </div>
+            </div>
+            <button type="submit" style="margin: 0% 30%;">Создать</button>
+        </div>
+    </form>
+
+
+    <script>    
+        let mem_data = ["{{user.username}}"]
+        let mem_textarea = document.getElementById("mem_textarea")
+        let mem_select = document.getElementById("mem_select")
+
+        function on_submit() {
+            mem_textarea.disabled = false
+            return true
+        }
+
+        function set_mem_textarea_val() {
+            mem_textarea.value=""
+            for (let i=0;i<mem_data.length;i++)
+                mem_textarea.value += mem_data[i]+"\n"
+        }
+        function mem_add_btn_click(){
+            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
+            if (!mem_data.includes(mem_select_val)){
+                mem_data.push(mem_select_val)
+                set_mem_textarea_val()
+            }
+        }
+        function mem_rem_btn_click(){
+            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
+            if (mem_data.includes(mem_select_val) && mem_select_val != "{{user.username}}"){
+                mem_data.splice(mem_data.indexOf(mem_select_val),1)
+                set_mem_textarea_val()
+            }
+        }
+    </script>
+
+{% endblock %}

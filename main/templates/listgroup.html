@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+
+    <div class="flex-sb box" style="width: 300px;">
+        <a class="component" href="/groups/create">Создать группу</a>
+        <a class="component" href="/groups/find">Войти в группу</a>
+    </div>
+
+    <div class="flex-col box" style="width: 300px;">
+        <p class="component2">Ваши группы:</p>
+        {% for group in my_groups %}
+            <a class="component" href="/groups/{{group.id}}">{{group.name}}</a>
+        {% endfor %}
+    </div>
+
+
+
+    <form method="POST" class="flex-col">
+        {% csrf_token %}
+    </form>
+{% endblock %}
