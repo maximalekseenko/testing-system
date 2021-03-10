@@ -1,0 +1,45 @@
+<div class="flex flex-col bigbox" id="module_task_box">
+    <div class="flex-sb component2">
+        <div>{{ form.author.label }}:{{ form.author }}</div>
+        <div>{{ form.name.label }}:{{ form.name }}</div>
+    </div>
+
+    <div class="flex-col component2">
+        <div class="flex-col">{{ form.assigned_to.label }}:{{ form.assigned_to }}</div>
+        {% if action == "create" or action == "edit" %}
+        <button type="button" onclick="assigned_to_edit_btn_click()">Редактировать</button>
+        {% endif %}
+    </div>
+
+    <div class="flex-col component2">
+        <div class="flex-col">{{ form.tasks.label }}:{{ form.tasks }}</div>
+        {% if action == "create" or action == "edit" %}
+        <button type="button" onclick="assigned_to_edit_btn_click()">Редактировать</button>
+        {% endif %}
+    </div>
+    
+    <div class="flex-col component2">
+        <div>{{ form.is_active.label }}:{{ form.is_active }}</div>
+        <div>{{ form.is_public.label }}:{{ form.is_public }}</div>
+    </div>
+    
+    <div style="margin: auto">
+        {% if action == "create" or action == "edit" %}
+        <button type="submit">{{buttonname}}</button>
+        {% endif %}
+        {% if action == "edit" %}
+        <button type="submit" onclick="delete_btn_click()">Удалить</button>
+        {% endif %}
+        <input type="hidden" value="{{action}}" id="action">
+    </div>
+    <div style="margin: auto">
+        <button type="button" onclick="switch_box_btn_click('module_show_box')">Назад</button>
+    </div>
+</div>
+
+
+
+<script>
+    function to_module_task_box(){}
+    function from_module_task_box(){}
+</script>

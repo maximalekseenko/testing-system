@@ -22,16 +22,13 @@ def CreateGroupView(request):
         form = GroupForm(request.POST)
         if len(Group.objects.filter(name=form.data['name'])):
             return redirect('/groups/create/')
-        #create new group
-        new_group = Group.objects.create(
+        new_group = Group.objects.create(   #create new group
             name   = form.data['name'],
             author = request.user
         )
         new_group.members.set(User.objects.filter(username__in=form.data['members'].split('\r\n')))
-        #save new group
-        new_group.save()
-        #show new group
-        id = new_group.id
+        new_group.save()    #save new group
+        id = new_group.id   #show new group
         return redirect(f'/groups/{id}/')
     #if POST-end
     context['form'] = GroupForm(initial={
