@@ -40,6 +40,7 @@ def RegisterView(request):
     return render(request, 'registration/register.html', context)
 
 
+
 def AccoutView(request):
     context = get_base_context(request, "")
     if request.method == 'POST':

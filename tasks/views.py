@@ -9,89 +9,83 @@ from main.models import Group
 
 
 def CreateModuleView(request):  
+    # is auth
     if not request.user.is_authenticated:
         return redirect("/accounts/register/")
-    
+    # context
     context = get_base_context(request, 'Создание Модуля', 'Создать')
     context['action'] = "create"
-    
+    context['form'] = ModuleForm({
+            'name':         request.POST.get('name', ""),
+            'author':       request.user,
+            'assigned_to':  request.POST.get('assigned_to', ""),
+            'tasks':        request.POST.get('tasks', ""),
+            'is_active':    request.POST.get('is_active', False)!=False,
+            'is_public':    request.POST.get('is_public', False)!=False,
+        } )
+    # POST
     if request.method == 'POST':
-        form = ModuleForm(request.POST)
+        form = context['form']
+        # is valid
         if len(Module.objects.filter(name=form.data['name'])):
-            return redirect('/tasks/create/')
-        #create new module
+            return render(request, 'module.html', context)
+        # create new module
         new_module = Module.objects.create(
             name        = form.data['name'],
-            author      = request.user,
+            author      = form.data['author'],
             is_active   = form.data.get('is_active', False)!=False,
             is_public   = form.data.get('is_public', False)!=False,
         )
-        # new_module.tasks.set(Task.objects.filter(name__in=form.data['tasks'].split('\r\n')))
         new_module.assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to'].split('\r\n')))
-        #save new module
+        # save and show new module
         new_module.save()
-        #show new module
         id = new_module.id
         return redirect(f'/tasks/{id}/')
-    #if POST-end
-    context['form'] = ModuleForm(
-        initial={
-            'name':         "",
-            'author':       request.user,
-            'assigned_to':  "",
-            'tasks':        "",
-            'is_active':    True,
-            'is_public':    False,
-        } )
-    context['assigned_to'] = ""
+    # POST-end
     return render(request, 'module.html', context)
 #CreateModuleView-end
 
 
 def ShowModuleView(request, id):
+    # is auth
     if not request.user.is_authenticated:
         return redirect("/accounts/register/")
+    # context
     context = get_base_context(request, 'Просмотр модуля', 'Сохравнить')
-    #get module
-    try:
+    try:    # FIX: to one line pls
         context['module'] = Module.objects.get(id=id)
     except Task.DoesNotExist:
         raise Http404
     context['action'] = "edit" if context['module'].author == request.user else "show"
+    context['form'] = ModuleForm({ # FIX: len of line
+            'name':         request.POST.get('name', context['module'].name),
+            'author':       request.POST.get('author', context['module'].author),
+            'assigned_to':  request.POST.get('assigned_to', "\r\n".join(map(lambda g: g.name, context['module'].assigned_to.all()))),
+            'tasks':        request.POST.get('tasks', "\r\n".join(map(lambda g: g.name, context['module'].assigned_to.all()))),
+            'is_active':    request.POST.get('is_active', context['module'].is_active)!=False,
+            'is_public':    request.POST.get('is_public', context['module'].is_public)!=False,
+        } )
+    # POST
     if request.method == 'POST':
-        #is not owner
-        if context['action'] != "edit":
+        form = context['form']
+        # is not owner
+        if Module.objects.get(id=id).author != request.user:
             return redirect(f"/tasks/{id}")
-        #get data form POST
-        form = ModuleForm(request.POST)
-        if len(Module.objects.filter(name=form.data['name'])) and Module.objects.filter(name=form.data['name'])[0].name != context['module'].name:
-            return redirect('/module/create/')
+        # is valid
+        if len(Module.objects.filter(name=form.data['name'])) and form.data['name'] != context['module'].name:
+            return render(request, 'module.html', context)
+        # edit
         context['module'].name      = form.data['name']
         context['module'].is_active = form.data.get('is_active', False)!=False
         context['module'].is_public = form.data.get('is_public', False)!=False
         context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to'].split('\r\n')))
-        #save edited group
+        # save
         context['module'].save()
         return redirect(f'/tasks/{id}/')
-    context['form'] = ModuleForm(
-        initial={
-            'name':         context['module'].name,
-            'author':       context['module'].author,
-            'assigned_to':  "\r\n".join(map(lambda g: g.name, context['module'].assigned_to.all())),
-            'tasks':        "\r\n".join(map(lambda g: g.name, context['module'].assigned_to.all())),
-            'is_active':    context['module'].is_active,
-            'is_public':    context['module'].is_public,
-        } )
-    context['all_groups']    = User.objects.all()
-    context['assigned_to']   = " ".join(list(map(lambda m: m.name, context['module'].assigned_to.all())))
-    #if POST-end
+    # POST-end
+
     return render(request, 'module.html', context) 
 #ShowModuleView-end
-
-
-    # #task
-    # path('tasks/<int:id>/create/',       tasks.CreateTaskView),
-    # path('tasks/<int:id>/<int:id>/',     tasks.ShowTaskView),
 
 
 def CreateTaskView(request):
