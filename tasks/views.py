@@ -21,8 +21,8 @@ def CreateModuleView(request):
     context['form'] = ModuleForm({
             'name':         request.POST.get('name', ""),
             'author':       request.user,
-            'assigned_to':  request.POST.get('assigned_to', ""),
-            'tasks':        request.POST.get('tasks', ""),
+            'assigned_to_value':  request.POST.get('assigned_to_value', ""),
+            'tasks_value':        request.POST.get('tasks_value', "[]"),
             'is_active':    request.POST.get('is_active', False),
             'is_public':    request.POST.get('is_public', False),
     })
@@ -52,7 +52,7 @@ def CreateModuleView(request):
             context['module'].tasks.add(new_task)
         # save
         context['module'].save()
-        id = new_module.id
+        id = context['module'].id
         return redirect(f'/tasks/{id}/')
     # POST-end
 
@@ -82,29 +82,33 @@ def ShowModuleView(request, id):
     # POST
     if request.method == 'POST':
         form = context['form']
-        # is not owner
-        if Module.objects.get(id=id).author != request.user:
+        # is owner
+        if Module.objects.get(id=id).author == request.user:
+            if form.data['tasks_value'] == "DELETE":
+                context['module'].delete()
+                return redirect(f'/tasks/')
+            # is valid
+            if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
+                return render(request, 'module.html', context)
+            # edit
+            context['module'].name      = form.data['name']
+            context['module'].is_active = form.data.get('is_active', False)=="on"
+            context['module'].is_public = form.data.get('is_public', False)=="on"
+            context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to_value'].split('\r\n')))
+            context['module'].tasks.all().delete()
+            for task in json.loads(form.data['tasks_value']):
+                new_task = Task.objects.create(
+                    name = task['name'],
+                    content = task['content'],
+                    answer = task['answer'],
+                    options = task['options'],
+                )
+                context['module'].tasks.add(new_task)
+            # save
+            context['module'].save()
+            return redirect(f'/tasks/{id}/')
+        else:
             return redirect(f"/tasks/{id}")
-        # is valid
-        if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
-            return render(request, 'module.html', context)
-        # edit
-        context['module'].name      = form.data['name']
-        context['module'].is_active = form.data.get('is_active', False)=="on"
-        context['module'].is_public = form.data.get('is_public', False)=="on"
-        context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to_value'].split('\r\n')))
-        context['module'].tasks.all().delete()
-        for task in json.loads(form.data['tasks_value']):
-            new_task = Task.objects.create(
-                name = task['name'],
-                content = task['content'],
-                answer = task['answer'],
-                options = task['options'],
-            )
-            context['module'].tasks.add(new_task)
-        # save
-        context['module'].save()
-        return redirect(f'/tasks/{id}/')
     # POST-end
 
     return render(request, 'module.html', context) 

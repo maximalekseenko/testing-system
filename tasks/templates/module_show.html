@@ -30,7 +30,9 @@
         {% if action == "edit" %}
         <button type="button" onclick="delete_btn_click()">Удалить</button>
         {% endif %}
-        <input type="hidden" value="{{action}}" id="action">
+        {% if action == "show" %}
+        <button type="button" onclick="to_module_pass_box()">Пройти</button>
+        {% endif %}
     </div>
 </div>
 
