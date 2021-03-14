@@ -2,42 +2,57 @@
 
 {% block content %}
     <h1 align="center">{{pagename}}</h1>
-    <form method="POST" onsubmit="return on_submit();">
+    <form method="POST" id="form">
         {% csrf_token %}
         {% include 'module_show.html' %}
         {% include 'module_assigned_to.html' %}
         {% include 'module_task.html' %}
+        {% include 'module_newtask.html' %}
     </form>
 
 
-
     <script> 
+        const form     = document.getElementById("form")
         //box
-        const module_show_box           = document.getElementById("module_show_box")
-        const module_assigned_to_box    = document.getElementById("module_assigned_to_box")
-        const module_task_box           = document.getElementById("module_task_box")
+        const module_show_box        = document.getElementById("module_show_box")
+        const module_assigned_to_box = document.getElementById("module_assigned_to_box")
+        const module_task_box        = document.getElementById("module_task_box")
+        const module_newtask_box     = document.getElementById("module_newtask_box")
 
-        module_assigned_to_box.style.display = "none"
-        module_task_box.style.display = "none"
+        var assigned_to_vars         = assigned_to_value.value.split("\n")
+        var tasks_vars               = JSON.parse(tasks_value.value).map(task=>task['fields'])
+
+        to_module_show_box()
         
-        function switch_box_btn_click(box_name){
+        
+        function create_btn_click(){
+            assigned_to_value.value = assigned_to_vars.join("\n")
+            console.log(assigned_to_value.value)
+            tasks_value.value = JSON.stringify(tasks_vars)
+            form.submit()
+        }//create_btn_click-end
+
+
+        
+        function delete_btn_click(){
+
+        }//delete_btn_click-end
+
+
+        function switch_box(box_name){
             module_show_box.style.display        = "none"
             module_assigned_to_box.style.display = "none"
             module_task_box.style.display        = "none"
+            module_newtask_box.style.display     = "none"
             
-            if (box_name == "module_show_box"){
+            if (box_name == "module_show_box")
                 module_show_box.style.display = "block"
-                to_module_show_box()
-            }
-            if (box_name == "module_assigned_to_box") {
+            if (box_name == "module_assigned_to_box") 
                 module_assigned_to_box.style.display = "block"
-                to_module_assigned_to_box()
-            }
-            if (box_name == "module_task_box") {
+            if (box_name == "module_task_box")
                 module_task_box.style.display = "block"
-                to_module_task_box()
-            }
-        }
+            if (box_name == "module_newtask_box")
+                module_newtask_box.style.display = "block"
+        }//switch_box-end
     </script>
-
 {% endblock %}

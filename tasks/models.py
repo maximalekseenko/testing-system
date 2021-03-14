@@ -10,19 +10,12 @@ class Mark(models.Model):
     mark                = models.IntegerField(default = 0)
 
 
-class Answer(models.Model):
-    content             = models.CharField(max_length=32, default = "")
-
-
 class Task(models.Model):
-    title               = models.CharField(max_length=64, default = "Имя")
+    name                = models.CharField(max_length=64, default = "Имя")
     content             = models.CharField(max_length=512, default = "Условие")
     #answer
-    correct_answer      = models.CharField(max_length=32, default = "-1")
-    answer_type         = models.CharField(max_length=32, default = "input")
-    options_answer      = models.ManyToManyField(Answer)
-    ANSWER_TYPE_CHOICES = [('CH', 'choise'), ('IN', 'input'), ('MC', 'm_choise')]
-    answer_type         = models.CharField(max_length=2, choices=ANSWER_TYPE_CHOICES, default='IN')
+    answer              = models.IntegerField(default = 0)
+    options             = models.CharField(max_length=255, default = "")
 
 
 class Module(models.Model):
