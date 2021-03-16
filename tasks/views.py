@@ -10,8 +10,8 @@ from .form import ModuleForm
 from .models import Task, Module
 from main.models import Group
 
-def CreateModuleView(request):  
-    # is auth
+
+def CreateModuleView(request):
     if not request.user.is_authenticated:
         return redirect("/accounts/register/")
 
@@ -19,20 +19,22 @@ def CreateModuleView(request):
     context = get_base_context(request, 'Создание Модуля', 'Создать')
     context['action'] = "create"
     context['form'] = ModuleForm({
-            'name':         request.POST.get('name', ""),
-            'author':       request.user,
-            'assigned_to_value':  request.POST.get('assigned_to_value', ""),
-            'tasks_value':        request.POST.get('tasks_value', "[]"),
-            'is_active':    request.POST.get('is_active', False),
-            'is_public':    request.POST.get('is_public', False),
+            'name':              request.POST.get('name', ""),
+            'author':            request.user,
+            'assigned_to_value': request.POST.get('assigned_to_value', ""),
+            'tasks_value':       request.POST.get('tasks_value', "[]"),
+            'is_active':         request.POST.get('is_active', False),
+            'is_public':         request.POST.get('is_public', False),
     })
-        
+
     # POST
     if request.method == 'POST':
         form = context['form']
+
         # is valid
         if len(Module.objects.filter(name=form.data['name'])):
             return render(request, 'module.html', context)
+            
         # create
         context['module'] = Module.objects.create(
             name      = form.data['name'],
@@ -62,9 +64,8 @@ def CreateModuleView(request):
 
 def ShowModuleView(request, id):
     # is auth
-    if not request.user.is_authenticated:
-        return redirect("/accounts/register/")
-
+    # if not request.user.is_authenticated:
+    #     return redirect("/accounts/register/")
     # context
     context = get_base_context(request, 'Просмотр модуля', 'Сохравнить')
     try: context['module'] = Module.objects.get(id=id) 

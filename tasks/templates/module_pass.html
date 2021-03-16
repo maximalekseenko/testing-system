@@ -1,4 +1,5 @@
 <div class="flex flex-col bigbox" id="module_pass_box">
+    Прохождение модуля {{module.name}}:
     <div class="flex component2">
         Название: <input id="pass_name" disabled>
     </div>
@@ -18,25 +19,27 @@
 
 <script>
     var task_list
-    var task_list_length
     var cur_task
     var cur_statistic
 
     function to_module_pass_box(){
         switch_box("module_pass_box")
 
-        cur_statistic = 0
-        task_list = Array.from(tasks_vars).sort(()=>-Math.floor(Math.random()*2))
-        task_list_length =task_list.length
+        cur_statistic = []
+        task_list = Array.from(tasks_vars).sort(()=>-Math.floor(Math.random()*2)).map(x=>({...x}))
         pass_next_btn_click()
     }
 
     function from_module_pass_box(){
-        console.log(cur_statistic/task_list_length*100)
+        to_module_result_box()
     }
 
     function pass_next_btn_click() {
-        if (task_list.length==0)from_module_pass_box()
+        if (task_list.length==0){
+            from_module_pass_box()
+            return NaN
+        }
+        console.log(tasks_vars)
         cur_task = task_list.pop()
         pass_name.value    = cur_task["name"]
         pass_content.value = cur_task["content"]
@@ -46,14 +49,15 @@
         cur_task["options"].split("\n").forEach(option => {
             var option_inp = document.createElement("button")
             option_inp.type = "button"
-            console.log(option)
             option_inp.appendChild(document.createTextNode(option))
             option_inp.onclick = ()=>pass_answer_btn_click(option)
             pass_options.appendChild(option_inp)
         })
     }
     function pass_answer_btn_click(text) {
-        if (cur_task["options"].split("\n").indexOf(text) == cur_task["answer"]){cur_statistic+=1}
+        cur_task["cur_answer"]=cur_task["options"].split("\n").indexOf(text)
+        cur_statistic.push(cur_task)
+
         pass_next_btn_click()
     }
 </script>

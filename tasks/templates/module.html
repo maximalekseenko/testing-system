@@ -9,6 +9,7 @@
         {% include 'module_task.html' %}
         {% include 'module_newtask.html' %}
         {% include 'module_pass.html' %}
+        {% include 'module_result.html' %}
     </form>
 
 
@@ -20,6 +21,7 @@
         const module_task_box        = document.getElementById("module_task_box")
         const module_newtask_box     = document.getElementById("module_newtask_box")
         const module_pass_box        = document.getElementById("module_pass_box")
+        const module_result_box      = document.getElementById("module_result_box")
 
         var assigned_to_vars         = assigned_to_value.value.split("\n")
         var tasks_vars               = JSON.parse(tasks_value.value).map(task=>task['fields'])
@@ -47,6 +49,7 @@
             module_task_box.style.display        = "none"
             module_newtask_box.style.display     = "none"
             module_pass_box.style.display        = "none"
+            module_result_box.style.display        = "none"
             
             if (box_name == "module_show_box")
                 module_show_box.style.display = "block"
@@ -58,6 +61,8 @@
                 module_newtask_box.style.display = "block"
             if (box_name == "module_pass_box")
                 module_pass_box.style.display = "block"
+            if (box_name == "module_result_box")
+                module_result_box.style.display = "block"
         }//switch_box-end
     </script>
 {% endblock %}
