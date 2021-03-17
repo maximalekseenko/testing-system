@@ -6,7 +6,7 @@
     </div>
     
     <div style="margin: auto">
-        <button type="button" onclick="to_module_show_box()">Назад</button>
+        <input type="button" onclick="to_module_show_box()">Назад</button>
     </div>
 </div>
 
@@ -19,11 +19,11 @@
         
         task_alltasks.textContent = ''
         tasks_vars.forEach(task => {
-            var task_btn     = document.createElement("button");
+            var task_btn     = document.createElement("input");
             task_btn.onclick = e=>to_module_newtask_box(task['name'])
-            task_btn.style   = "min-width: 200px;"
+            task_btn.style   = "width: 200px;"
             task_btn.type    = "button"
-            task_btn.appendChild(document.createTextNode(task['name']))
+            task_btn.value   = task['name']
             task_alltasks.appendChild(task_btn)
         })
     }

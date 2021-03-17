@@ -24,15 +24,17 @@
     </div>
     
     <div class="flex" style="width: 100%;">
-        {% if action == "create" or action == "edit" %}
-        <button type="button" onclick="create_btn_click()" style="margin: auto;">{{buttonname}}</button>
-        {% endif %}
-        {% if action == "edit" %}
-        <button type="button" onclick="delete_btn_click()" style="margin: auto;">Удалить</button>
-        {% endif %}
-        {% if action == "show" %}
-        <button type="button" onclick="to_module_pass_box()" style="margin: auto;">Пройти</button>
-        {% endif %}
+        <div style="margin: auto;">
+            {% if action == "create" or action == "edit" %}
+            <input type="button" onclick="create_btn_click()" value={{buttonname}}>
+            {% endif %}
+            {% if action == "edit" %}
+            <input type="button" onclick="delete_btn_click()" value="Удалить">
+            {% endif %}
+            {% if action == "show" %}
+            <input type="button" onclick="to_module_pass_box()" value="Пройти">
+            {% endif %}
+        </div>
     </div>
 </div>
 
