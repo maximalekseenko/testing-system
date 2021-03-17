@@ -11,8 +11,11 @@
     <div class="flex-col flex-sb component2">
         Ответы:<div class="flex-col" id="pass_options"></div>
     </div>
-    <div style="margin: auto">
-        <button type="button" onclick="to_module_show_box()">Назад</button>
+
+    <div class="flex" style="width: 100%;">
+        <div style="margin: auto;">
+            <input type="button" onclick="to_module_show_box()" value="Назад">
+        </div>
     </div>
 </div>
 
@@ -39,14 +42,14 @@
             from_module_pass_box()
             return NaN
         }
-        console.log(tasks_vars)
-        cur_task = task_list.pop()
+        
+        cur_task           = task_list.pop()
         pass_name.value    = cur_task["name"]
         pass_content.value = cur_task["content"]
         pass_options.value = cur_task["options"]
 
         pass_options.textContent = ''
-        cur_task["options"].split("\n").forEach(option => {
+        cur_task["options"].split("\n").sort(()=>-Math.floor(Math.random()*2)).forEach(option => {
             var option_inp = document.createElement("button")
             option_inp.type = "button"
             option_inp.appendChild(document.createTextNode(option))
