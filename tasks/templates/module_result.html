@@ -61,7 +61,7 @@
         })
 
         result_percent.textContent = ""
-        percent=cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100
+        percent=Math.floor(cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100)
         result_percent.appendChild(document.createTextNode(percent+"%"))
 
         if     (percent<20) result_percent.style = "margin:auto; font-size:40px; color:red;"
