@@ -83,15 +83,28 @@ def ShowModuleView(request, id):
     # POST
     if request.method == 'POST':
         form = context['form']
-        # is owner
-        if Module.objects.get(id=id).author == request.user:
-            if form.data['tasks_value'] == "DELETE":
-                context['module'].delete()
-                return redirect(f'/tasks/')
-            # is valid
+
+        if form.data['tasks_value'][:4] == "RES-":
+            form.data['tasks_value'] = form.data['tasks_value'][4:]
+            if context['module'].marks.all().filter(user=request.user).count():
+                context['module'].marks.all().get(user=request.user).note=form.data['tasks_value']
+            else:
+                context['module'].marks.all().create(user=request.user,note=form.data['tasks_value'])
+        #RES-end
+
+        if Module.objects.get(id=id).author != request.user:
+            return redirect(f"/tasks/{id}")
+        #IF AUTHOR-end
+        if form.data['tasks_value'][:4] == "DEL-":
+            form.data['tasks_value'] = form.data['tasks_value'][4:]
+            context['module'].delete()
+            return redirect(f'/tasks/')
+        #DEL-end
+        if form.data['tasks_value'][:4] == "NEW-":
+            form.data['tasks_value'] = form.data['tasks_value'][4:]
             if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
                 return render(request, 'module.html', context)
-            # edit
+                
             context['module'].name      = form.data['name']
             context['module'].is_active = form.data.get('is_active', False)=="on"
             context['module'].is_public = form.data.get('is_public', False)=="on"
@@ -105,11 +118,10 @@ def ShowModuleView(request, id):
                     options = task['options'],
                 )
                 context['module'].tasks.add(new_task)
-            # save
+                
             context['module'].save()
             return redirect(f'/tasks/{id}/')
-        else:
-            return redirect(f"/tasks/{id}")
+        #NEW-del
     # POST-end
 
     return render(request, 'module.html', context) 

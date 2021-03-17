@@ -9,9 +9,10 @@
         <a id="result_percent" style="margin: auto; font-size: 50px;"></a>
     </div>
     <div style="margin: auto">
-        <button type="button" onclick="to_module_show_box()">Назад</button>
+        <button type="button" onclick="result_save_btn_click()">Назад</button>
     </div>
 </div>
+
 
 
 <script>
@@ -70,7 +71,8 @@
         else                result_percent.style = "margin:auto; font-size:40px; color:green;"
     }
 
-    function from_module_result_box(){
-        console.log(cur_statistic/task_list_length*100)
+    function result_save_btn_click(){
+            tasks_value.value = "RES-"+cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100
+            form.submit()
     }
 </script>

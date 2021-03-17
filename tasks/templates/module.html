@@ -30,15 +30,15 @@
         
         
         function create_btn_click(){
-            assigned_to_value.value = assigned_to_vars.join("\n")
-            tasks_value.value = JSON.stringify(tasks_vars)
+            assigned_to_value.value = assigned_to_vars.join('\n')
+            tasks_value.value = "NEW-"+JSON.stringify(tasks_vars)
             form.submit()
         }//create_btn_click-end
 
 
         
         function delete_btn_click(){
-            tasks_value.value = "DELETE"
+            tasks_value.value = "DEL-"
             form.submit()
         }//delete_btn_click-end
 
@@ -49,7 +49,7 @@
             module_task_box.style.display        = "none"
             module_newtask_box.style.display     = "none"
             module_pass_box.style.display        = "none"
-            module_result_box.style.display        = "none"
+            module_result_box.style.display      = "none"
             
             if (box_name == "module_show_box")
                 module_show_box.style.display = "block"
