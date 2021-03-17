@@ -19,22 +19,18 @@
             <button type="button" onclick="newtask_answer_btn_click(false)" style="width: 30px;">-</button>
         </div>
     </div>
-
-    <div style="margin:auto" id="newtask_btns">
-        <button type="button" onclick="newtask_create_btn_click()">Создать</button>
-        <button type="button" onclick="to_module_task_box()">Назад</button>
+    
+    <div class="flex" style="width: 100%;">
+        <div style="margin: auto;" id="newtask_btns">
+        </div>
     </div>
 </div>
 
 
 
 <script>
-    // const newtask_name        = document.getElementById("newtask_name")
-    // const newtask_content     = document.getElementById("newtask_content")
-    // const newtask_options     = document.getElementById("newtask_options")
-    // const newtask_btns        = document.getElementsByName("newtask_btns")
-    let   newtask_options_rad = document.getElementsByName("newtask_options_rad")
-    let   newtask_options_inp = document.getElementsByName("newtask_options_inp")
+    let newtask_options_rad = document.getElementsByName("newtask_options_rad")
+    let newtask_options_inp = document.getElementsByName("newtask_options_inp")
     
     var cur_edit
     var cur_task
