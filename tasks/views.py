@@ -33,7 +33,7 @@ def CreateModuleView(request):
 
         # is valid
         if len(Module.objects.filter(name=form.data['name'])):
-            return render(request, 'module.html', context)
+            return redirect(f'/tasks/create/')
             
         # create
         context['module'] = Module.objects.create(
@@ -100,27 +100,26 @@ def ShowModuleView(request, id):
             context['module'].delete()
             return redirect(f'/tasks/')
         #DEL-end
-        if form.data['tasks_value'][:4] == "NEW-":
-            form.data['tasks_value'] = form.data['tasks_value'][4:]
-            if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
-                return render(request, 'module.html', context)
-                
-            context['module'].name      = form.data['name']
-            context['module'].is_active = form.data.get('is_active', False)=="on"
-            context['module'].is_public = form.data.get('is_public', False)=="on"
-            context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to_value'].split('\r\n')))
-            context['module'].tasks.all().delete()
-            for task in json.loads(form.data['tasks_value']):
-                new_task = Task.objects.create(
-                    name = task['name'],
-                    content = task['content'],
-                    answer = task['answer'],
-                    options = task['options'],
-                )
-                context['module'].tasks.add(new_task)
-                
-            context['module'].save()
-            return redirect(f'/tasks/{id}/')
+        form.data['tasks_value'] = form.data['tasks_value'][4:]
+        if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
+            return render(request, 'module.html', context)
+            
+        context['module'].name      = form.data['name']
+        context['module'].is_active = form.data.get('is_active', False)=="on"
+        context['module'].is_public = form.data.get('is_public', False)=="on"
+        context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to_value'].split('\r\n')))
+        context['module'].tasks.all().delete()
+        for task in json.loads(form.data['tasks_value']):
+            new_task = Task.objects.create(
+                name = task['name'],
+                content = task['content'],
+                answer = task['answer'],
+                options = task['options'],
+            )
+            context['module'].tasks.add(new_task)
+            
+        context['module'].save()
+        return redirect(f'/tasks/{id}/')
         #NEW-del
     # POST-end
 

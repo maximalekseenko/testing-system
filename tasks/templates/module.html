@@ -24,14 +24,16 @@
         const module_result_box      = document.getElementById("module_result_box")
 
         var assigned_to_vars         = assigned_to_value.value.split("\n")
+        console.log(tasks_value)
         var tasks_vars               = JSON.parse(tasks_value.value).map(task=>task['fields'])
 
         to_module_show_box()
         
         
         function create_btn_click(){
+            if (!name.value) return undefined
             assigned_to_value.value = assigned_to_vars.join('\n')
-            tasks_value.value = "NEW-"+JSON.stringify(tasks_vars)
+            tasks_value.value = JSON.stringify(tasks_vars)
             form.submit()
         }//create_btn_click-end
 
