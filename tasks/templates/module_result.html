@@ -74,7 +74,7 @@
     }
 
     function result_save_btn_click(){
-            tasks_value.value = "RES-"+cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100
+            tasks_value.value = "RES-"+Math.floor(cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100)
             form.submit()
     }
 </script>
