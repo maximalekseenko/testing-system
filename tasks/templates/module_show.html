@@ -23,6 +23,12 @@
         <div>{{form.is_public.label}}:{{form.is_public}}</div>
     </div>
     
+    {% if action == "edit" %}
+    <div class="flex-col component2">
+        <input type="button" onclick="to_module_mark_box()" value="смотреть результаты">
+    </div>
+    {% endif %}
+
     <div class="flex" style="width: 100%;">
         <div style="margin: auto;">
             {% if action == "create" or action == "edit" %}

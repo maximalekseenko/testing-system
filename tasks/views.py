@@ -8,7 +8,7 @@ import json
 from static.py.view import get_base_context
 from .form import ModuleForm
 from .models import Task, Module
-from main.models import Group
+from main.models import Group, UserNote
 
 
 def CreateModuleView(request):
@@ -75,19 +75,22 @@ def ShowModuleView(request, id):
             'is_active':         request.POST.get('is_active', context['module'].is_active),
             'is_public':         request.POST.get('is_public', context['module'].is_public),
     })
-
+    context['marks'] = context['module'].marks.all()
     # POST
     if request.method == 'POST':
         form = context['form']
 
         if form.data['tasks_value'][:4] == "RES-":
             form.data['tasks_value'] = form.data['tasks_value'][4:]
-            if context['module'].marks.all().filter(user=request.user).count():
-                context['module'].marks.all().get(user=request.user).note=form.data['tasks_value']
+            print(context['module'].marks,context['module'].marks.filter(user=request.user))
+            if len(context['module'].marks.filter(user=request.user)):
+                mark = context['module'].marks.get(user=request.user)
+                mark.note=form.data['tasks_value']
+                mark.save()
             else:
-                context['module'].marks.all().create(user=request.user,note=form.data['tasks_value'])
+                context['module'].marks.add(UserNote.objects.create(user=request.user, note=form.data['tasks_value']))
             context['module'].save()
-        #RES-end
+        #RES-end=
 
         if Module.objects.get(id=id).author != request.user:
             return redirect(f"/tasks/{id}")

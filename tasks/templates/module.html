@@ -4,17 +4,20 @@
     <h1 align="center">{{pagename}}</h1>
     <form method="POST" id="form">
         {% csrf_token %}
+
         {% include 'module_show.html' %}
         {% include 'module_assigned_to.html' %}
         {% include 'module_task.html' %}
         {% include 'module_newtask.html' %}
+        {% include 'module_mark.html' %}
         {% include 'module_pass.html' %}
         {% include 'module_result.html' %}
+        
     </form>
 
 
     <script> 
-        const form     = document.getElementById("form")
+        const form = document.getElementById("form")
         //box
         const module_show_box        = document.getElementById("module_show_box")
         const module_assigned_to_box = document.getElementById("module_assigned_to_box")
@@ -22,9 +25,9 @@
         const module_newtask_box     = document.getElementById("module_newtask_box")
         const module_pass_box        = document.getElementById("module_pass_box")
         const module_result_box      = document.getElementById("module_result_box")
+        const module_mark_box        = document.getElementById("module_mark_box")
 
         var assigned_to_vars         = assigned_to_value.value.split("\n")
-        console.log(tasks_value)
         var tasks_vars               = JSON.parse(tasks_value.value).map(task=>task['fields'])
 
         to_module_show_box()
@@ -52,6 +55,7 @@
             module_newtask_box.style.display     = "none"
             module_pass_box.style.display        = "none"
             module_result_box.style.display      = "none"
+            module_mark_box.style.display      = "none"
             
             if (box_name == "module_show_box")
                 module_show_box.style.display = "block"
@@ -65,6 +69,8 @@
                 module_pass_box.style.display = "block"
             if (box_name == "module_result_box")
                 module_result_box.style.display = "block"
+            if (box_name == "module_mark_box")
+                module_mark_box.style.display = "block"
         }//switch_box-end
     </script>
 {% endblock %}
