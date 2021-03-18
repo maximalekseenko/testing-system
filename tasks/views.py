@@ -67,7 +67,7 @@ def ShowModuleView(request, id):
     # if not request.user.is_authenticated:
     #     return redirect("/accounts/register/")
     # context
-    context = get_base_context(request, 'Просмотр модуля', 'Сохравнить')
+    context = get_base_context(request, 'Просмотр модуля', 'Сохранить')
     try: context['module'] = Module.objects.get(id=id) 
     except Task.DoesNotExist: raise Http404
     context['action'] = "edit" if context['module'].author == request.user else "show"
@@ -90,6 +90,7 @@ def ShowModuleView(request, id):
                 context['module'].marks.all().get(user=request.user).note=form.data['tasks_value']
             else:
                 context['module'].marks.all().create(user=request.user,note=form.data['tasks_value'])
+            context['module'].save()
         #RES-end
 
         if Module.objects.get(id=id).author != request.user:
@@ -100,7 +101,7 @@ def ShowModuleView(request, id):
             context['module'].delete()
             return redirect(f'/tasks/')
         #DEL-end
-        form.data['tasks_value'] = form.data['tasks_value'][4:]
+        
         if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
             return render(request, 'module.html', context)
             
@@ -125,3 +126,7 @@ def ShowModuleView(request, id):
 
     return render(request, 'module.html', context) 
 #ShowModuleView-end
+
+
+def FindModuleView():
+    pass

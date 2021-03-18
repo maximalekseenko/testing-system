@@ -2,7 +2,7 @@
     {{ form.assigned_to.label }}:
     <div class="flex-col component2">
         <div class="flex-wrap flex-sb">
-            {% for group in my_groups %}
+            {% for group in modules_groups.keys %}
             <div>
                 <input type="checkbox" name="group_cb" value="{{group.name}}">
                 <input disabled value="{{group.name}}">
