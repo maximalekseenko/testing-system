@@ -1,0 +1,30 @@
+<div class="flex flex-col bigbox" id="module_mark_box">
+    Результат модуля {{module.name}}:
+    <div class="flex">
+        <div class="flex-col" id="mark_task_names">
+            <input disabled value="Пользователь">
+            {%for mark in marks%}
+            <input disabled value="{{mark.user}}">
+            {%endfor%}
+        </div>
+        <div class="flex-col" id="mark_cur_persent">
+            <input disabled value="Результат">
+            {%for mark in marks%}
+            <input disabled value="{{mark.note}}">
+            {%endfor%}
+        </div>
+    </div>
+    <div class="flex" style="width: 100%;">
+        <div style="margin: auto;">
+            <input type="button" onclick="to_module_show_box()" value="Назад">
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function to_module_mark_box(){
+        switch_box("module_mark_box")
+    }
+</script>

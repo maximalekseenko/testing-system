@@ -15,11 +15,9 @@ urlpatterns = [
     path('accounts/',                   accounts.AccoutView),
 #tasks
     #module
+    path('tasks/',                      tasks.FindModuleView),
     path('tasks/create/',               tasks.CreateModuleView),
     path('tasks/<int:id>/',             tasks.ShowModuleView),
-    #task
-    # path('tasks/<int:id>/create/',      tasks.CreateTaskView),
-    # path('tasks/<int:id>/<int:AAA>/',    tasks.ShowTaskView),
 #main
     #groups
     path('groups/create/',              main.CreateGroupView),

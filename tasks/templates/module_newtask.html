@@ -1,0 +1,145 @@
+<div class="flex flex-col bigbox" id="module_newtask_box">
+    <div class="flex-col">
+        Создать задачу:
+    </div>
+
+    <div class="flex component2">
+        Название: <input id="newtask_name">
+    </div>
+
+    <div class="flex-col component2">
+        Условие: <textarea id="newtask_content" style="resize: vertical; height: 150px;"></textarea>
+    </div>
+    
+    <div class="flex-col component2">
+        Ответы:<div class="flex-col" id="newtask_options"></div>
+        
+        <div style="margin-left: 15%;">
+            <button type="button" onclick="newtask_answer_btn_click(true)" style="width: 30px;">+</button>
+            <button type="button" onclick="newtask_answer_btn_click(false)" style="width: 30px;">-</button>
+        </div>
+    </div>
+    
+    <div class="flex" style="width: 100%;">
+        <div style="margin: auto;" id="newtask_btns">
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    let newtask_options_rad = document.getElementsByName("newtask_options_rad")
+    let newtask_options_inp = document.getElementsByName("newtask_options_inp")
+    
+    var cur_edit
+    var cur_task
+
+
+    function to_module_newtask_box(to_edit=""){
+        switch_box('module_newtask_box')
+        
+        cur_edit = to_edit
+
+        if (to_edit) {cur_task = tasks_vars.find(t=>t['name']==to_edit)
+            cur_task = {'name':cur_task['name'],'content':cur_task['content'],'answer':cur_task['answer'],'options':cur_task['options']}}
+        else cur_task = {'name':"",'content':"",'answer':0,'options':""}
+
+        //btns
+        newtask_btns.textContent = ''
+
+        var task_btn = document.createElement("button")
+        task_btn.type = "button"
+        task_btn.onclick = newtask_create_btn_click
+        task_btn.appendChild(document.createTextNode(to_edit?"Сохранить":"Создать"))
+        newtask_btns.appendChild(task_btn)
+
+        if (to_edit) {
+            task_btn = document.createElement("button")
+            task_btn.type = "button"
+            task_btn.onclick = newtask_delete_btn_click
+            task_btn.appendChild(document.createTextNode("Удалить"))
+            newtask_btns.appendChild(task_btn)
+        }
+        task_btn = document.createElement("button")
+        task_btn.type = "button"
+        task_btn.onclick = to_module_task_box
+        task_btn.appendChild(document.createTextNode("Назад"))
+        newtask_btns.appendChild(task_btn)
+        //fill html
+        newtask_name.value = cur_task['name']
+        newtask_content.value = cur_task['content']
+        newtask_options_set()
+        newtask_options_rad[cur_task['answer']].checked = true
+    }//to_module_newtask_box-end
+
+    
+    function newtask_create_btn_click(){
+        //fix values
+        if (newtask_name.value.length>20)
+            newtask_name.value=newtask_name.value.slice(0,20)
+
+        //set
+        cur_task['name']    = newtask_name.value
+        cur_task['content'] = newtask_content.value
+        cur_task['answer']  = Array.from(newtask_options_rad).findIndex(o=>o.checked)
+        cur_task['options'] = Array.from(newtask_options_inp).map(o=>o.value).join("\n")
+
+        //is valid
+        if (cur_task['name'] 
+        && cur_task['content'] 
+        && !tasks_vars.find(t=>t['name']==cur_task['name'] && !cur_edit)
+        && !Array.from(newtask_options_inp).some(o=>o.value=="")){
+            if(cur_edit) tasks_vars[tasks_vars.findIndex(t=>t['name']==cur_edit)] = cur_task
+            else tasks_vars.push(cur_task)
+            to_module_task_box()
+        }
+    }//newtask_create_btn_click-end
+
+
+    function newtask_delete_btn_click(){
+        tasks_vars.splice(tasks_vars.findIndex(t=>t['name']==cur_edit), 1)
+        to_module_task_box()
+    }//newtask_delete_btn_click-end
+
+
+    function newtask_answer_btn_click(create=false){
+        cur_task['options'] = Array.from(newtask_options_inp).map(o=>o.value)
+        
+        //add or remove
+        if (create) cur_task['options'].push("")
+        else if (cur_task['options'].length>1) cur_task['options'].pop()
+
+        cur_task['answer'] = Array.from(newtask_options_rad).findIndex(o=>o.checked)
+        if (cur_task['answer']>=cur_task['options'].length) cur_task['answer'] = 0
+    
+        cur_task['options'] = cur_task['options'].join("\n")
+        
+        newtask_options_set()
+    }//newtask_answer_btn_click-end
+
+
+    function newtask_options_set(){
+        var answer_list = cur_task['options'].split("\n")
+
+        //set elements on html
+        newtask_options.textContent = ''
+        answer_list.forEach(answer => {
+            var answer_div = document.createElement("div")
+
+            var answer_radio = document.createElement("input")
+            answer_radio.type = "radio"
+            answer_radio.name = "newtask_options_rad"
+            answer_div.appendChild(answer_radio)
+
+            var answer_inp = document.createElement("input")
+            answer_inp.value = answer
+            answer_inp.name = "newtask_options_inp"
+            answer_div.appendChild(answer_inp)
+
+            newtask_options.appendChild(answer_div)
+        })
+
+        newtask_options_rad[cur_task['answer']].checked = true
+    }//newtask_options_set-end
+</script>

@@ -36,6 +36,21 @@ class ModuleForm(forms.Form):
                 'style':    'resize: none; height: 150px;',
                 'id':       'assigned_to',
     }))#assigned_to-end
+<<<<<<< HEAD
+=======
+    
+    tasks_value = forms.CharField(
+        max_length=255,
+        widget=forms.HiddenInput(attrs={
+                'id':'tasks_value',
+    }))#tasks_value-end
+
+    assigned_to_value = forms.CharField(
+        max_length=255,
+        widget=forms.HiddenInput(attrs={
+                'id':'assigned_to_value',
+    }))#assigned_to_value-end
+>>>>>>> develop
 
     is_active = forms.BooleanField(
         label='Активен',
@@ -50,8 +65,9 @@ class ModuleForm(forms.Form):
         widget=forms.CheckboxInput(attrs={
                 'disabled': '',
                 'id':       'is_public',
-    }), required=False,initial=True
+        }), required=False,initial=True
     )#name-end
+<<<<<<< HEAD
 
 
 class AddTaskForm(forms.Form):
@@ -102,3 +118,5 @@ class AddTaskForm(forms.Form):
     #             'id':       'assigned_to',
     # }))#assigned_to-end
 
+=======
+>>>>>>> develop

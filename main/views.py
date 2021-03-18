@@ -59,10 +59,16 @@ def ShowGroupView(request, id):
         #is not owner
         if context['action'] != "edit":
             return redirect(f"/groups/{id}")
+
         #get data form POST
         form = GroupForm(request.POST)
         if len(Group.objects.filter(name=form.data['name'])) and Group.objects.filter(name=form.data['name'])[0].name != context['group'].name:
             return redirect('/groups/create/')
+
+        # if delete
+        if not form.data.get('members',""):
+            context['group'].delete()
+            return redirect('/')
         #save edited group
         context['group'].name   = form.data['name']
         context['group'].members.set(User.objects.filter(username__in=form.data['members'].split('\r\n')))

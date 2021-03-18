@@ -36,7 +36,11 @@ div#sider{
 }
 .bigbox {
     margin: auto; 
+<<<<<<< HEAD
     width: 500px;
+=======
+    width: 550px;
+>>>>>>> develop
     border-radius: 4px;
     border-color: #A0A0A0;
     background-color: #A0A0A0;

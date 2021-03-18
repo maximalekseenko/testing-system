@@ -1,0 +1,80 @@
+<div class="flex flex-col bigbox" id="module_result_box">
+    Результат модуля {{module.name}}:
+    <div class="flex">
+        <div class="flex-col" id="result_task_names"></div>
+        <div class="flex-col" id="result_cur_answers"></div>
+        <div class="flex-col" id="result_cor_answers"></div>
+    </div>
+    <div style="width: 100%" class="flex">
+        <a id="result_percent" style="margin: auto; font-size: 50px;"></a>
+    </div>
+    <div class="flex" style="width: 100%;">
+        <div style="margin: auto;">
+            <input type="button" onclick="result_save_btn_click()" value="Назад">
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    function to_module_result_box(){
+        switch_box("module_result_box")
+        
+        result_task_names.textContent  = ""
+        result_cur_answers.textContent = ""
+        result_cor_answers.textContent = ""
+        
+        var cor_answer_header      = document.createElement("input")
+        cor_answer_header.value    = "Ваш ответ"
+        cor_answer_header.disabled = true
+        
+        var cur_answer_header      = document.createElement("input")
+        cur_answer_header.value    = "Правильный ответ"
+        cur_answer_header.disabled = true
+        
+        var task_name_header       = document.createElement("input")
+        task_name_header.value     = "Название задачи"
+        task_name_header.disabled  = true
+
+        result_task_names.appendChild(task_name_header)
+        result_cur_answers.appendChild(cor_answer_header)
+        result_cor_answers.appendChild(cur_answer_header)
+        
+        cur_statistic.forEach(task => {
+            task["options"]=task["options"].split("\n")
+
+            var cur_answer      = document.createElement("input")
+            cur_answer.value    = task["options"][task["cur_answer"]]
+            cur_answer.style    = task["options"][task["cur_answer"]]==task["options"][task["answer"]]?"background-color: green;":"background-color: red;"
+            cur_answer.disabled = true
+            
+            var cor_answer      = document.createElement("input")
+            cor_answer.value    = task["options"][task["answer"]]
+            cor_answer.disabled = true
+
+            var task_name       = document.createElement("input")
+            task_name.value     = task["name"]
+            task_name.disabled  = true
+
+            result_task_names.appendChild(task_name)
+            result_cur_answers.appendChild(cur_answer)
+            result_cor_answers.appendChild(cor_answer)
+        })
+
+        result_percent.textContent = ""
+        percent=Math.floor(cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100)
+        result_percent.appendChild(document.createTextNode(percent+"%"))
+
+        if     (percent<20) result_percent.style = "margin:auto; font-size:40px; color:red;"
+        else if(percent<40) result_percent.style = "margin:auto; font-size:40px; color:orange;"
+        else if(percent<60) result_percent.style = "margin:auto; font-size:40px; color:yellow;"
+        else if(percent<80) result_percent.style = "margin:auto; font-size:40px; color:lime;"
+        else                result_percent.style = "margin:auto; font-size:40px; color:green;"
+    }
+
+    function result_save_btn_click(){
+            tasks_value.value = "RES-"+Math.floor(cur_statistic.filter(task=>task["options"][task["cur_answer"]]==task["options"][task["answer"]]).length/cur_statistic.length*100)
+            form.submit()
+    }
+</script>

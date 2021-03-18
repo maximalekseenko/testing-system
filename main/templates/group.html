@@ -2,7 +2,7 @@
 
 {% block content %}
     <h1 align="center">{{pagename}}</h1>
-    <form method="POST" onsubmit="return on_submit();">
+    <form method="POST" id="form">
         {% csrf_token %}
 
         <div class="flex flex-col box" style="margin: auto; width: 500px;">
@@ -31,14 +31,22 @@
                 </div>
                 {% endif %}
             </div>
-            {% if action == "create" or action == "edit" %}
-            <button type="submit" style="margin: 0% 30%;">{{buttonname}}</button>
-            {% endif %}
+            
+            <div class="flex" style="width: 100%;">
+                <div style="margin: auto;">
+                    {% if action == "create" or action == "edit" %}
+                    <input type="button" onclick="mem_create()" value={{buttonname}}>
+                    {% endif %}
+                    {% if action == "edit" %}
+                    <input type="button" onclick="mem_delete()" value="Удалить">
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </form>
 
 
-    <script>    
+    <script>
         let mem_name = document.getElementById("mem_name")
         let mem_author = document.getElementById("mem_author")
         let mem_edit_div = document.getElementById("mem_edit_div")
@@ -50,9 +58,16 @@
             mem_name.disabled = false
         }
         //submit
-        function on_submit() {
+        function mem_create() {
+            if (!mem_name.value) return undefined
+            if (mem_name.value.length>20) mem_name.value=mem_name.value.slice(0,20)
+
             mem_members.disabled = false
-            return true
+            form.submit()
+        }
+        function mem_delete() {
+            mem_members.disabled = true
+            form.submit()
         }
         //members_val
         function set_mem_members_val() {

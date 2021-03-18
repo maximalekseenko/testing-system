@@ -1,4 +1,5 @@
 <div class="flex flex-col bigbox" id="module_assigned_to_box">
+<<<<<<< HEAD
     <div class="flex-wrap flex-sb component2">
         {% for group in my_groups %}
         <div>
@@ -10,11 +11,29 @@
     
     <div style="margin: auto">
         <button type="button" onclick="switch_box_btn_click('module_show_box')">Назад</button>
+=======
+    {{ form.assigned_to.label }}:
+    <div class="flex-col component2">
+        <div class="flex-wrap flex-sb">
+            {% for group in modules_groups.keys %}
+            <div>
+                <input type="checkbox" name="group_cb" value="{{group.name}}">
+                <input disabled value="{{group.name}}">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="flex" style="width: 100%;">
+        <div style="margin: auto;">
+            <input type="button" onclick="from_module_assigned_to_box()" value="Назад">
+        </div>
+>>>>>>> develop
     </div>
 </div>
 
 
 <script>
+<<<<<<< HEAD
     function to_module_assigned_to_box(){
         group_cbs.forEach(group_cb => {
             if (assigned_to.value.split("\n").includes(group_cb.value)) 
@@ -24,4 +43,27 @@
     }
 
     const group_cbs = document.getElementsByName("group_cb")
+=======
+    const group_cbs = document.getElementsByName("group_cb")
+    
+    
+    function to_module_assigned_to_box(){
+        switch_box("module_assigned_to_box")
+        
+        group_cbs.forEach(group_cb => {
+            if (assigned_to_vars.includes(group_cb.value)) 
+                group_cb.checked = true
+        })
+    }
+    
+        function from_module_assigned_to_box(){
+            assigned_to_vars = []
+            group_cbs.forEach(cb=>{
+                if (cb.checked) 
+                    assigned_to_vars.push(cb.value)
+            })
+            
+            to_module_show_box()
+        }
+>>>>>>> develop
 </script>
