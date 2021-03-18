@@ -1,7 +1,9 @@
 <div class="box flex-col">
     Ваши Группы:
     {% if not my_groups %}
-        <p class="component">Пусто...</p>
+    <div class="component2">
+        У вас нет групп <a href="/groups/create">создать</a>
+    </div>
     {% endif %}
     {% for group in my_groups %}
         <div class="flex-col box">
@@ -13,7 +15,9 @@
 <div class="box flex-col">
     Ваши Модули:
     {% if not my_modules %}
-        <p class="component">Пусто...</p>
+    <div class="component2">
+        У вас нет модулей <a href="/tasks/create">создать</a>
+    </div>
     {% endif %}
     {% for module in my_modules %}
         <div class="flex-col box">
@@ -33,7 +37,7 @@
 <div class="flex-col box">
     Модули по группам:
     {% if not modules_groups %}
-        <p class="component">Вы не состоите ни в одной группе!</p>
+        <p class="component2">Вы не состоите ни в одной группе!</p>
     {% endif %}
     {% for group, modules in modules_groups.items %}
     <div class="flex-col box">
