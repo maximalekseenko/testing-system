@@ -35,6 +35,8 @@
         
         function create_btn_click(){
             if (!name.value) return undefined
+            if (name.value.length>23) return undefined
+
             assigned_to_value.value = assigned_to_vars.join('\n')
             tasks_value.value = JSON.stringify(tasks_vars)
             form.submit()
