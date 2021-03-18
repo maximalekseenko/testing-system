@@ -13,7 +13,7 @@ def get_base_context(request, pagename, buttonname=""):
 
     if request.user.is_authenticated:
         context['my_modules']     = Module.objects.filter(author=request.user)
-        # context['groups']         = Group.objects.filter(members__id=request.user.id)
+        context['my_groups']      = Group.objects.filter(author__id=request.user.id)
         context['modules_groups'] = {group:set(Module.objects.filter(is_active=True, assigned_to=group)) for group in Group.objects.filter(members__id=request.user.id)}
 
     return context

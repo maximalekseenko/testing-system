@@ -1,4 +1,16 @@
 <div class="box flex-col">
+    Ваши Группы:
+    {% if not my_groups %}
+        <p class="component">Пусто...</p>
+    {% endif %}
+    {% for group in my_groups %}
+        <div class="flex-col box">
+            <a class="component2" href="/tasks/{{group.id}}">{{group.name}}</a>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="box flex-col">
     Ваши Модули:
     {% if not my_modules %}
         <p class="component">Пусто...</p>
@@ -6,12 +18,14 @@
     {% for module in my_modules %}
         <div class="flex-col box">
             <a class="component2" href="/tasks/{{module.id}}">{{module.name}}</a>
-            {%if module.is_active%}
-                <a class="component">Активный</a>
-            {%endif%} 
-            {%if module.is_public%}
-                <a class="component">Публичный</a>
-            {%endif%} 
+            <div class="flex">
+                {%if module.is_active%}
+                    <a class="component">Активный</a>
+                {%endif%} 
+                {%if module.is_public%}
+                    <a class="component">Публичный</a>
+                {%endif%} 
+            </div>
         </div>
     {% endfor %}
 </div>

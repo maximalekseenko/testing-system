@@ -1,0 +1,22 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+    <form method="POST" id="form">
+        {% csrf_token %}
+        <div class="flex-col bigbox" id="module_newtask_box">
+            <div class="flex component2">
+                <input name="to_search">
+                <input type="submit" value="найти">
+            </div>
+
+            <div class="flex-col component2">
+                {%for module in to_show%}
+                <div class="flex component">
+                    <a href="/tasks/{{module.id}}/">{{module.name}}</a>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+    </form>
+{% endblock %}

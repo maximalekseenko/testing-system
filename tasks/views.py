@@ -63,10 +63,6 @@ def CreateModuleView(request):
 
 
 def ShowModuleView(request, id):
-    # is auth
-    # if not request.user.is_authenticated:
-    #     return redirect("/accounts/register/")
-    # context
     context = get_base_context(request, 'Просмотр модуля', 'Сохранить')
     try: context['module'] = Module.objects.get(id=id) 
     except Task.DoesNotExist: raise Http404
@@ -128,5 +124,11 @@ def ShowModuleView(request, id):
 #ShowModuleView-end
 
 
-def FindModuleView():
-    pass
+def FindModuleView(request):
+    context = get_base_context(request, 'Найти модуль')
+    context['to_find'] = request.POST.get('to_search', "")
+    if request.method == 'POST':
+        context['to_show'] = sorted(Module.objects.filter(is_active=True,is_public=True, name__startswith=request.POST['to_search']), key=lambda m: m.creation_date, reverse=True)[:10]
+    else:
+        context['to_show'] = sorted(Module.objects.filter(is_active=True,is_public=True), key=lambda m: m.creation_date, reverse=True)[:10]
+    return render(request, 'module_find.html', context) 
