@@ -9,8 +9,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'u3ngg!ph*(pru(l_$c+wd@dze9^f1btuk+72wfdi*3+t6gjupv'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-ALLOWED_HOSTS = []
+DEBUG = False
+ALLOWED_HOSTS = ['harmonica.ru']
 
 
 # Application definition
