@@ -1,17 +1,4 @@
 <div class="flex flex-col bigbox" id="module_assigned_to_box">
-<<<<<<< HEAD
-    <div class="flex-wrap flex-sb component2">
-        {% for group in my_groups %}
-        <div>
-            <input type="checkbox" name="group_cb" value="{{group.name}}">
-            <input disabled value="{{group.name}}">
-        </div>
-        {% endfor %}
-    </div>
-    
-    <div style="margin: auto">
-        <button type="button" onclick="switch_box_btn_click('module_show_box')">Назад</button>
-=======
     {{ form.assigned_to.label }}:
     <div class="flex-col component2">
         <div class="flex-wrap flex-sb">
@@ -27,23 +14,11 @@
         <div style="margin: auto;">
             <input type="button" onclick="from_module_assigned_to_box()" value="Назад">
         </div>
->>>>>>> develop
     </div>
 </div>
 
 
 <script>
-<<<<<<< HEAD
-    function to_module_assigned_to_box(){
-        group_cbs.forEach(group_cb => {
-            if (assigned_to.value.split("\n").includes(group_cb.value)) 
-                group_cb.checked = true
-        })
-        group_cbs.forEach(group_cb => console.log(group_cb.checked))
-    }
-
-    const group_cbs = document.getElementsByName("group_cb")
-=======
     const group_cbs = document.getElementsByName("group_cb")
     
     
@@ -65,5 +40,4 @@
             
             to_module_show_box()
         }
->>>>>>> develop
 </script>

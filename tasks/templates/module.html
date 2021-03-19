@@ -4,12 +4,6 @@
     <h1 align="center">{{pagename}}</h1>
     <form method="POST" id="form">
         {% csrf_token %}
-<<<<<<< HEAD
-        {% include 'module_show.html' %}
-        {% include 'module_assigned_to.html' %}
-        {% include 'module_task.html' %}
-    </form>
-=======
 
         {% include 'module_show.html' %}
         {% include 'module_assigned_to.html' %}
@@ -48,7 +42,6 @@
             form.submit()
         }//create_btn_click-end
 
->>>>>>> develop
 
         
         function delete_btn_click(){
@@ -57,35 +50,6 @@
         }//delete_btn_click-end
 
 
-<<<<<<< HEAD
-    <script> 
-        //box
-        const module_show_box           = document.getElementById("module_show_box")
-        const module_assigned_to_box    = document.getElementById("module_assigned_to_box")
-        const module_task_box           = document.getElementById("module_task_box")
-
-        module_assigned_to_box.style.display = "none"
-        module_task_box.style.display = "none"
-        
-        function switch_box_btn_click(box_name){
-            module_show_box.style.display        = "none"
-            module_assigned_to_box.style.display = "none"
-            module_task_box.style.display        = "none"
-            
-            if (box_name == "module_show_box"){
-                module_show_box.style.display = "block"
-                to_module_show_box()
-            }
-            if (box_name == "module_assigned_to_box") {
-                module_assigned_to_box.style.display = "block"
-                to_module_assigned_to_box()
-            }
-            if (box_name == "module_task_box") {
-                module_task_box.style.display = "block"
-                to_module_task_box()
-            }
-        }
-=======
         function switch_box(box_name){
             module_show_box.style.display        = "none"
             module_assigned_to_box.style.display = "none"
@@ -110,6 +74,5 @@
             if (box_name == "module_mark_box")
                 module_mark_box.style.display = "block"
         }//switch_box-end
->>>>>>> develop
     </script>
 {% endblock %}

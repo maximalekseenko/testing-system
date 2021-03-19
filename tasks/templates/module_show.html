@@ -1,15 +1,5 @@
 <div class="flex flex-col bigbox" id="module_show_box">
     <div class="flex-sb component2">
-<<<<<<< HEAD
-        <div>{{ form.author.label }}:{{ form.author }}</div>
-        <div>{{ form.name.label }}:{{ form.name }}</div>
-    </div>
-
-    <div class="flex-col component2">
-        <div class="flex-col">{{ form.assigned_to.label }}:{{ form.assigned_to }}</div>
-        {% if action == "create" or action == "edit" %}
-        <button type="button" onclick="switch_box_btn_click('module_assigned_to_box')">Редактировать</button>
-=======
         <div>{{form.author.label}}:{{form.author}}</div>
         <div>{{form.name.label}}:{{form.name}}</div>
     </div>
@@ -18,41 +8,17 @@
         <div class="flex-col">{{form.assigned_to.label}}:{{form.assigned_to}}{{form.assigned_to_value}}</div>
         {% if action == "create" or action == "edit" %}
             <button type="button" onclick="to_module_assigned_to_box()">Редактировать</button>
->>>>>>> develop
         {% endif %}
     </div>
 
     <div class="flex-col component2">
-<<<<<<< HEAD
-        <div class="flex-col">{{ form.tasks.label }}:{{ form.tasks }}</div>
-        {% if action == "create" or action == "edit" %}
-        <button type="button" onclick="switch_box_btn_click('module_task_box')">Редактировать</button>
-=======
         <div class="flex-col">{{form.tasks.label}}:{{form.tasks}}{{form.tasks_value}}</div>
         {% if action == "create" or action == "edit" %}
             <button type="button" onclick="to_module_task_box()">Редактировать</button>
->>>>>>> develop
         {% endif %}
     </div>
     
     <div class="flex-col component2">
-<<<<<<< HEAD
-        <div>{{ form.is_active.label }}:{{ form.is_active }}</div>
-        <div>{{ form.is_public.label }}:{{ form.is_public }}</div>
-    </div>
-    
-    <div style="margin: auto">
-        {% if action == "create" or action == "edit" %}
-        <button type="submit">{{buttonname}}</button>
-        {% endif %}
-        {% if action == "edit" %}
-        <button type="submit" onclick="delete_btn_click()">Удалить</button>
-        {% endif %}
-        <input type="hidden" value="{{action}}" id="action">
-    </div>
-</div>
-
-=======
         <div>{{form.is_active.label}}:{{form.is_active}}</div>
         <div>{{form.is_public.label}}:{{form.is_public}}</div>
     </div>
@@ -77,38 +43,21 @@
         </div>
     </div>
 </div>
->>>>>>> develop
 
 
 <script>
     function to_module_show_box(){
-<<<<<<< HEAD
-        //from module_assigned_to_box
-        assigned_to.value = ""
-        group_cbs.forEach(group_cb => {
-            if (group_cb.checked) 
-                assigned_to.value += group_cb.value + "\n"
-        })
-        //from module_assigned_to_box
-=======
         switch_box("module_show_box")
         assigned_to.value = ""
         assigned_to_vars.forEach(name=>assigned_to.value += name + "\n")
         
         tasks.value = ""
         tasks_vars.forEach(task=>tasks.value += task['name'] + "\n")
->>>>>>> develop
     }
 
     //form elements
     const name        = document.getElementById("name")
     const author      = document.getElementById("author")
-<<<<<<< HEAD
-    const tasks       = document.getElementById("tasks")
-    const assigned_to = document.getElementById("assigned_to")
-    const is_public   = document.getElementById("is_public")
-    const is_active   = document.getElementById("is_active")
-=======
     const assigned_to = document.getElementById("assigned_to")
     const tasks       = document.getElementById("tasks")
     const is_public   = document.getElementById("is_public")
@@ -116,51 +65,10 @@
     
     const tasks_value       = document.getElementById("tasks_value")
     const assigned_to_value = document.getElementById("assigned_to_value")
->>>>>>> develop
 
     if ("{{action}}" == "edit" || "{{action}}" == "create"){
         name.disabled = false
         is_public.disabled = false
         is_active.disabled = false
     }
-<<<<<<< HEAD
-    // //old
-
-    // let assigned_to_select  = document.getElementById("assigned_to_select")
-    // let ass_data 
-
-    // ass_data =assigned_to.value.split("\r\n")
-
-    // //submit
-    // function delete_btn_click() {
-    //     console.log("AAA")
-    //     assigned_to.disabled = false
-    //     return true
-    // }
-
-    // function on_submit() {
-    //     console.log("sob")
-    //     assigned_to.disabled = false
-    //     return true
-    // }
-    // //assigned_to_val
-    // function set_assigned_to_val() {
-    //     assigned_to.value=""
-    //     for (let i = 0; i < ass_data.length; i++)
-    //         assigned_to.value += ass_data[i] + "\n"
-    // }
-    // function assigned_to_add_btn_click(){
-    //     var assigned_to_select_val = assigned_to_select.options[assigned_to_select.selectedIndex].text;
-    //     if (!ass_data.includes(assigned_to_select_val)){
-    //         ass_data.push(assigned_to_select_val)
-    //         set_assigned_to_val()
-    // }}
-    // function assigned_to_rem_btn_click(){
-    //     var assigned_to_select_val = assigned_to_select.options[assigned_to_select.selectedIndex].text;
-    //     if (ass_data.includes(assigned_to_select_val)){
-    //         ass_data.splice(ass_data.indexOf(assigned_to_select_val), 1)
-    //         set_assigned_to_val()
-    // }}
-=======
->>>>>>> develop
 </script>
