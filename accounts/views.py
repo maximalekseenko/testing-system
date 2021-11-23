@@ -56,6 +56,5 @@ def AccoutView(request):
             'username'  : request.user.username,
             'status'    : request.user.userprofile.status,
             'bio'       : request.user.userprofile.bio,
-            'metall'    : request.user.userprofile.metall,
     })
     return render(request, 'account.html', context)

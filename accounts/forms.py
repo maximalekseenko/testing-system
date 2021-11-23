@@ -36,8 +36,3 @@ class AccountForm(forms.Form):
         max_length=64,
         widget=forms.TextInput()
     )#bio-end
-    metall = forms.CharField(
-        label='Metall',
-        max_length=64,
-        widget=forms.TextInput()
-    )#metall-end

@@ -8,8 +8,7 @@ class UserProfile(models.Model):
     user        = models.OneToOneField(User, on_delete=models.CASCADE)
     user_type   = models.CharField(max_length=32)
     status      = models.CharField(max_length=64, default='exist')
-    bio         = models.CharField(max_length=64, default='is weak')
-    metall      = models.CharField(max_length=64, default='is strong')
+    bio         = models.CharField(max_length=64, default='just born')
     
 def create_profile(sender,**kwargs):
     if kwargs['created']:
