@@ -8,7 +8,8 @@ import json
 from static.py.view import get_base_context
 from .form import ModuleForm
 from .models import Task, Module
-from main.models import Group, UserNote
+from main.models import UserNote
+from groups.models import Group
 
 
 def CreateModuleView(request):

@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
-import  main.views      as  main,\
-        accounts.views  as  accounts,\
-        tasks.views     as  tasks
+import  main.views      as main,\
+        groups.views    as groups,\
+        accounts.views  as accounts,\
+        tasks.views     as tasks
 
 
 urlpatterns = [
@@ -20,8 +21,10 @@ urlpatterns = [
     path('tasks/<int:id>/',             tasks.ShowModuleView),
 #main
     #groups
-    path('groups/create/',              main.CreateGroupView),
-    path('groups/<int:id>/',            main.ShowGroupView),
+    path('groups/',                     groups.HomeView),
+    path('groups/invite/<int:id>/',     groups.InviteView),
+    path('groups/<int:id>/',            groups.ShowView),
+    path('groups/create/',              groups.CreateView),
     #home
     path('' ,                           main.HomeView),
 

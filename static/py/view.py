@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from tasks.models import Module
-from main.models import Group
+from groups.models import Group
 
 
 def get_base_context(request, pagename, buttonname=""):

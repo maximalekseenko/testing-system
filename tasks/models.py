@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 #app
-from main.models import Group, UserNote
+from main.models import UserNote
 
 class Task(models.Model):
     name          = models.CharField(max_length=64, default = "Имя")
@@ -15,9 +15,8 @@ class Module(models.Model):
     name          = models.CharField(max_length=64, default="Новый модуль")
     author        = models.ForeignKey(User, on_delete=models.CASCADE)
     #lists
-    marks         = models.ManyToManyField(UserNote, blank=True)
+    # marks         = models.ManyToManyField(UserNote, blank=True)
     tasks         = models.ManyToManyField(Task, blank=True)
-    assigned_to   = models.ManyToManyField(Group, blank=True)
     #data
     creation_date = models.DateTimeField(auto_now_add=True)
     #bool
