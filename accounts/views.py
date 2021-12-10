@@ -4,25 +4,23 @@ from django.contrib.auth.forms import UserCreationForm
 from static.py.view import get_base_context
 from .forms import AccountForm
 
-
 def LoginView(request):
+    context = get_base_context(request)
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            #login
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
+        print(request.POST)
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
             login(request, user)
-            #login-end
             return redirect('/')
-    else:
-        form = UserCreationForm()
+        else:
+            context['login_error'] = True
+    return render(request, 'registration/login.html', context)
 
-
+        
 def RegisterView(request):
-    context = get_base_context(request, "Регистрация")
+    context = get_base_context(request)
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():

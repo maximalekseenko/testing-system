@@ -14,23 +14,44 @@ def is_user_pure_for_page(request):
     if not request.user.is_authenticated: return False
     return True
 
+
 def is_user_registred(request):
     if not request.user.is_authenticated: return False
     return True
+
 
 def is_user_authenticated(request):#fix
     if not request.user.is_authenticated: return False
     return True
 
-def get_base_context(request, pagename, buttonname=""):
+
+def get_base_context(request, pagename="", buttonname=""):
     context = {}
+    #old
     context['pagename']    = pagename
     context['buttonname']  = buttonname
     context['user']        = request.user
     context['all_modules'] = Module.objects.filter(is_public=True, is_active=True)
-
-
+    #sider content
     if request.user.is_authenticated:
         context['my_groups']      = [[group, getattr(group,'moduls').count()] for group in Group.objects.filter(members__id=request.user.id)]
         context['new_modules']    = Module.objects.filter(author=request.user)
+    #languesge content
+    if True:
+        #account
+        context['tr_registration'] = "Регистрация"
+        context['tr_register'] = "Зарегистрироваться"
+        context['tr_signin'] = "Войти"
+        context['tr_username'] = "Имя пользователя"
+        context['tr_password1'] = "Пароль"
+        context['tr_password2'] = "Подтверждение пароля"
+    else:
+        context['tr_registration'] = "Registration"
+        context['tr_register'] = "Register"
+        context['tr_username'] = "Username"
+        context['tr_password1'] = "Password"
+        context['tr_password2'] = "Password confirmation"
+
+
+
     return context

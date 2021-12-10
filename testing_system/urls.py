@@ -10,7 +10,7 @@ import  main.views      as main,\
 urlpatterns = [
     path('admin/', admin.site.urls),
 #accounts
-    path('accounts/login/',             LoginView.as_view()),
+    path('accounts/login/',             accounts.LoginView),
     path('accounts/logout/',            LogoutView.as_view()),
     path('accounts/register/',          accounts.RegisterView),
     path('accounts/',                   accounts.AccoutView),
