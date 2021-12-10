@@ -1,7 +1,26 @@
 from django.shortcuts import render, redirect
 from tasks.models import Module
 from groups.models import Group
+from string import ascii_letters, digits, punctuation
+from random import sample
 
+
+def get_new_key(length=16):
+    all = ascii_letters + digits + punctuation
+    return "".join(sample(all,length))
+
+
+def is_user_pure_for_page(request):
+    if not request.user.is_authenticated: return False
+    return True
+
+def is_user_registred(request):
+    if not request.user.is_authenticated: return False
+    return True
+
+def is_user_authenticated(request):#fix
+    if not request.user.is_authenticated: return False
+    return True
 
 def get_base_context(request, pagename, buttonname=""):
     context = {}
@@ -12,11 +31,6 @@ def get_base_context(request, pagename, buttonname=""):
 
 
     if request.user.is_authenticated:
-        # context['group-module_dic'] = {group:module Group.objects.filter(author__id=request.user.id)}
-        # context['modules_groups'] = {group:set(Module.objects.filter(is_active=True, assigned_to=group)) for group in Group.objects.filter(members__id=request.user.id)}
-
-        context['my_modules']     = Module.objects.filter(author=request.user)
-        context['my_groups']      = Group.objects.filter(author__id=request.user.id)
-        context['modules_groups'] = {group:set(Module.objects.filter(is_active=True, assigned_to=group)) for group in Group.objects.filter(members__id=request.user.id)}
-
+        context['my_groups']      = [[group, getattr(group,'moduls').count()] for group in Group.objects.filter(members__id=request.user.id)]
+        context['new_modules']    = Module.objects.filter(author=request.user)
     return context

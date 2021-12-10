@@ -1,27 +1,27 @@
-from django import forms
+from django.forms import Form, MultiWidget,\
+    CharField, TextInput, Textarea
 
 
-class GroupForm(forms.Form):
-
-    name = forms.CharField(
-        label='Название',
-        max_length=64,
-        widget=forms.TextInput(attrs={
-                'disabled': '',
-                'id':       'mem_name',
-    }))#name-end
-    author = forms.CharField(
+class GroupForm(Form):
+    author = CharField(
         label='Автор',
         max_length=64,
-        widget=forms.TextInput(attrs={
+        widget=TextInput(attrs={
                 'disabled': '',
-                'id':       'mem_author',
+                'id':       'gru_author',
     }))#name-end
-    members = forms.CharField(
+    name = CharField(
+        label='Название',
+        max_length=64,
+        widget=TextInput(attrs={
+                'disabled': '',
+                'id':       'gru_name',
+    }))#name-end
+    members = CharField(
         label='Участники',
         max_length=32,
-        widget=forms.Textarea(attrs={
+        widget=Textarea(attrs={
                 'disabled': '',
                 'style':    'resize: none; height: 150px;',
-                'id':       'mem_members',
-        } ) )
+                'id':       'gru_members',
+    }))

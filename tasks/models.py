@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
-#app
-from main.models import UserNote
+from django.utils import timezone
+
 
 class Task(models.Model):
     name          = models.CharField(max_length=64, default = "Имя")
@@ -14,14 +14,15 @@ class Task(models.Model):
 class Module(models.Model):
     name          = models.CharField(max_length=64, default="Новый модуль")
     author        = models.ForeignKey(User, on_delete=models.CASCADE)
-    #lists
-    # marks         = models.ManyToManyField(UserNote, blank=True)
-    tasks         = models.ManyToManyField(Task, blank=True)
-    #data
-    creation_date = models.DateTimeField(auto_now_add=True)
+    description = models.CharField(max_length=256, default="AAAA")
+    creation_date = models.DateTimeField(default=timezone.now())
+    #vars
+    tasks         = models.JSONField(default={})
     #bool
-    is_active     = models.BooleanField(default=True)
     is_public     = models.BooleanField(default=False)
+    is_active     = models.BooleanField(default=False)
+    #key
+    key           = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)
     
     def is_assigned(self, user:User):
         groups = self.assigned_to.filter(members__id=user.id)

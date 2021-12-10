@@ -1,20 +1,19 @@
 from django.shortcuts import render, redirect
-from static.py.view import get_base_context
+from static.py.view import get_base_context,is_user_pure_for_page
 from django.contrib.auth.models import User
 from .models import Group
 from .form import GroupForm
 import json
 
-def HomeView(request):  pass
-def InviteView(request):  pass
-def ShowView(request):  pass
+def HomeView(request): pass
+def InviteView(request): pass
 
 def CreateView(request):
-    if not request.user.is_authenticated:
+    if not is_user_pure_for_page:
         return redirect("/accounts/register/")
 
     context = get_base_context(request, 'Создание группы', 'Создать')
-    context['action']    = "create"
+    context['action'] = "create"
     
     if request.method == 'POST':
         form = GroupForm(request.POST)
@@ -24,6 +23,7 @@ def CreateView(request):
             name   = form.data['name'],
             author = request.user
         )
+        print("AAA")
         new_group.members.set(User.objects.filter(username__in=form.data['members'].split('\r\n')))
         new_group.save()    #save new group
         id = new_group.id   #show new group
@@ -36,11 +36,11 @@ def CreateView(request):
         } )
     context['all_users'] = User.objects.all()
     context['members']   = request.user
-    return render(request, 'group.html', context)
+    return render(request, 'group_create.html', context)
 #CreateGroupView-end
 
 
-def ShowGroupView(request, id):
+def ShowView(request, id):
     if not request.user.is_authenticated:
         return redirect("/accounts/register/")
         
