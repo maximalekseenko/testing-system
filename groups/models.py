@@ -14,5 +14,5 @@ class Group(models.Model):
     members         = models.ManyToManyField(User, related_name="members", blank=True)
     moduls          = models.ManyToManyField(Module, related_name="moduls", blank=True)
     moduls_data     = models.JSONField(default={})
-    #key
-    key             = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)
+    #id
+    id             = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)

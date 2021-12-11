@@ -24,11 +24,11 @@ def CreateView(request):
             new_group = Group.objects.create(   
                 name   = name,
                 author = request.user,
-                key = get_new_key()
+                id = get_new_key()
             )
         except IntegrityError: pass
         new_group.save()  
-        id = new_group.key  
+        id = new_group.id  
         return redirect(f'/groups/{id}/')
     #if POST-end
     return render(request, 'group_create.html', context)
