@@ -21,9 +21,10 @@ def CreateView(request):
         if len(Group.objects.filter(name=name, author=request.user)):
             return redirect('/groups/create/')
         try:
-            new_group = Group.objects.create(   
+            new_group = Group.objects.create(
                 name   = name,
                 author = request.user,
+                description = description,
                 id = get_new_key()
             )
         except IntegrityError: pass
