@@ -16,11 +16,9 @@ def CreateView(request):
     context = get_base_context(request, 'Создание группы', 'Создать')
     
     if request.method == 'POST':
-        a = [1]
         name = request.POST['name']
         description = request.POST['description']
         if len(Group.objects.filter(name=name, author=request.user)):
-            context['errors'] = context["tr_err_name_exist"]
             return redirect('/groups/create/')
         try:
             new_group = Group.objects.create(   
