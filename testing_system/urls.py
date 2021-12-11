@@ -14,18 +14,16 @@ urlpatterns = [
     path('accounts/logout/',            LogoutView.as_view()),
     path('accounts/register/',          accounts.RegisterView),
     path('accounts/',                   accounts.AccoutView),
+#groups
+    path('groups/',                     groups.HomeView),
+    path('groups/create/',              groups.CreateView),
+    path('groups/<str:id>/',            groups.ShowView),
+    path('groups/invite/<str:id>/',     groups.InviteView),
 #tasks
-    #module
     path('tasks/',                      tasks.FindModuleView),
     path('tasks/create/',               tasks.CreateModuleView),
     path('tasks/<int:id>/',             tasks.ShowModuleView),
 #main
-    #groups
-    path('groups/',                     groups.HomeView),
-    path('groups/invite/<int:id>/',     groups.InviteView),
-    path('groups/<int:id>/',            groups.ShowView),
-    path('groups/create/',              groups.CreateView),
-    #home
     path('' ,                           main.HomeView),
 
 ]

@@ -1,71 +1,30 @@
 {% extends './base.html' %}
 
 {% block content %}
-    <h1 align="center">Создание группы</h1>
+    <h1 align="center">{{tr_group_creation}}</h1>
     <form method="POST" id="form">
         {% csrf_token %}
         <div class="flex flex-col box" style="margin: auto; width: 500px;">
-
-            <div class="flex component2">
-                {{ form.author.label }}: 
-                {{ form.author }}
+            <div class="flex flex-sb component2">
+                <input id="id_name" name="name" type="text" placeholder="{{tr_group_name}}" maxlength="32" style="width: 50%"/>
+                <div>
+                    {{tr_author}}: 
+                    <input value="{{user}}" disabled=true/>
+                </div>
             </div>
-
             <div class="flex component2">
-                {{ form.name.label }}: 
-                {{ form.name }}
+                <textarea id="id_description" name="description" placeholder="{{tr_description}}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
             </div>
+            {% for error in errors %}
+            <a>{{error}}</a>
+            {% endfor %}
             
             <div class="flex" style="width: 100%;">
                 <div style="margin: auto;">
-                    <input type="submit" value={{Создать}}>
+                    <input type="submit" value={{tr_create}}>
                 </div>
             </div>
         </div>
     </form>
-
-
-    <script>
-        let mem_name = document.getElementById("gru_name")
-        let mem_author = document.getElementById("mem_author")
-        let mem_edit_div = document.getElementById("mem_edit_div")
-        let mem_members = document.getElementById("mem_members")
-        let mem_select = document.getElementById("mem_select")
-        let mem_data = "{{members}}".split(" ")
-        //edit
-        if ("{{user.username}}" == "{{group.author.username}}" || "{{action}}" == "create"){
-            mem_name.disabled = false
-        }
-        //submit
-        function mem_create() {
-            if (!mem_name.value) return undefined
-            if (mem_name.value.length>20) mem_name.value=mem_name.value.slice(0,20)
-
-            mem_members.disabled = false
-            form.submit()
-        }
-        function mem_delete() {
-            mem_members.disabled = true
-            form.submit()
-        }
-        //members_val
-        function set_mem_members_val() {
-            mem_members.value=""
-            for (let i=0;i<mem_data.length;i++)
-                mem_members.value += mem_data[i]+"\n"
-        }
-        function mem_add_btn_click(){
-            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
-            if (!mem_data.includes(mem_select_val)){
-                mem_data.push(mem_select_val)
-                set_mem_members_val()
-        }}
-        function mem_rem_btn_click(){
-            var mem_select_val = mem_select.options[mem_select.selectedIndex].text;
-            if (mem_data.includes(mem_select_val) && mem_select_val != "{{user.username}}"){
-                mem_data.splice(mem_data.indexOf(mem_select_val),1)
-                set_mem_members_val()
-        }}
-    </script>
 
 {% endblock %}

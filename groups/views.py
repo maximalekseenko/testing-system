@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
-from static.py.view import get_base_context,is_user_pure_for_page
+from static.py.view import get_base_context, is_user_registred, get_new_key
+from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
 from .models import Group
 from .form import GroupForm
@@ -9,33 +10,29 @@ def HomeView(request): pass
 def InviteView(request): pass
 
 def CreateView(request):
-    if not is_user_pure_for_page:
+    if not is_user_registred(request):
         return redirect("/accounts/register/")
 
     context = get_base_context(request, 'Создание группы', 'Создать')
-    context['action'] = "create"
     
     if request.method == 'POST':
-        form = GroupForm(request.POST)
-        if len(Group.objects.filter(name=form.data['name'])):
+        a = [1]
+        name = request.POST['name']
+        description = request.POST['description']
+        if len(Group.objects.filter(name=name, author=request.user)):
+            context['errors'] = context["tr_err_name_exist"]
             return redirect('/groups/create/')
-        new_group = Group.objects.create(   #create new group
-            name   = form.data['name'],
-            author = request.user
-        )
-        print("AAA")
-        new_group.members.set(User.objects.filter(username__in=form.data['members'].split('\r\n')))
-        new_group.save()    #save new group
-        id = new_group.id   #show new group
+        try:
+            new_group = Group.objects.create(   
+                name   = name,
+                author = request.user,
+                key = get_new_key()
+            )
+        except IntegrityError: pass
+        new_group.save()  
+        id = new_group.key  
         return redirect(f'/groups/{id}/')
     #if POST-end
-    context['form'] = GroupForm(initial={
-            'name'      : "",
-            'author'    : request.user,
-            'members'   : request.user,
-        } )
-    context['all_users'] = User.objects.all()
-    context['members']   = request.user
     return render(request, 'group_create.html', context)
 #CreateGroupView-end
 

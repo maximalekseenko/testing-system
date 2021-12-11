@@ -6,7 +6,7 @@ from random import sample
 
 
 def get_new_key(length=16):
-    all = ascii_letters + digits + punctuation
+    all = ascii_letters + digits
     return "".join(sample(all,length))
 
 
@@ -38,6 +38,8 @@ def get_base_context(request, pagename="", buttonname=""):
         context['new_modules']    = Module.objects.filter(author=request.user)
     #languesge content
     if True:
+        #errors
+        context['tr_err_name_exist'] = "Имя уже занято"
         #account
         context['tr_registration'] = "Регистрация"
         context['tr_register'] = "Зарегистрироваться"
@@ -45,6 +47,13 @@ def get_base_context(request, pagename="", buttonname=""):
         context['tr_username'] = "Имя пользователя"
         context['tr_password1'] = "Пароль"
         context['tr_password2'] = "Подтверждение пароля"
+        #groups
+        context['tr_group_creation'] = "Создание группы"
+        context['tr_author'] = "Автор"
+        context['tr_group_name'] = "Название группы"
+        context['tr_description'] = "Описание"
+        context['tr_create'] = "Создать"
+        context['tr_'] = ""
     else:
         context['tr_registration'] = "Registration"
         context['tr_register'] = "Register"
