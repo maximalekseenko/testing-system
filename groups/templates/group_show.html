@@ -1,0 +1,52 @@
+{% extends './base.html' %}
+
+{% block content %}
+    <h1 align="center">{{pagename}}</h1>
+    <form method="POST" id="form">
+        {% csrf_token %}
+
+        <div class="flex flex-col box" style="margin: auto; width: 500px;">
+            <div class="flex flex-sb component2">
+                <input value="{{group.name}}" disabled=true maxlength="32" style="width: 50%"/>
+                <div>
+                    {{tr_author}}: 
+                    <input value="{{group.author}}" disabled=true/>
+                </div>
+            </div>
+            {{group.description}}
+            <div class="flex">
+                <div class="flex-col component2" style="width: 50%">               
+                    <textarea style="width: 100%; resize: vertical; height: 100px">{{group.description}}</textarea>
+                </div>
+                <div class="flex-col component2" style="width: 50%"></div>
+            </div>
+            <div class="flex-col component2">
+                {{ form.members.label }}: 
+                {{ form.members }}
+                {% if action == "create" or action == "edit" %}
+                <div class="flex" id="mem_edit_div">
+                    <select id="mem_select">
+                        {% for user in all_users %}
+                        <option value="{{user.username}}">{{user.username}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" value="add" onclick="mem_add_btn_click()">
+                    <input type="button" value="remove" onclick="mem_rem_btn_click()">
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="flex" style="width: 100%;">
+                <div style="margin: auto;">
+                    {% if action == "create" or action == "edit" %}
+                    <input type="button" onclick="mem_create()" value={{buttonname}}>
+                    {% endif %}
+                    {% if action == "edit" %}
+                    <input type="button" onclick="mem_delete()" value="Удалить">
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </form>
+
+{% endblock %}

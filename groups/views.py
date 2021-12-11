@@ -46,8 +46,6 @@ def ShowView(request, id):
         context['group'] = Group.objects.get(id=id)
     except Task.DoesNotExist:
         raise Http404
-
-    context['action'] = "edit" if context['group'].author == request.user else "show"
     
     if request.method == 'POST':
         #is not owner
@@ -76,5 +74,5 @@ def ShowView(request, id):
         } )
     context['all_users']    = User.objects.all()
     context['members']      = " ".join(list(map(lambda m: m.username, context['group'].members.all())))
-    return render(request, 'group.html', context)
+    return render(request, 'group_show.html', context)
 #ShowGroupView-end
