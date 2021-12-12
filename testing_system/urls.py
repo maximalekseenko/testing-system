@@ -18,7 +18,6 @@ urlpatterns = [
     path('groups/',                     groups.HomeView),
     path('groups/create/',              groups.CreateView),
     path('groups/<str:id>/',            groups.ShowView),
-    path('groups/invite/<str:id>/',     groups.InviteView),
 #tasks
     path('tasks/',                      tasks.FindModuleView),
     path('tasks/create/',               tasks.CreateModuleView),

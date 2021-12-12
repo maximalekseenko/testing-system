@@ -56,6 +56,9 @@ def get_base_context(request, pagename="", buttonname=""):
         context['tr_edit'] = "Редактировать"
         context['tr_join'] = "Вступить"
         context['tr_group'] = "Группа"
+        #module
+        context['tr_module_creation'] = "Создание модуля"
+        context['tr_module_name'] = "Название модуля"
     else:
         context['tr_registration'] = "Registration"
         context['tr_register'] = "Register"

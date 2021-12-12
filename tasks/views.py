@@ -5,7 +5,7 @@ from django.core import serializers
 
 import json
 
-from static.py.view import get_base_context
+from static.py.view import get_base_context, is_user_authenticated
 from .form import ModuleForm
 from .models import Task, Module
 from main.models import UserNote
@@ -13,12 +13,10 @@ from groups.models import Group
 
 
 def CreateModuleView(request):
-    if not request.user.is_authenticated:
+    if not is_user_authenticated:
         return redirect("/accounts/register/")
 
-    # context
     context = get_base_context(request, 'Создание Модуля', 'Создать')
-    context['action'] = "create"
     context['form'] = ModuleForm({
             'name':              request.POST.get('name', ""),
             'author':            request.user,
@@ -59,7 +57,7 @@ def CreateModuleView(request):
         return redirect(f'/tasks/{id}/')
     # POST-end
 
-    return render(request, 'module.html', context)
+    return render(request, 'module_create.html', context)
 #CreateModuleView-end
 
 
