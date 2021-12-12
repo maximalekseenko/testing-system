@@ -1,0 +1,31 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div class="bigbox">
+    <h1>{{tr_module}} {{module.name}}</h1>
+
+    <form method="POST" id="form"> {% csrf_token %}
+
+        <div class="flex flex-sb component2">
+            <div>
+                {{tr_author}}: 
+                <input value="{{module.author}}" disabled=true/>
+            </div>
+        </div>
+
+        
+
+        <div class="flex component2">
+            <textarea id="id_description" name="description" placeholder="{{tr_description}}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
+        </div>
+        
+
+        <div class="submitbox">
+            {% if module.author == user %} <input type="submit" name="btn_edit" value={{tr_edit}}> {% endif %}
+            {% if module.author != user %} <input type="submit" name="btn_pass" value={{tr_pass}}> {% endif %}
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

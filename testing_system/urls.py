@@ -21,9 +21,11 @@ urlpatterns = [
     path('groups/create/',              groups.CreateView),
     path('groups/<str:id>/',            groups.ShowView),
 #tasks
-    path('tasks/',                      tasks.FindModuleView),
-    path('tasks/create/',               tasks.CreateModuleView),
-    path('tasks/<int:id>/',             tasks.ShowModuleView),
+    path('tasks/',                      tasks.FindView),
+    path('tasks/create/',               tasks.CreateView),
+    path('tasks/<str:id>/',             tasks.ShowView),
+    path('tasks/<str:id>/edit/',        tasks.EditView),
+    path('tasks/<str:id>/pass',         tasks.PassView),
 #main
     path('' ,                           main.HomeView),
 

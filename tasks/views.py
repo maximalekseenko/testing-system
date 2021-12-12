@@ -15,7 +15,7 @@ from main.models import UserNote
 from groups.models import Group
 
 
-def CreateModuleView(request):
+def CreateView(request):
     if not is_user_authenticated(request):
         return redirect("/accounts/register/tasks_create")
 
@@ -25,9 +25,9 @@ def CreateModuleView(request):
         return render(request, 'module_create.html', context)
 
     # scrap data
-    name        = request.POST['name'],
+    name        = request.POST['name']
     description = request.POST['description']
-    author      = request.user,
+    author      = request.user
 
     # validation
     if len(Module.objects.filter(name=name, author=author)):
@@ -47,75 +47,35 @@ def CreateModuleView(request):
     new_module.save()
     # proceed
     return redirect(f'/tasks/{new_module.id}/')
-#CreateModuleView-end
+# CreateModuleView - end
 
 
-def ShowModuleView(request, id):
+def ShowView(request, id):
+
     context = get_base_context(request)
-    try: context['module'] = Module.objects.get(id=id) 
-    except Task.DoesNotExist: raise Http404
-    context['action'] = "edit" if context['module'].author == request.user else "show"
-    context['form'] = ModuleForm({
-            'name':              request.POST.get('name', context['module'].name),
-            'author':            request.POST.get('author', context['module'].author),
-            'assigned_to_value': request.POST.get('assigned_to_value', "\n".join(map(lambda g: g.name, context['module'].assigned_to.all()))),
-            'tasks_value':       request.POST.get('tasks_value', serializers.serialize('json', context['module'].tasks.all())),
-            'is_active':         request.POST.get('is_active', context['module'].is_active),
-            'is_public':         request.POST.get('is_public', context['module'].is_public),
-    })
-    context['marks'] = context['module'].marks.all()
-    # POST
-    if request.method == 'POST':
-        form = context['form']
 
-        if form.data['tasks_value'][:4] == "RES-":
-            form.data['tasks_value'] = form.data['tasks_value'][4:]
-            print(context['module'].marks,context['module'].marks.filter(user=request.user))
-            if len(context['module'].marks.filter(user=request.user)):
-                mark = context['module'].marks.get(user=request.user)
-                mark.note=form.data['tasks_value']
-                mark.save()
-            else:
-                context['module'].marks.add(UserNote.objects.create(user=request.user, note=form.data['tasks_value']))
-            context['module'].save()
-        #RES-end=
+    # does id exist
+    try: context['module'] = Module.objects.get(id=id)
+    except Module.DoesNotExist: raise Http404
 
-        if Module.objects.get(id=id).author != request.user:
-            return redirect(f"/tasks/{id}")
-        #IF AUTHOR-end
-        if form.data['tasks_value'][:4] == "DEL-":
-            form.data['tasks_value'] = form.data['tasks_value'][4:]
-            context['module'].delete()
-            return redirect(f'/tasks/')
-        #DEL-end
-        
-        if len(Module.objects.filter(name=form.data['name'])) and form.data['name']!=context['module'].name:
-            return render(request, 'module.html', context)
-            
-        context['module'].name      = form.data['name']
-        context['module'].is_active = form.data.get('is_active', False)=="on"
-        context['module'].is_public = form.data.get('is_public', False)=="on"
-        context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to_value'].split('\r\n')))
-        context['module'].tasks.all().delete()
-        for task in json.loads(form.data['tasks_value']):
-            new_task = Task.objects.create(
-                name = task['name'],
-                content = task['content'],
-                answer = task['answer'],
-                options = task['options'],
-            )
-            context['module'].tasks.add(new_task)
-            
-        context['module'].save()
-        return redirect(f'/tasks/{id}/')
-        #NEW-del
-    # POST-end
+    # render page
+    if request.method != 'POST':
+        return render(request, 'module_show.html', context) 
+    
+    # what request
+    if request.POST["btn_edit"]:
+        return redirect(f'/tasks/{id}/edit')
+    if request.POST["btn_pass"]:
+        return redirect(f'/tasks/{id}/pass')
 
-    return render(request, 'module.html', context) 
+    # what?
+    return redirect(f'/tasks/{id}/')    
 #ShowModuleView-end
 
+def EditView(request):pass
+def PassView(request):pass
 
-def FindModuleView(request):
+def FindView(request):
     context = get_base_context(request, 'Найти модуль')
     context['to_find'] = request.POST.get('to_search', "")
     if request.method == 'POST':

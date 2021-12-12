@@ -57,6 +57,7 @@ def ShowView(request, id):
         return redirect(f"/accounts/register/groups_{id}")
         
     context = get_base_context(request)
+    
     #get group
     try:
         context['group'] = Group.objects.get(id=id)

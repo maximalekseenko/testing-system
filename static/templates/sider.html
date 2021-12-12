@@ -8,7 +8,7 @@
     {% for group in my_groups %}
         <div class="flex">
             {% if group.1 != 0 %}<a class="component">{{group.1}}</a>{% endif %}
-            <a class="component2" href="/groups/{{group.0.id}}">{{group.0.name}}</a>
+            <a class="component2" href="/groups/{{group.id}}">{{group.name}}</a>
         </div>
     {% endfor %}
 </div>

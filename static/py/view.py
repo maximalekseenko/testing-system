@@ -23,8 +23,11 @@ def get_base_context(request, pagename="", buttonname=""):
     # context['all_modules'] = Module.objects.filter(is_public=True, is_active=True)
     #sider content
     if request.user.is_authenticated:
-        context['my_groups']      = [[group, getattr(group,'moduls').count()] for group in Group.objects.filter(members__id=request.user.id)]
+        context['my_modules']    = Module.objects.all()
+        context['my_groups']     = Group.objects.all()
         context['new_modules']    = Module.objects.filter(author=request.user)
+        # context['my_groups']      = [[group, getattr(group,'moduls').count()] for group in Group.objects.filter(members__id=request.user.id)]
+        # context['new_modules']    = Module.objects.filter(author=request.user)
     #languesge content
     if True:
         #errors
@@ -50,6 +53,8 @@ def get_base_context(request, pagename="", buttonname=""):
         #module
         context['tr_module_creation'] = "Создание модуля"
         context['tr_module_name'] = "Название модуля"
+        context['tr_module'] = "Модуль"
+        context['tr_pass'] = "Пройти"
     else:
         context['tr_registration'] = "Registration"
         context['tr_register'] = "Register"
