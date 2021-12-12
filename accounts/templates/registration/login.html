@@ -1,15 +1,21 @@
 {% extends '../base.html' %}
 
 {% block content %}
-<h1 style="text-align: center;">{{tr_signin}}</h1>
-<form method="post">
-    {% csrf_token %}
-    <div class="flex flex-col box" style="margin: auto; width: 500px;">
+<div class="bigbox">
+    <h1>{{tr_signin}}</h1>
+    
+    <form method="post"> {% csrf_token %}
+        
         <div class="flex component2">
             <input id="id_username" name="username" type="text" placeholder="{{tr_username}}" style="width: 50%;"/>
             <input id="id_password" name="password" type="password" placeholder="{{tr_password1}}" style="width: 50%;"/>
         </div>
-        <button type="submit" style="margin: 0% 30%;">{{tr_signin}}</button>
-    </div>
-</form>
+
+
+        <div class="submitbox">
+            <button type="submit">{{tr_signin}}</button>
+        </div>
+
+    </form>
+</div>
 {% endblock %}

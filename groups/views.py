@@ -40,7 +40,7 @@ def ShowView(request, id):
     if not request.user.is_authenticated:
         return redirect("/accounts/register/")
         
-    context = get_base_context(request, 'Просмотр группы', 'Сохравнить')
+    context = get_base_context(request)
     #get group
     try:
         context['group'] = Group.objects.get(id=id)
@@ -67,12 +67,8 @@ def ShowView(request, id):
         context['group'].save()
         return redirect(f'/groups/{id}/')
     #if POST-end
-    context['form'] = GroupForm(initial={
-            'name'      : context['group'].name,
-            'author'    : context['group'].author,
-            'members'   : "\r\n".join(map(str, context['group'].members.all())),
-        } )
-    context['all_users']    = User.objects.all()
-    context['members']      = " ".join(list(map(lambda m: m.username, context['group'].members.all())))
+    
+    if context['group'].author == request.user: context["gr_action"] = "edit"
+    elif not context['group'].members.contains(request.user): context["gr_action"] = "join"
     return render(request, 'group_show.html', context)
 #ShowGroupView-end

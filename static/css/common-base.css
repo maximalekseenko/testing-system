@@ -50,5 +50,9 @@ a {
     text-decoration: none;
 }/*a-end*/
 
+h1 {
+    margin: 0px;
+    text-align: center;
+}
 
 

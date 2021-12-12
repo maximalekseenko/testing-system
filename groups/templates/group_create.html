@@ -1,30 +1,36 @@
 {% extends './base.html' %}
 
 {% block content %}
-    <h1 align="center">{{tr_group_creation}}</h1>
-    <form method="POST" id="form">
-        {% csrf_token %}
-        <div class="flex flex-col box" style="margin: auto; width: 500px;">
-            <div class="flex flex-sb component2">
-                <input id="id_name" name="name" type="text" placeholder="{{tr_group_name}}" maxlength="32" style="width: 50%"/>
-                <div>
-                    {{tr_author}}: 
-                    <input value="{{user}}" disabled=true/>
-                </div>
-            </div>
-            <div class="flex component2">
-                <textarea id="id_description" name="description" placeholder="{{tr_description}}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
-            </div>
-            {% for error in errors %}
-            <a>{{error}}</a>
-            {% endfor %}
+<div class="bigbox">
+    <h1>{{tr_group_creation}}</h1>
+
+    <form method="POST" id="form"> {% csrf_token %}
+
+        <div class="flex flex-sb component2">
+            <input id="id_name" name="name" type="text" placeholder="{{tr_group_name}}" maxlength="32" style="width: 50%"/>
             
-            <div class="flex" style="width: 100%;">
-                <div style="margin: auto;">
-                    <input type="submit" value={{tr_create}}>
-                </div>
+            <div>
+                {{tr_author}}: 
+                <input value="{{user}}" disabled=true/>
             </div>
         </div>
-    </form>
+        
 
+        <div class="flex component2">
+            <textarea id="id_description" name="description" placeholder="{{tr_description}}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
+        </div>
+
+
+        {% for error in errors %}
+        <a>{{error}}</a>
+        {% endfor %}
+        
+
+        <div class="submitbox">
+            <input type="submit" value={{tr_create}}>
+        </div>
+
+    </form>
+</div>
+        
 {% endblock %}
