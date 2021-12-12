@@ -26,7 +26,12 @@
             </div>
         </div>
 
+
+        <div class="flex-col component2">
+            <textarea style="width: 100%; resize: vertical;" disabled=true>{% for member in group.members.all %}{{member}} {% endfor %}</textarea>
+        </div>
         
+
         <div class="submitbox">
             {% if gr_action == "edit" %}
             <input type="button" onclick="gr_edit()" value={{tr_edit}}>
