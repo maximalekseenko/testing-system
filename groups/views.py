@@ -1,17 +1,19 @@
 from django.shortcuts import render, redirect
-from static.py.view import get_base_context, is_user_registred, get_new_key
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
 from .models import Group
-from .form import GroupForm
+from django.http import Http404
 import json
+from static.py.view import get_base_context, is_user_authenticated, get_new_key
+#to be anihilated
+from .form import GroupForm
 
 def HomeView(request): pass
 def InviteView(request): pass
 
 def CreateView(request):
-    if not is_user_registred(request):
-        return redirect("/accounts/register/")
+    if not is_user_authenticated(request):
+        return redirect("/accounts/register/groups_create/")
 
     context = get_base_context(request, 'Создание группы', 'Создать')
     
@@ -37,14 +39,14 @@ def CreateView(request):
 
 
 def ShowView(request, id):
-    if not request.user.is_authenticated:
-        return redirect("/accounts/register/")
+    if not is_user_authenticated(request):
+        return redirect(f"/accounts/register/groups_{id}")
         
     context = get_base_context(request)
     #get group
     try:
         context['group'] = Group.objects.get(id=id)
-    except Task.DoesNotExist:
+    except Group.DoesNotExist:
         raise Http404
     
     if request.method == 'POST':

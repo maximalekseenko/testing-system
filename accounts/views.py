@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from static.py.view import get_base_context
+#to be anihilated
 from .forms import AccountForm
 
-def LoginView(request):
+def LoginView(request, red=""):
     context = get_base_context(request)
+    context['redirect'] = red
+
     if request.method == 'POST':
         print(request.POST)
         username = request.POST['username']
@@ -13,14 +16,17 @@ def LoginView(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('/')
+            return redirect(f'/{"/".join(red.split("_"))}')
         else:
             context['login_error'] = True
+
     return render(request, 'registration/login.html', context)
 
         
-def RegisterView(request):
+def RegisterView(request, red=""):
     context = get_base_context(request)
+    context['redirect'] = red
+
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
@@ -31,10 +37,11 @@ def RegisterView(request):
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             #login-end
-            return redirect('/')
+            return redirect(f'/{"/".join(red.split("_"))}')
     else:
         form = UserCreationForm()
     context['form'] = form
+
     return render(request, 'registration/register.html', context)
 
 

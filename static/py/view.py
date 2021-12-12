@@ -10,19 +10,8 @@ def get_new_key(length=16):
     return "".join(sample(all,length))
 
 
-def is_user_pure_for_page(request):
-    if not request.user.is_authenticated: return False
-    return True
-
-
-def is_user_registred(request):
-    if not request.user.is_authenticated: return False
-    return True
-
-
-def is_user_authenticated(request):#fix
-    if not request.user.is_authenticated: return False
-    return True
+def is_user_authenticated(request):
+    return request.user.is_authenticated
 
 
 def get_base_context(request, pagename="", buttonname=""):
@@ -42,8 +31,10 @@ def get_base_context(request, pagename="", buttonname=""):
         context['tr_err_name_exist'] = "Имя уже занято"
         #account
         context['tr_registration'] = "Регистрация"
+        context['tr_reg_already'] = "Уже зарегистрированы"
         context['tr_register'] = "Зарегистрироваться"
         context['tr_signin'] = "Войти"
+        context['tr_not_reg'] = "Не зарегистрированы"
         context['tr_username'] = "Имя пользователя"
         context['tr_password1'] = "Пароль"
         context['tr_password2'] = "Подтверждение пароля"

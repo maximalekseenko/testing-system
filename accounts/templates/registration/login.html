@@ -12,8 +12,15 @@
         </div>
 
 
-        <div class="submitbox">
-            <button type="submit">{{tr_signin}}</button>
+        <div class="flex-sb">
+            <div class="submitbox" style="width: 50%;">
+                <button type="submit">{{tr_signin}}</button>
+            </div>
+    
+            <div class="submitbox" style="width: 50%;">
+                <a style="font-size:smaller;">{{tr_not_reg}}? - </a>
+                <button type="button" onclick="window.location='/accounts/register/{{redirect}}';">{{tr_register}}</button>
+            </div>
         </div>
 
     </form>

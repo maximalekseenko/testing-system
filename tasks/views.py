@@ -13,10 +13,10 @@ from groups.models import Group
 
 
 def CreateModuleView(request):
-    if not is_user_authenticated:
-        return redirect("/accounts/register/")
+    if not is_user_authenticated(request):
+        return redirect("/accounts/register/tasks_create")
 
-    context = get_base_context(request, 'Создание Модуля', 'Создать')
+    context = get_base_context(request)
     context['form'] = ModuleForm({
             'name':              request.POST.get('name', ""),
             'author':            request.user,

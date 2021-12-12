@@ -24,9 +24,17 @@
         </div>
         
 
-        <div class="submitbox">
-            <button type="submit">{{tr_register}}</button>
+        <div class="flex-sb">
+            <div class="submitbox" style="width: 50%;">
+                <button type="submit">{{tr_register}}</button>
+            </div>
+
+            <div class="submitbox" style="width: 50%;">
+                <a style="font-size:smaller;">{{tr_reg_already}}? - </a>
+                <button type="button" onclick="window.location='/accounts/login/{{redirect}}';">{{tr_signin}}</button>
+            </div>
         </div>
+
 
     </form>
 </div>

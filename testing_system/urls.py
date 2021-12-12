@@ -11,8 +11,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 #accounts
     path('accounts/login/',             accounts.LoginView),
-    path('accounts/logout/',            LogoutView.as_view()),
+    path('accounts/login/<str:red>/',   accounts.LoginView),
+    path('accounts/register/<str:red>/',accounts.RegisterView),
     path('accounts/register/',          accounts.RegisterView),
+    path('accounts/logout/',            LogoutView.as_view()),
     path('accounts/',                   accounts.AccoutView),
 #groups
     path('groups/',                     groups.HomeView),
