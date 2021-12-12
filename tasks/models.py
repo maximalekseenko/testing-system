@@ -14,13 +14,14 @@ class Task(models.Model):
 class Module(models.Model):
     name          = models.CharField(max_length=64, default="Новый модуль")
     author        = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=256, default="AAAA")
+    description   = models.CharField(max_length=256, default="AAAA")
     creation_date = models.DateTimeField(default=timezone.now())
     #vars
     tasks         = models.JSONField(default={})
     #key
-    key           = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)
+    id            = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)
     
+    #to be ahihilated
     def is_assigned(self, user:User):
         groups = self.assigned_to.filter(members__id=user.id)
         return len(groups)>0

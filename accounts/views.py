@@ -14,9 +14,9 @@ def LoginView(request, red=""):
         return render(request, 'registration/login.html', context)
 
     # scrap data
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(request, username=username, password=password)
+    username    = request.POST['username']
+    password    = request.POST['password']
+    user        = authenticate(request, username=username, password=password)
 
     # validation
     if user is None:

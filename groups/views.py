@@ -1,12 +1,17 @@
 from django.shortcuts import render, redirect
-from django.db.utils import IntegrityError
-from django.contrib.auth.models import User
-from .models import Group
-from django.http import Http404
-import json
 from static.py.view import get_base_context, is_user_authenticated, get_new_key
+from .models import Group
+# json
+import json
+from django.core import serializers
+# errors
+from django.db.utils import IntegrityError
+from django.http import Http404
+
 #to be anihilated
+from django.contrib.auth.models import User
 from .form import GroupForm
+
 
 def HomeView(request): pass
 def InviteView(request): pass
@@ -21,20 +26,21 @@ def CreateView(request):
         return render(request, 'group_create.html', context)
 
     # scrap data
-    name = request.POST['name']
+    name        = request.POST['name']
     description = request.POST['description']
+    author      = request.user
 
     # validation
-    if len(Group.objects.filter(name=name, author=request.user)):
+    if len(Group.objects.filter(name=name, author=author)):
         return redirect('/groups/create/')
         
     # creation
     try:
         new_group = Group.objects.create(
-            name   = name,
-            author = request.user,
+            name        = name,
+            author      = author,
             description = description,
-            id = get_new_key()
+            id          = get_new_key()
         )
     except IntegrityError: pass
 

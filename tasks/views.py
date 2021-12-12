@@ -1,13 +1,16 @@
-from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.http import Http404
-from django.core import serializers
-
+from static.py.view import get_base_context, is_user_authenticated, get_new_key
+from .models import Module
+# json
 import json
+from django.core import serializers
+# errors
+from django.db.utils import IntegrityError
+from django.http import Http404
 
-from static.py.view import get_base_context, is_user_authenticated
+#to be anihilated
+from .models import Task
 from .form import ModuleForm
-from .models import Task, Module
 from main.models import UserNote
 from groups.models import Group
 
@@ -16,48 +19,39 @@ def CreateModuleView(request):
     if not is_user_authenticated(request):
         return redirect("/accounts/register/tasks_create")
 
-    context = get_base_context(request)
+    # render page
+    if request.method != 'POST':
+        context = get_base_context(request)
+        return render(request, 'module_create.html', context)
 
-    # POST
-    if request.method == 'POST':
-        name      = request.POST['name'],
-        author    = request.user,
+    # scrap data
+    name        = request.POST['name'],
+    description = request.POST['description']
+    author      = request.user,
 
-        # is valid
-        if len(Group.objects.filter(name=name, author=request.user)):
-            return redirect('/groups/create/')
-        if len(Module.objects.filter(name=form.data['name'])):
-            return redirect(f'/tasks/create/')
-            
-        # create
-        context['module'] = Module.objects.create(
-            name      = form.data['name'],
-            author    = form.data['author'],
-            is_active = form.data.get('is_active', False)=="on",
-            is_public = form.data.get('is_public', False)=="on",
+    # validation
+    if len(Module.objects.filter(name=name, author=author)):
+        return redirect('/tasks/create/')
+        
+    # create
+    try:
+        new_module = Module.objects.create(
+            name        = name,
+            author      = author,
+            description = description,
+            id          = get_new_key()
         )
-        context['module'].assigned_to.set(Group.objects.filter(name__in=form.data['assigned_to_value'].split('\r\n')))
-        context['module'].tasks.all().delete()
-        for task in json.loads(form.data['tasks_value']):
-            new_task = Task.objects.create(
-                name = task['name'],
-                content = task['content'],
-                answer = task['answer'],
-                options = task['options'],
-            )
-            context['module'].tasks.add(new_task)
-        # save
-        context['module'].save()
-        id = context['module'].id
-        return redirect(f'/tasks/{id}/')
-    # POST-end
-
-    return render(request, 'module_create.html', context)
+    except IntegrityError: pass
+    
+    # save
+    new_module.save()
+    # proceed
+    return redirect(f'/tasks/{new_module.id}/')
 #CreateModuleView-end
 
 
 def ShowModuleView(request, id):
-    context = get_base_context(request, 'Просмотр модуля', 'Сохранить')
+    context = get_base_context(request)
     try: context['module'] = Module.objects.get(id=id) 
     except Task.DoesNotExist: raise Http404
     context['action'] = "edit" if context['module'].author == request.user else "show"
