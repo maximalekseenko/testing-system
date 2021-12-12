@@ -20,7 +20,7 @@ def get_base_context(request, pagename="", buttonname=""):
     context['pagename']    = pagename
     context['buttonname']  = buttonname
     context['user']        = request.user
-    context['all_modules'] = Module.objects.filter(is_public=True, is_active=True)
+    # context['all_modules'] = Module.objects.filter(is_public=True, is_active=True)
     #sider content
     if request.user.is_authenticated:
         context['my_groups']      = [[group, getattr(group,'moduls').count()] for group in Group.objects.filter(members__id=request.user.id)]

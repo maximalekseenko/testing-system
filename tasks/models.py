@@ -18,9 +18,6 @@ class Module(models.Model):
     creation_date = models.DateTimeField(default=timezone.now())
     #vars
     tasks         = models.JSONField(default={})
-    #bool
-    is_public     = models.BooleanField(default=False)
-    is_active     = models.BooleanField(default=False)
     #key
     key           = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)
     

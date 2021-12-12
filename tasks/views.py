@@ -17,20 +17,15 @@ def CreateModuleView(request):
         return redirect("/accounts/register/tasks_create")
 
     context = get_base_context(request)
-    context['form'] = ModuleForm({
-            'name':              request.POST.get('name', ""),
-            'author':            request.user,
-            'assigned_to_value': request.POST.get('assigned_to_value', ""),
-            'tasks_value':       request.POST.get('tasks_value', "[]"),
-            'is_active':         request.POST.get('is_active', False),
-            'is_public':         request.POST.get('is_public', False),
-    })
 
     # POST
     if request.method == 'POST':
-        form = context['form']
+        name      = request.POST['name'],
+        author    = request.user,
 
         # is valid
+        if len(Group.objects.filter(name=name, author=request.user)):
+            return redirect('/groups/create/')
         if len(Module.objects.filter(name=form.data['name'])):
             return redirect(f'/tasks/create/')
             

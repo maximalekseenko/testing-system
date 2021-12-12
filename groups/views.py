@@ -15,27 +15,35 @@ def CreateView(request):
     if not is_user_authenticated(request):
         return redirect("/accounts/register/groups_create/")
 
-    context = get_base_context(request, 'Создание группы', 'Создать')
+    # render page
+    if request.method != 'POST':
+        context = get_base_context(request)
+        return render(request, 'group_create.html', context)
+
+    # scrap data
+    name = request.POST['name']
+    description = request.POST['description']
+
+    # validation
+    if len(Group.objects.filter(name=name, author=request.user)):
+        return redirect('/groups/create/')
+        
+    # creation
+    try:
+        new_group = Group.objects.create(
+            name   = name,
+            author = request.user,
+            description = description,
+            id = get_new_key()
+        )
+    except IntegrityError: pass
+
+    # save
+    new_group.save()  
     
-    if request.method == 'POST':
-        name = request.POST['name']
-        description = request.POST['description']
-        if len(Group.objects.filter(name=name, author=request.user)):
-            return redirect('/groups/create/')
-        try:
-            new_group = Group.objects.create(
-                name   = name,
-                author = request.user,
-                description = description,
-                id = get_new_key()
-            )
-        except IntegrityError: pass
-        new_group.save()  
-        id = new_group.id  
-        return redirect(f'/groups/{id}/')
-    #if POST-end
-    return render(request, 'group_create.html', context)
-#CreateGroupView-end
+    # proceed
+    return redirect(f'/groups/{new_group.id}/')
+# CreateGroupView - end
 
 
 def ShowView(request, id):
@@ -73,4 +81,4 @@ def ShowView(request, id):
     if context['group'].author == request.user: context["gr_action"] = "edit"
     elif not context['group'].members.contains(request.user): context["gr_action"] = "join"
     return render(request, 'group_show.html', context)
-#ShowGroupView-end
+# ShowGroupView - end
