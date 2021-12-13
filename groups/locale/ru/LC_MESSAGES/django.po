@@ -1,0 +1,53 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-12-13 11:57+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
+"%100>=11 && n%100<=14)? 2 : 3);\n"
+
+#: templates/group_create.html:5
+msgid "Group creation"
+msgstr ""
+
+#: templates/group_create.html:10
+msgid "group name"
+msgstr ""
+
+#: templates/group_create.html:13 templates/group_show.html:13
+msgid "author"
+msgstr ""
+
+#: templates/group_create.html:20
+msgid "description"
+msgstr ""
+
+#: templates/group_create.html:30
+msgid "create"
+msgstr ""
+
+#: templates/group_show.html:7
+msgid "Group"
+msgstr ""
+
+#: templates/group_show.html:37
+msgid "Edit"
+msgstr ""
+
+#: templates/group_show.html:41
+msgid "Join"
+msgstr ""

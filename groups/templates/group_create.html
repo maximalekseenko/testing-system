@@ -1,23 +1,23 @@
 {% extends './base.html' %}
-
 {% block content %}
+{% load i18n %}
 <div class="bigbox">
-    <h1>{{tr_group_creation}}</h1>
+    <h1>{% trans 'Group creation' %}</h1>
 
     <form method="POST" id="form"> {% csrf_token %}
 
         <div class="flex flex-sb component2">
-            <input id="id_name" name="name" type="text" placeholder="{{tr_group_name}}" maxlength="32" style="width: 50%"/>
+            <input id="id_name" name="name" type="text" placeholder="{% trans 'group name' %}" maxlength="32" style="width: 50%"/>
             
             <div>
-                {{tr_author}}: 
+                {% trans 'author' %}: 
                 <input value="{{user}}" disabled=true/>
             </div>
         </div>
         
 
         <div class="flex component2">
-            <textarea id="id_description" name="description" placeholder="{{tr_description}}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
+            <textarea id="id_description" name="description" placeholder="{% trans 'description' %}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
         </div>
 
 
@@ -27,10 +27,9 @@
         
 
         <div class="submitbox">
-            <input type="submit" value={{tr_create}}>
+            <button type="submit">{% trans 'create' %}</button>
         </div>
 
     </form>
 </div>
-        
 {% endblock %}

@@ -47,7 +47,7 @@ def CreateView(request):
     new_module.save()
     # proceed
     return redirect(f'/tasks/{new_module.id}/')
-# CreateModuleView - end
+# CreateView - end
 
 
 def ShowView(request, id):
@@ -70,9 +70,30 @@ def ShowView(request, id):
 
     # what?
     return redirect(f'/tasks/{id}/')    
-#ShowModuleView-end
+# ShowView - end
 
-def EditView(request):pass
+def EditView(request, id):
+
+    context = get_base_context(request)
+
+    # does id exist
+    try: context['module'] = Module.objects.get(id=id)
+    except Module.DoesNotExist: raise Http404
+
+    # is user author 
+    if context['module'].author != request.user:
+        raise Http404
+
+    # render page
+    if request.method != 'POST':
+        return render(request, 'module_edit.html', context) 
+    
+
+
+    # proceed
+    return redirect(f'/tasks/{id}/')    
+# EditView - end
+
 def PassView(request):pass
 
 def FindView(request):

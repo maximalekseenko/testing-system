@@ -1,16 +1,16 @@
 {% extends './base.html' %}
-
 {% block content %}
+{% load i18n %}
 
 <div class="bigbox">
     
-    <h1>{{tr_group}} {{group.name}}</h1>
+    <h1>{% trans 'Group' %} {{group.name}}</h1>
 
     <form method="POST" id="form"> {% csrf_token %}
 
         <div class="flex flex-sb component2">
             <div>
-                {{tr_author}}: 
+                {% trans 'author' %}: 
                 <input value="{{group.author}}" disabled=true/>
             </div>
         </div>
@@ -34,11 +34,11 @@
 
         <div class="submitbox">
             {% if gr_action == "edit" %}
-            <input type="button" onclick="gr_edit()" value={{tr_edit}}>
+            <button type="button" onclick="gr_edit()">{% trans 'Edit' %}</button>
             {% endif %}
 
             {% if gr_action == "join" %}
-            <input type="button" onclick="gr_join()" value={{tr_join}}>
+            <button type="button" onclick="gr_join()">{% trans 'Join' %}</button>
             {% endif %}
         </div>
 

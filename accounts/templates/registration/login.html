@@ -1,25 +1,25 @@
 {% extends '../base.html' %}
-
 {% block content %}
+{% load i18n %}
 <div class="bigbox">
-    <h1>{{tr_signin}}</h1>
+    <h1>{% trans 'Signin' %}</h1>
     
     <form method="post"> {% csrf_token %}
         
         <div class="flex component2">
-            <input id="id_username" name="username" type="text" placeholder="{{tr_username}}" style="width: 50%;"/>
-            <input id="id_password" name="password" type="password" placeholder="{{tr_password1}}" style="width: 50%;"/>
+            <input id="id_username" name="username" type="text" placeholder="{% trans 'username' %}" style="width: 50%;"/>
+            <input id="id_password" name="password" type="password" placeholder="{% trans 'password' %}" style="width: 50%;"/>
         </div>
 
 
         <div class="flex-sb">
             <div class="submitbox" style="width: 50%;">
-                <button type="submit">{{tr_signin}}</button>
+                <button type="submit">{% trans 'Signin' %}</button>
             </div>
     
             <div class="submitbox" style="width: 50%;">
-                <a style="font-size:smaller;">{{tr_not_reg}}? - </a>
-                <button type="button" onclick="window.location='/accounts/register/{{redirect}}';">{{tr_register}}</button>
+                <a style="font-size:smaller;">{% trans 'Not registred?' %} - </a>
+                <input type="button" value="{% trans 'Register' %}" onclick="window.location='/accounts/register/{{redirect}}';">
             </div>
         </div>
 

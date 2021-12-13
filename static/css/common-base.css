@@ -27,6 +27,13 @@ button.delete {
     padding: 1px 2px;
 }
 
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: #F0F0F0;
+    border-radius: 4px;
+    border-color: #D0D0D0;
+    border-style: outset;
+    padding: 1px 5px;
+}
 
 footer, header {
     background-color: #A0A0A0;
@@ -38,6 +45,7 @@ footer a:any-link, header a:any-link {
 footer a:focus, header a:focus{
     color:#300030
 }/*footer, header-end*/
+
 
 
 a:any-link {

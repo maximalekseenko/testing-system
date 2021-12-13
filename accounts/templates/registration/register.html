@@ -1,24 +1,24 @@
 {% extends '../base.html' %}
 {% block content %}
-
+{% load i18n %}
 <div class="bigbox">
-    <h1>{{tr_registration}}</h1>
+    <h1>{% trans 'Registration' %}</h1>
 
     <form method="post"> {% csrf_token %}
 
         <div class="flex component2">
             <div class="flex-col" style="width: 33%;">
-                <input id="id_username" name="username" type="text" placeholder="{{tr_username}}" />
+                <input id="id_username" name="username" type="text" placeholder="{% trans 'username' %}" />
                 {% for error in form.username.errors %} {{error}} {% endfor %}
             </div>
 
             <div class="flex-col" style="width: 33%;">
-                <input id="id_password1" name="password1" type="password" placeholder="{{tr_password1}}" />
+                <input id="id_password1" name="password1" type="password" placeholder="{% trans 'password' %}" />
                 {% for error in form.password1.errors %} {{error}} {% endfor %}
             </div>
 
             <div class="flex-col" style="width: 33%;">
-                <input id="id_password2" name="password2" type="password" placeholder="{{tr_password2}}" />
+                <input id="id_password2" name="password2" type="password" placeholder="{% trans 'password conformation' %}" />
                 {% for error in form.password2.errors %} {{error}} {% endfor %}
             </div>
         </div>
@@ -26,17 +26,16 @@
 
         <div class="flex-sb">
             <div class="submitbox" style="width: 50%;">
-                <button type="submit">{{tr_register}}</button>
+                <input type="submit" value="{% trans 'Register' %}">
             </div>
 
             <div class="submitbox" style="width: 50%;">
-                <a style="font-size:smaller;">{{tr_reg_already}}? - </a>
-                <button type="button" onclick="window.location='/accounts/login/{{redirect}}';">{{tr_signin}}</button>
+                <a style="font-size:smaller;">{% trans 'Registred already?' %} - </a>
+                <input type="button" value="{% trans 'Signin' %}" onclick="window.location='/accounts/login/{{redirect}}';">
             </div>
         </div>
 
 
     </form>
 </div>
-
 {% endblock %}

@@ -1,0 +1,55 @@
+{% extends './base.html' %}
+
+{% block content %}
+<div class="bigbox">
+    <h1>{{tr_module}}</h1>
+
+    <form method="POST" id="form"> {% csrf_token %}
+
+        <div class="flex flex-sb component2">
+            <input id="name" value="{{module.name}}" name="name" type="text" placeholder="{{tr_module_name}}" maxlength="32" style="width: 50%"/>
+            
+            <div>
+                {{tr_author}}: 
+                <input value="{{user}}" disabled=true/>
+            </div>
+        </div>
+
+        
+        <div class="flex">
+            <div class="flex-col component2" style="width: 50%">               
+                <textarea id="description" value="{{module.description}}" name="description" placeholder="{{tr_description}}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
+            </div>
+
+            <div id="tasks_div" class="flex-col component2" style="width: 50%; overflow-y: scroll; height:100px;">
+                <a hidden name="tasks_data"></a>
+                <a style="text-align: center; width: 100%;">{{tr_edit_tasks}}</a>
+                <div>
+
+                </div>
+                <button>{{tr_add_task}}</button>
+                <button>
+            </div>
+        </div>
+        
+
+        <div class="submitbox">
+            {% if module.author == user %} <input type="submit" name="btn_edit" value={{tr_edit}}> {% endif %}
+            {% if module.author != user %} <input type="submit" name="btn_pass" value={{tr_pass}}> {% endif %}
+        </div>
+
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    var description = document.getElementById("description")
+    var height = description.style.height
+    document.getElementById("form").addEventListener("mousemove", function(){
+    if(description.style.height != height)
+        document.getElementById("tasks_div").style.height = description.style.height
+    height = description.style.height;
+});
+</script>
+
+{% endblock %}
