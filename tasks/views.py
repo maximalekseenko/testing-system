@@ -60,6 +60,7 @@ def ShowView(request, id):
 
     # render page
     if request.method != 'POST':
+        
         return render(request, 'module_show.html', context) 
     
     # what request
@@ -74,25 +75,48 @@ def ShowView(request, id):
 
 def EditView(request, id):
 
-    context = get_base_context(request)
-
     # does id exist
-    try: context['module'] = Module.objects.get(id=id)
+    try: cur_module = Module.objects.get(id=id)
     except Module.DoesNotExist: raise Http404
 
     # is user author 
-    if context['module'].author != request.user:
+    if cur_module.author != request.user:
         raise Http404
 
     # render page
     if request.method != 'POST':
+        context = get_base_context(request, keep_cookies=[
+            f"tepm_edit_task_{cur_module.id}", 
+            f"tepm_edit_module_{cur_module.id}"
+        ])
+        context['module'] = cur_module
+        if 'tepm_edit_task_{cur_module.id}' in request.session:
+            context['task_data'] = request.session['tepm_edit_task_{cur_module.id}']
+        else: context['task_data'] = cur_module.tasks
         return render(request, 'module_edit.html', context) 
-    
 
+
+    # scrap data
+    name        = request.POST['name']
+    description = request.POST['description']
+
+    # edit task
+    if "btn_task" in request.POST:
+        request.sessions['tepm_edit_module_{cur_module.id}']={'name':name,'description':description}
+        if not 'tepm_edit_task_{cur_module.id}' in request.session:
+            request.session['tepm_edit_task_{cur_module.id}'] = cur_module.tasks
+        return redirect(f'/tasks/{id}/task/')
+
+    # save data
+    cur_module.name = name
+    cur_module.name = description
+    cur_module.save()
 
     # proceed
     return redirect(f'/tasks/{id}/')    
 # EditView - end
+
+def EditTaskView(request):pass
 
 def PassView(request):pass
 

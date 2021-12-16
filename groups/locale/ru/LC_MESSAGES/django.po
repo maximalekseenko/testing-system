@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-13 11:57+0300\n"
+"POT-Creation-Date: 2021-12-13 12:02+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,34 +20,34 @@ msgstr ""
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n"
 "%100>=11 && n%100<=14)? 2 : 3);\n"
 
-#: templates/group_create.html:5
+#: groups/templates/group_create.html:5
 msgid "Group creation"
-msgstr ""
+msgstr "Создание группы"
 
-#: templates/group_create.html:10
+#: groups/templates/group_create.html:10
 msgid "group name"
-msgstr ""
+msgstr "имя группы"
 
-#: templates/group_create.html:13 templates/group_show.html:13
+#: groups/templates/group_create.html:13 groups/templates/group_show.html:13
 msgid "author"
-msgstr ""
+msgstr "автор"
 
-#: templates/group_create.html:20
+#: groups/templates/group_create.html:20
 msgid "description"
-msgstr ""
+msgstr "описание"
 
-#: templates/group_create.html:30
-msgid "create"
-msgstr ""
+#: groups/templates/group_create.html:30
+msgid "Сreate"
+msgstr "Создать"
 
-#: templates/group_show.html:7
+#: groups/templates/group_show.html:7
 msgid "Group"
-msgstr ""
+msgstr "Группа"
 
-#: templates/group_show.html:37
+#: groups/templates/group_show.html:37
 msgid "Edit"
-msgstr ""
+msgstr "Редактировать"
 
-#: templates/group_show.html:41
+#: groups/templates/group_show.html:41
 msgid "Join"
-msgstr ""
+msgstr "Вступить"

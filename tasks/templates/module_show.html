@@ -1,14 +1,13 @@
 {% extends './base.html' %}
-
 {% block content %}
+{% load i18n %}
 <div class="bigbox">
-    <h1>{{tr_module}} {{module.name}}</h1>
-
+    <h1>{% trans 'Module' %} {{module.name}}</h1>
     <form method="POST" id="form"> {% csrf_token %}
 
         <div class="flex flex-sb component2">
             <div>
-                {{tr_author}}: 
+                {% trans 'author' %}: 
                 <input value="{{module.author}}" disabled=true/>
             </div>
         </div>
@@ -26,11 +25,10 @@
         
 
         <div class="submitbox">
-            {% if module.author == user %} <input type="submit" name="btn_edit" value={{tr_edit}}> {% endif %}
-            {% if module.author != user %} <input type="submit" name="btn_pass" value={{tr_pass}}> {% endif %}
+            {% if module.author == user %} <input type="submit" name="btn_edit" value="{% trans 'Edit' %}"> {% endif %}
+            {% if module.author != user %} <input type="submit" name="btn_pass" value="{% trans 'Pass' %}"> {% endif %}
         </div>
 
     </form>
 </div>
-
 {% endblock %}

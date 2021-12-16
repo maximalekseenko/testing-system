@@ -37,7 +37,8 @@ def RegisterView(request, red=""):
         context = get_base_context(request)
         context['redirect'] = red
         context['form'] = UserCreationForm()
-        return render(request, 'registration/register.html', context)
+        response=render(request, 'registration/register.html', context)
+        return response
 
     # scrap data
     form = UserCreationForm(request.POST)

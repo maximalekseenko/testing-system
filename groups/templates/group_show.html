@@ -1,11 +1,8 @@
 {% extends './base.html' %}
 {% block content %}
 {% load i18n %}
-
 <div class="bigbox">
-    
     <h1>{% trans 'Group' %} {{group.name}}</h1>
-
     <form method="POST" id="form"> {% csrf_token %}
 
         <div class="flex flex-sb component2">
@@ -44,5 +41,4 @@
 
     </form>
 </div>
-
 {% endblock %}

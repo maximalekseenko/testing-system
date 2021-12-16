@@ -1,0 +1,60 @@
+{% load i18n %}
+<div id="task_edit_box" class="bigbox" style="display: none">
+    <h1>{% trans 'Task editor' %}</h1>
+
+    <div class="flex-sb component2"> 
+        <input id="task_name" value="{{module.name}}" type="text" placeholder="{% trans 'task name' %}" maxlength="32" style="width: 50%"/>
+        
+        <div>
+            {% trans 'type' %}: 
+            <select id="task_type">
+                <option value="one answer">{% trans 'one answer' %}</option>
+                <option value="multiple answers">{% trans 'multiple answers' %}</option>
+            </select>
+        </div>
+    </div>
+
+    
+    <div class="flex">
+        <div id="task_condition_div" class="flex-col component2" style="width: 50%; height: fit-content;">               
+            <textarea id="task_condition" placeholder="{% trans 'condition' %}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
+        </div>
+
+        <div id="task_content_div" class="flex-col component2" style="width: 50%; overflow-y: scroll;">
+            <a style="text-align: center; width: 100%;">{% trans 'Answer options' %}</a>
+            <div></div>
+            <input type="button" value="{% trans 'New task' %}">
+        </div>
+    </div>
+    
+
+    <div class="flex">
+        <div class="submitbox" style="width: 50%;">
+            <input type="button" onclick=btn_task_save() value="{% trans 'Save' %}">
+        </div>
+
+        <div class="submitbox" style="width: 50%;">
+            <input id="task_btn" type="button" onclick=btn_task_del() value="{% trans 'Delete' %}">
+        </div>
+    </div>
+
+</div>
+
+
+<script type="text/javascript">
+    // buttons
+    function btn_task_save(){
+    }// btn_task_save - end
+    function btn_task_del(){
+    }// btn_task_del - end
+
+    // resize due decription
+    var task_condition_div = document.getElementById("task_condition_div")
+    var height = task_condition_div.clientHeight
+    document.getElementById("task_content_div").style.height = task_condition_div.clientHeight - 10 + 'px'
+    document.getElementById("task_edit_box").addEventListener("mousemove", function(){
+        if(task_condition_div.clientHeight != height)
+            document.getElementById("task_content_div").style.height = task_condition_div.clientHeight - 10 + 'px'
+        height = task_condition_div.clientHeight;
+    });
+</script>

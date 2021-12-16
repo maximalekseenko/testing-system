@@ -1,5 +1,3 @@
-{% extends './base.html' %}
-{% block content %}
 {% load i18n %}
 <div id="module_edit_box" class="bigbox" style="display: block">
     <h1>{% trans 'Module editor' %}</h1>
@@ -13,7 +11,7 @@
                 <input value="{{user}}" disabled=true/>
             </div>
         </div>
-        {{DIE}}
+
         
         <div class="flex">
             <div id="left_content_div" class="flex-col component2" style="width: 50%; height: fit-content;">               
@@ -21,7 +19,7 @@
             </div>
 
             <div id="right_content_div" class="flex-col component2" style="width: 50%; overflow-y: scroll; height:100px;">
-                <input type="text" value="{{task_data}}" id="tasks_data" name="tasks_data">
+                <input type="text" value="{{module.tasks}}" id="tasks_data" name="tasks_data">
                 <a style="text-align: center; width: 100%;">{% trans 'Edit tasks' %}</a>
                 <div id="tasks_div"></div>
                 <input type="button" onclick="{task_edit_click('')}" value="{% trans 'New task' %}">
@@ -65,4 +63,3 @@
         height = left_content_div.clientHeight;
     });
 </script>
-{% endblock %}
