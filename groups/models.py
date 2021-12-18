@@ -10,9 +10,12 @@ class Group(models.Model):
     name            = models.CharField(max_length=32, default="")
     description     = models.CharField(max_length=1024, default="")
     creation_date   = models.DateTimeField(default=timezone.now())
-    #vars
-    members         = models.ManyToManyField(User, related_name="members", blank=True)
+    id              = models.CharField(max_length=16, unique=True, primary_key = True)
+    # moduls
     moduls          = models.ManyToManyField(Module, related_name="moduls", blank=True)
     moduls_data     = models.JSONField(default={})
-    #id
-    id              = models.CharField(max_length=16, default="AAAAAAAAAAAAAAAA", unique=True, primary_key = True)
+    # memers
+    mem             = models.ManyToManyField(User, related_name="mem", blank=True)
+    mem_adm         = models.ManyToManyField(User, related_name="mem_adm", blank=True)
+    mem_req         = models.ManyToManyField(User, related_name="mem_req", blank=True)
+    

@@ -30,12 +30,10 @@
         
 
         <div class="submitbox">
-            {% if gr_action == "edit" %}
-            <button type="button" onclick="gr_edit()">{% trans 'Edit' %}</button>
-            {% endif %}
-
-            {% if gr_action == "join" %}
-            <button type="button" onclick="gr_join()">{% trans 'Join' %}</button>
+            {% if group.author == user %}
+            <input type="submit" name="edit">{% trans 'Edit' %}</button>
+            {% else %}
+            <input type="submit" name="gr_join()">{% trans 'Join' %}</button>
             {% endif %}
         </div>
 

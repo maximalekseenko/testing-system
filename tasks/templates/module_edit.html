@@ -7,7 +7,6 @@
 
         <div class="flex-sb component2">
             <input name="name" type="text" value="{{module.name}}" placeholder="{% trans 'module name' %}" maxlength="32" style="width: 50%"/>
-            
             <div>
                 {% trans 'author' %}: 
                 <input value="{{user}}" disabled=true/>
@@ -21,13 +20,19 @@
 
             <div class="flex-col componentNone" style="width: 50%; overflow-y: scroll; height:100%;">
                 <div class="flex-col component2">
-                    <input id="tasks_data" type="hidden" value="{{task_data}}">
                     <a style="text-align: center; width: 100%;">{% trans 'Edit tasks' %}</a>
-                    <div id="tasks_div"></div>
-                    <input id="btn_task_new" type="submit" value="{% trans 'New task' %}">
+                    <div id="tasks_div">
+                        {% for task in tasks_data %}
+                        <div class="flex">
+                            <input name="btn_task_{{forloop.counter|add:-1}}/del" type="submit" value={% trans 'Delete' %}>
+                            <input name="btn_task_{{forloop.counter|add:-1}}" type="submit" value={{task.name}} style="width: 100%;">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <input id="btn_task_new" name="btn_task_{{tasks_data|length}}" type="submit" value="{% trans 'New task' %}">
                 </div>
                 <div class="flex component2">
-                    <input id="is_tasks_rnd" name="is_tasks_rnd" type="checkbox">
+                    <input name="is_tasks_rnd" type="checkbox" {% if module.is_tasks_rnd %}checked{% endif %}>
                     <a style="font-size: 15px">{% trans 'In random order' %}</a>
                 </div>
             </div>
@@ -35,51 +40,16 @@
         
         
         <div class="flex">
-            <div class="submitbox" style="width: 50%;">
+            <div class="submitbox" style="width: 100%;">
                 <input type="submit" name="btn_save" value="{% trans 'Save' %}">
             </div>
-            <div class="submitbox" style="width: 50%;">
+            <div class="submitbox" style="width: 100%;">
                 <input type="submit" name="btn_del" value="{% trans 'Delete' %}">
+            </div>
+            <div class="submitbox" style="width: 100%;">
+                <input name="cancel_btn" type="submit" value="{% trans 'Cancel' %}">
             </div>
         </div>
     </form>
 </div>
-
-
-<script type="text/javascript">
-
-    // get tasks data
-    var tasks_data = JSON.parse(document.getElementById("tasks_data").value.replaceAll('\'','"'))
-
-    // new task button name
-    document.getElementById("is_tasks_rnd").checked = '{{module.is_tasks_rnd}}' == 'True'
-    document.getElementById("btn_task_new").name = "btn_task_" + 
-        Object.keys(tasks_data).length
-
-    // element vars
-    var tasks_div = document.getElementById("tasks_div")
-
-    // task list settup
-    Object.keys(tasks_data).forEach(key => {
-        var task_div = document.createElement("div")
-        task_div.classList.add("flex")
-        // task_del setup
-        var task_del = document.createElement("input")
-        task_del.type = "submit"
-        task_del.name = "btn_del_task"+key
-        task_del.value = "{% trans 'Delete' %}"
-        // task_btn setup
-        var task_btn    = document.createElement("input");
-        task_btn.name   = "btn_task_"+key
-        task_btn.style  = "width: 100%;"
-        task_btn.type   = "submit"
-        task_btn.value  = tasks_data[key]["name"]
-        tasks_div.appendChild(task_btn)
-        // task_div setup
-        task_div.appendChild(task_del)
-        task_div.appendChild(task_btn)
-        // tasks_div setup
-        tasks_div.appendChild(task_div)
-    })
-</script>
 {% endblock %}

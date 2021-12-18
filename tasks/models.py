@@ -9,7 +9,7 @@ class Module(models.Model):
     description     = models.CharField(max_length=1024, default="AAAA")
     creation_date   = models.DateTimeField(default=timezone.now())
     # tasks
-    tasks_data      = models.JSONField(default=dict)
+    tasks_data      = models.JSONField(default=list)
     is_tasks_rnd    = models.BooleanField(default=False)
     # key
     id              = models.CharField(max_length=16, unique=True, primary_key=True)
