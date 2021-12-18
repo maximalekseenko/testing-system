@@ -18,10 +18,9 @@ def get_base_context(request, **kwargs):
     context = {}
     # cookie cleanup
     for c_name, c_value in list(filter(lambda c:c[0].startswith('temp'), request.session.items())):
-        if c_name in kwargs['keep_cookies']: continue
+        if 'keep_cookies' in kwargs and c_name in kwargs['keep_cookies']: continue
         del request.session[c_name]
-    for a in request.session.items():
-        print(a)
+    for s in request.session.items():print(s)
     # context['all_modules'] = Module.objects.filter(is_public=True, is_active=True)
     #sider context
     if request.user.is_authenticated:

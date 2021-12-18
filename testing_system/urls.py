@@ -25,7 +25,7 @@ urlpatterns = [
     path('tasks/create/',               tasks.CreateView),
     path('tasks/<str:id>/',             tasks.ShowView),
     path('tasks/<str:id>/edit/',        tasks.EditView),
-    path('tasks/<str:id>/edit/<int:taskid>',tasks.EditTaskView),
+    path('tasks/<str:id>/edit/<str:tn>',tasks.EditTaskView),
     path('tasks/<str:id>/pass',         tasks.PassView),
 #main
     path('' ,                           main.HomeView),

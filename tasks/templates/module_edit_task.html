@@ -1,60 +1,118 @@
+{% extends './base.html' %}
+{% block content %}
 {% load i18n %}
-<div id="task_edit_box" class="bigbox" style="display: none">
+<div class="bigbox">
     <h1>{% trans 'Task editor' %}</h1>
+    <form method="POST" id="form"> {% csrf_token %}
 
-    <div class="flex-sb component2"> 
-        <input id="task_name" value="{{module.name}}" type="text" placeholder="{% trans 'task name' %}" maxlength="32" style="width: 50%"/>
+        <div class="flex-sb component2"> 
+            <input id="name" name="name" type="text" value="{{task_data.name}}" placeholder="{% trans 'task name' %}" maxlength="32" style="width: 50%"/>
+            
+            <div>
+                {% trans 'type' %}: 
+                <select id="ans_type" name="ans_type" onchange="set_answers_div()">
+                    <option value="one_answer">{% trans 'one answer' %}</option>
+                    <option value="mult_answer">{% trans 'multiple answers' %}</option>
+                    <option value="text_answer">{% trans 'text answers' %}</option>
+                </select>
+            </div>
+        </div>
+
         
-        <div>
-            {% trans 'type' %}: 
-            <select id="task_type">
-                <option value="one answer">{% trans 'one answer' %}</option>
-                <option value="multiple answers">{% trans 'multiple answers' %}</option>
-            </select>
-        </div>
-    </div>
+        <div class="flex">
+            <div class="flex-col component2" style="width: 50%; height: auto;">               
+                <textarea id="condition" name="condition" placeholder="{% trans 'condition' %}" maxlength="1024" style="width: 100%; resize: vertical; min-height: -webkit-fill-available;">{{task_data.condition}}</textarea>
+            </div>
 
-    
-    <div class="flex">
-        <div id="task_condition_div" class="flex-col component2" style="width: 50%; height: fit-content;">               
-            <textarea id="task_condition" placeholder="{% trans 'condition' %}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
+            <div class="flex-col componentNone" style="width: 50%; overflow-y: scroll;">
+                <div class="flex-col component2">
+                    <input id="task_data" type="hidden" value="{{task_data}}">
+                    <a style="text-align: center; width: 100%;">{% trans 'Answer options' %}</a>
+                    <div id="answers_div"></div>
+                    <div class="flex">
+                        <input type="button" onclick="set_answers_div('add')" value="{% trans 'Add field' %}" style="width:50%">
+                        <input type="button" onclick="set_answers_div('rem')" value="{% trans 'Remove field' %}" style="width:50%">
+                    </div>
+                </div>
+                <div class="flex component2">
+                    <input id="ans_rnd" name="ans_rnd" type="checkbox">
+                    <a style="font-size: 15px">{% trans 'In random order' %}</a>
+                </div>
+            </div>
         </div>
+        <div class="flex">
+            <div class="submitbox" style="width: 50%;">
+                <input name="btn_save" type="submit" value="{% trans 'Save' %}">
+            </div>
 
-        <div id="task_content_div" class="flex-col component2" style="width: 50%; overflow-y: scroll;">
-            <a style="text-align: center; width: 100%;">{% trans 'Answer options' %}</a>
-            <div></div>
-            <input type="button" value="{% trans 'New task' %}">
+            <div class="submitbox" style="width: 50%;">
+                <input id="cancel_btn" name="cancel_btn" type="submit" value="{% trans 'Cancel' %}">
+            </div>
         </div>
-    </div>
-    
-
-    <div class="flex">
-        <div class="submitbox" style="width: 50%;">
-            <input type="button" onclick=btn_task_save() value="{% trans 'Save' %}">
-        </div>
-
-        <div class="submitbox" style="width: 50%;">
-            <input id="task_btn" type="button" onclick=btn_task_del() value="{% trans 'Delete' %}">
-        </div>
-    </div>
-
+    </form>
 </div>
 
 
 <script type="text/javascript">
-    // buttons
-    function btn_task_save(){
-    }// btn_task_save - end
-    function btn_task_del(){
-    }// btn_task_del - end
+    // task data
+    var task_data = JSON.parse(document.getElementById("task_data").value.replaceAll('\'','"'))
+    
+    // element vars
+    var answers_div = document.getElementById("answers_div")
+    var ans_type = document.getElementById('ans_type')
+    
+    // fill data
+    document.getElementById('ans_rnd').checked = !!task_data['ans_rnd']
+    ans_type.value = task_data['ans_type']
+    set_answers_div('new')
 
-    // resize due decription
-    var task_condition_div = document.getElementById("task_condition_div")
-    var height = task_condition_div.clientHeight
-    document.getElementById("task_content_div").style.height = task_condition_div.clientHeight - 10 + 'px'
-    document.getElementById("task_edit_box").addEventListener("mousemove", function(){
-        if(task_condition_div.clientHeight != height)
-            document.getElementById("task_content_div").style.height = task_condition_div.clientHeight - 10 + 'px'
-        height = task_condition_div.clientHeight;
-    });
+    // data
+    function ans_opt_change(event){
+        event.target.parentElement.children[0].value = event.target.parentElement.children[1].value
+    }
+
+    
+    function set_answers_div(req=''){
+        // get current answer options
+        if (req != 'new'){
+            task_data['ans_opt'] = Array.from(document.getElementsByName("ans_opt"),el=>el.value)
+            task_data['ans_cor'] = Array.from(document.getElementsByName("ans_cor")).filter(el=>el.checked||ans_type.value=='text_answer').map(el=>el.value)
+        }
+        console.log(task_data['ans_opt'],task_data['ans_cor'])
+
+        // add/remove if requaired
+        if (req=='add') task_data['ans_opt'].push("")
+        if (req=='rem') task_data['ans_opt'].pop()
+
+        // cleanse answers_div
+        answers_div.textContent = ''
+
+        // fill answers_div
+        task_data['ans_opt'].forEach(answer => {
+            var answer_div = document.createElement("div")
+            answer_div.classList.add("flex")
+            // ans_opt setup
+            var ans_opt_inp = document.createElement("input")
+            ans_opt_inp.type = "text"
+            ans_opt_inp.name = "ans_opt"
+            ans_opt_inp.value = answer
+            ans_opt_inp.style = "width: 100%"
+            ans_opt_inp.maxLength = 32
+            ans_opt_inp.addEventListener("change", ans_opt_change)
+            // ans_cor setup
+            var ans_cor_inp = document.createElement("input")
+            ans_cor_inp.name = "ans_cor"
+            ans_cor_inp.value = answer
+            if (task_data['ans_cor'].includes(answer)) ans_cor_inp.checked = true
+            if (ans_type.value == 'one_answer') ans_cor_inp.type = "radio"
+            if (ans_type.value == 'mult_answer')ans_cor_inp.type = "checkbox"
+            if (ans_type.value == 'text_answer')ans_cor_inp.type = "hidden"
+            // answer_div setup
+            answer_div.appendChild(ans_cor_inp)
+            answer_div.appendChild(ans_opt_inp)
+            // answers_div setup
+            answers_div.appendChild(answer_div)
+        })
+    }// set_answers_div - end
 </script>
+{% endblock %}

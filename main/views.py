@@ -4,6 +4,6 @@ from django.contrib.auth.models import User
 import json
 
 def HomeView(request):
-    context = get_base_context(request, "Главная страница")
+    context = get_base_context(request)
     return render(request, 'home.html', context)
 #HomeView-end
