@@ -15,7 +15,6 @@ class Group(models.Model):
     moduls          = models.ManyToManyField(Module, related_name="moduls", blank=True)
     moduls_data     = models.JSONField(default={})
     # memers
-    mem             = models.ManyToManyField(User, related_name="mem", blank=True)
-    mem_adm         = models.ManyToManyField(User, related_name="mem_adm", blank=True)
-    mem_req         = models.ManyToManyField(User, related_name="mem_req", blank=True)
+    members         = models.ManyToManyField(User, related_name="members", blank=True)
+    members_pending = models.ManyToManyField(User, related_name="members_pending", blank=True)
     

@@ -1,0 +1,116 @@
+{% extends './base.html' %}
+{% block content %}
+{% load i18n %}
+{% load DWP %}
+<div class="bigbox">
+    <h1>{% trans 'Group' %} {{group.name}}</h1>
+    <form method="POST" id="form"> {% csrf_token %}
+
+        <div class="flex-sb component2">
+            <input id='name' name="name" type="text" value="{{group.name}}" placeholder="{% trans 'group name' %}" maxlength="32" style="width: 50%"/>
+            <div>
+                {% trans 'author' %}: 
+                <input value="{{user}}" disabled=true/>
+            </div>
+        </div>
+
+
+        <div class="flex">
+            <div class="flex-col component2" style="width: 50%">               
+                <textarea name="description" style="width: 100%; resize: vertical; height: 200px" placeholder="{% trans 'description' %}">{{group.description}}</textarea>
+            </div>
+
+            <div class="flex-col component2" style="width: 50%">
+                
+            </div>
+        </div>
+
+
+        <div class="flex">
+            <div class="flex" style="width: 100%;">     
+                <textarea style="width: 0px; padding: 5px; resize: vertical;" disabled=true>{% for member in group.members.all %}{{member}} {% endfor %}</textarea>
+                <div class="flex-col component2" style="width: 100%; overflow-y: scroll;">     
+                    <div id="mem_div"></div>
+                </div>
+            </div>
+
+            <div class="flex" style="width: 100%;">   
+                <div class="flex-col component2" style="width: 100%; overflow-y: scroll;">
+                    <div id="mem_pen_div">
+                        {% for mem in group.members_pending.all %}
+                        <input value="{{mem}}" style="width: 40%" disabled>
+                        <input type="button" value="✔" style="width: 21px">
+                        <input type="button" value="✖" style="width: 21px">
+                        {% endfor %}
+                    </div>
+                </div>  
+            </div>
+        </div>
+    
+        <br>        
+
+        <div class="flex">
+            <div class="submitbox" style="width: 100%;">
+                <input type="submit" name="btn_save" value="{% trans 'Save' %}">
+            </div>
+            <div class="submitbox" style="width: 100%;">
+                <input type="submit" name="btn_del" value="{% trans 'Delete' %}" onclick="return btn_del_check('{% trans 'group' %} '+document.getElementById('name').value)">
+            </div>
+            <div class="submitbox" style="width: 100%;">
+                <input name="cancel_btn" type="submit" value="{% trans 'Cancel' %}">
+            </div>
+        </div>
+
+    </form>
+</div>
+<script type="text/javascript">
+    function btn_del_check(name='') {return confirm("{% trans 'Delete' %} "+name+"?")}
+
+    var members = [{% for mem in group.members.all %}"{{mem}}",{% endfor %}]
+    var members_pending = [{% for mem in group.members_pending.all %}"{{mem}}",{% endfor %}]
+
+    var mem_div = document.getElementById("mem_div")
+    var mem_pen_div = document.getElementById("mem_pen_div")
+
+    set_user_divs()
+
+    function set_user_divs(){
+        console.log(members,members_pending)
+
+        // add/remove if requaired
+        //if (req=='add') task_data['ans_opt'].push("")
+        //if (req=='rem') task_data['ans_opt'].pop()
+
+        // cleanse divs
+        {% comment %} mem_div.textContent = ''
+        mem_pen_div.textContent = '' {% endcomment %}
+
+        // fill divs
+        members.forEach(answer => {
+            var div = document.createElement("div")
+            div.classList.add("flex")
+            // ans_opt setup
+            var ans_opt_inp = document.createElement("input")
+            ans_opt_inp.type = "text"
+            ans_opt_inp.name = "ans_opt"
+            ans_opt_inp.value = answer
+            ans_opt_inp.style = "width: 100%"
+            ans_opt_inp.maxLength = 32
+            ans_opt_inp.addEventListener("change", ans_opt_change)
+            // ans_cor setup
+            var ans_cor_inp = document.createElement("input")
+            ans_cor_inp.name = "ans_cor"
+            ans_cor_inp.value = answer
+            if (task_data['ans_cor'].includes(answer)) ans_cor_inp.checked = true
+            if (ans_type.value == 'one_answer') ans_cor_inp.type = "radio"
+            if (ans_type.value == 'multi_answer')ans_cor_inp.type = "checkbox"
+            if (ans_type.value == 'text_answer')ans_cor_inp.type = "hidden"
+            // answer_div setup
+            div.appendChild(ans_cor_inp)
+            div.appendChild(ans_opt_inp)
+            // answers_div setup
+            mem_div.appendChild(div)
+        })
+    }// set_answers_div - end
+</script> 
+{% endblock %}

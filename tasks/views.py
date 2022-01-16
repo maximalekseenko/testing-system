@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from static.py.view import get_base_context, is_user_authenticated, get_new_key
 from .models import Module
-import json
 # errors
 from django.db.utils import IntegrityError
 from django.http import Http404
@@ -56,9 +55,9 @@ def ShowView(request, id):
         return render(request, 'module_show.html', context) 
     
     # what request
-    if request.POST["btn_edit"]:
+    if "btn_edit" in request.POST:
         return redirect(f'/tasks/{id}/edit')
-    if request.POST["btn_pass"]:
+    if "btn_pass" in request.POST:
         return redirect(f'/tasks/{id}/pass')
 
     # what?
@@ -89,7 +88,6 @@ def EditView(request, id):
     # cancel
     if "cancel_btn" in request.POST:
         return redirect(f'/tasks/{id}/')
-
 
     # delete module
     if 'btn_del' in request.POST:

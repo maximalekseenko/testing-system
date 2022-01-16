@@ -6,3 +6,6 @@ from json import dumps
 def tojson(value):
     return dumps(value)
 
+@register.filter
+def tolist(value):
+    return list(value)

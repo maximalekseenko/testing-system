@@ -57,30 +57,83 @@ def ShowView(request, id):
         context['group'] = cur_group
         return render(request, 'group_show.html', context)
     
+    # what request
+    if "btn_mem" in request.POST:
+        return redirect(f'/groups/{id}/users/')
+    if "btn_edit" in request.POST:
+        return redirect(f'/groups/{id}/edit/')
+    if "btn_join" in request.POST:
+        return redirect(f'/groups/{id}/join/')
+# ShowView - end
+
+
+def EditView(request, id):
+    # does id exist
+    try: cur_group = Group.objects.get(id=id)
+    except Group.DoesNotExist: raise Http404
+
+    # is user author 
+    if cur_group.author != request.user: raise Http404
+        
+    # render page
+    if request.method != 'POST':
+        context = get_base_context(request)
+        context['group'] = cur_group
+        return render(request, 'group_edit.html', context)
     
+    # cancel
+    if "cancel_btn" in request.POST:
+        return redirect(f'/groups/{id}/')
 
-    #     #get data form POST
-    #     form = GroupForm(request.POST)
-    #     if len(Group.objects.filter(name=form.data['name'])) and Group.objects.filter(name=form.data['name'])[0].name != context['group'].name:
-    #         return redirect('/groups/create/')
+    # delete module
+    if 'btn_del' in request.POST:
+        cur_group.delete()
+        return redirect(f'/')
 
-    #     # if delete
-    #     if not form.data.get('members',""):
-    #         context['group'].delete()
-    #         return redirect('/')
-    #     #save edited group
-    #     context['group'].name   = form.data['name']
-    #     context['group'].members.set(User.objects.filter(username__in=form.data['members'].split('\r\n')))
-    #     context['group'].save()
-    #     return redirect(f'/groups/{id}/')
-    # #if POST-end
-    # if not is_user_authenticated(request):
-    #     return redirect(f"/accounts/register/groups_{id}")
+    # scrap data
+    name            = request.POST['name']
+    description     = request.POST['description']
+
+    # save module
+    if 'btn_save' in request.POST:
+        cur_group.name = name
+        cur_group.description = description
+        cur_group.save()
+        return redirect(f'/groups/{id}/') 
+# EditView - end
+
+
+def MembersView(request, id):
+    # does id exist
+    try: cur_group = Group.objects.get(id=id)
+    except Group.DoesNotExist: raise Http404
+
+    # is user author 
+    if cur_group.author != request.user: raise Http404
+        
+    # render page
+    if request.method != 'POST':
+        context = get_base_context(request)
+        context['group'] = cur_group
+        return render(request, 'group_members.html', context)
+# MembersView - end
+
+
+def JoinView(request, id):
+    # does id exist
+    try: cur_group = Group.objects.get(id=id)
+    except Group.DoesNotExist: raise Http404
+
+    # is not user author 
+    if cur_group.author == request.user: raise Http404
     
-    # if context['group'].author == request.user: context["gr_action"] = "edit"
-    # elif not context['group'].members.contains(request.user): context["gr_action"] = "join"
-    # return render(request, 'group_show.html', context)
-# ShowGroupView - end
+    print(cur_group.members.all())
+    if request.user in cur_group.members.all(): raise Http404
+    if request.user in cur_group.members_pending.all(): raise Http404
 
-def JoinView(request):pass
-def EditView(request):pass
+    print("DIE SCUM")
+
+    cur_group.members_pending.add(request.user)
+    cur_group.save()
+
+    return redirect(f'/groups/{id}/') 

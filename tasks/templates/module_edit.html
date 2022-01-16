@@ -6,7 +6,7 @@
     <form method="POST" id="form"> {% csrf_token %}
 
         <div class="flex-sb component2">
-            <input name="name" type="text" value="{{module.name}}" placeholder="{% trans 'module name' %}" maxlength="32" style="width: 50%"/>
+            <input id="name" name="name" type="text" value="{{module.name}}" placeholder="{% trans 'module name' %}" maxlength="32" style="width: 50%"/>
             <div>
                 {% trans 'author' %}: 
                 <input value="{{user}}" disabled=true/>
@@ -24,32 +24,38 @@
                     <div id="tasks_div">
                         {% for task in tasks_data %}
                         <div class="flex">
-                            <input name="btn_task_{{forloop.counter|add:-1}}/del" type="submit" value={% trans 'Delete' %}>
-                            <input name="btn_task_{{forloop.counter|add:-1}}" type="submit" value={{task.name}} style="width: 100%;">
+                            <input name="btn_task_{{forloop.counter|add:-1}}/del" type="submit" value={% trans 'Delete' %} onclick="return btn_del_check('{% trans 'task' %} {{task.name}}')">
+                            <input name="btn_task_{{forloop.counter|add:-1}}" type="submit" value='{{task.name}}' style="width: 100%;">
                         </div>
                         {% endfor %}
                     </div>
+                    
                     <input id="btn_task_new" name="btn_task_{{tasks_data|length}}" type="submit" value="{% trans 'New task' %}">
                 </div>
+                
                 <div class="flex component2">
                     <input name="is_tasks_rnd" type="checkbox" {% if module.is_tasks_rnd %}checked{% endif %}>
                     <a style="font-size: 15px">{% trans 'In random order' %}</a>
                 </div>
             </div>
         </div>
-        
+
+        <br>
         
         <div class="flex">
             <div class="submitbox" style="width: 100%;">
                 <input type="submit" name="btn_save" value="{% trans 'Save' %}">
             </div>
             <div class="submitbox" style="width: 100%;">
-                <input type="submit" name="btn_del" value="{% trans 'Delete' %}">
+                <input type="submit" name="btn_del" value="{% trans 'Delete' %}" onclick="return btn_del_check('{% trans 'module' %} '+document.getElementById('name').value)">
             </div>
             <div class="submitbox" style="width: 100%;">
-                <input name="cancel_btn" type="submit" value="{% trans 'Cancel' %}">
+                <input type="submit" name="cancel_btn" value="{% trans 'Cancel' %}">
             </div>
         </div>
     </form>
 </div>
+<script type="text/javascript">
+    function btn_del_check(name='') {return confirm("{% trans 'Delete' %} "+name+"?")}
+</script>
 {% endblock %}

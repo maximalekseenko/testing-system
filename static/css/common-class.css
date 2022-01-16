@@ -53,6 +53,27 @@ div#sider{
     flex-direction: column;
 }
 
+.notification
+{   
+    font-family: Arial;
+    font-size: 13px;
+    
+    background-color: #D06565;
+    
+    border: #A0A0A0 solid 1px;
+    border-radius: 4px;
+    
+    cursor: default;
+
+    width: 10px;
+    height: 10px;
+
+    padding-top: 0px;
+    padding-bottom: 4px;
+    
+    margin-left: -5px;
+}
+
 .submitbox {
     text-align: center;
     border-radius: 4px;

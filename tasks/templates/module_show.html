@@ -6,6 +6,7 @@
     <form method="POST" id="form"> {% csrf_token %}
 
         <div class="flex flex-sb component2">
+            <div></div>
             <div>
                 {% trans 'author' %}: 
                 <input value="{{module.author}}" disabled=true/>
@@ -23,6 +24,7 @@
             </div>
         </div>
         
+        <br>
 
         <div class="submitbox">
             {% if module.author == user %} <input type="submit" name="btn_edit" value="{% trans 'Edit' %}"> {% endif %}

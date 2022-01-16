@@ -9,7 +9,7 @@
         <div class="flex-sb component2"> 
             <input id="name" name="name" type="text" value="{{task_data.name}}" placeholder="{% trans 'task name' %}" maxlength="32" style="width: 50%"/>
             <div>
-                {% trans 'type' %}: 
+                <a>{% trans 'type' %}:</a>
                 <select id="ans_type" name="ans_type" onchange="set_answers_div()">
                     <option value="one_answer">{% trans 'one answer' %}</option>
                     <option value="text_answer">{% trans 'text answers' %}</option>
@@ -33,12 +33,16 @@
                         <input type="button" onclick="set_answers_div('rem')" value="{% trans 'Remove field' %}" style="width:50%">
                     </div>
                 </div>
+
                 <div class="flex component2">
                     <input name="ans_rnd" type="checkbox" {% if task_data.ans_rnd %}checked{% endif %}>
                     <a style="font-size: 15px">{% trans 'In random order' %}</a>
                 </div>
             </div>
         </div>
+
+        <br>
+        
         <div class="flex">
             <div class="submitbox" style="width: 50%;">
                 <input name="btn_save" type="submit" value="{% trans 'Save' %}">

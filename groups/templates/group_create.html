@@ -14,16 +14,11 @@
             </div>
         </div>
         
-
         <div class="flex component2">
             <textarea id="id_description" name="description" placeholder="{% trans 'description' %}" maxlength="1024" style="width: 100%; resize: vertical; height: 100px;"></textarea>
         </div>
 
-
-        {% for error in errors %}
-        <a>{{error}}</a>
-        {% endfor %}
-        
+        <br>
 
         <div class="submitbox">
             <button type="submit">{% trans 'Сreate' %}</button>
