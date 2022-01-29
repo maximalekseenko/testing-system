@@ -32,23 +32,21 @@
             </div>
         </div>
 
-    
         <br>
 
+        <div class="submitbox">
         {% if group.author == user %}
-        <div class="submitbox">
             <input type="submit" name="btn_edit" value="{% trans 'Edit' %}">
-        </div>
         {% elif user in group.members_pending.all %}
-        <div class="submitbox">
             <input type="text" value="{% trans 'Join request pending' %}" disabled style="text-align: center">
-        </div>
+            <input type="submit" name="btn_cancel_join" value="{% trans 'Cancel' %}">
+        {% elif user in group.members.all %}
+            <input type="submit" name="btn_leave" value="{% trans 'Leave' %}">
         {% elif user not in group.members.all %}
-        <div class="submitbox">
             <input type="submit" name="btn_join" value="{% trans 'Join' %}">
-        </div>
         {% endif %}
-    
+        </div>
+        
     </form>
 </div>
 {% endblock %}

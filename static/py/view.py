@@ -1,8 +1,12 @@
 from tasks.models import Module
 from groups.models import Group
 from string import ascii_letters, digits
-from django.utils.translation import gettext
 from random import sample
+from django.contrib.auth.models import User
+
+
+def get_user_by_name(name):
+    return User.objects.get(username=name)
 
 
 def get_new_key(length=16):
@@ -12,6 +16,12 @@ def get_new_key(length=16):
 
 def is_user_authenticated(request):
     return request.user.is_authenticated
+
+
+def get_element_by_starts_with(start,request):
+    element=list(filter(lambda e:e.startswith(start), request.POST))
+    if element: return element[0].split(start)[1]
+    else: return False
 
 
 def get_base_context(request, **kwargs):

@@ -5,50 +5,41 @@
     <h1>{% trans 'Group' %} {{group.name}}</h1>
     <form method="POST" id="form"> {% csrf_token %}
 
-        <div class="flex flex-sb component2">
-            <div></div>
-            <div>
-                {% trans 'author' %}: 
-                <input value="{{group.author}}" disabled=true/>
-            </div>
-        </div>
-
-
-        <div class="flex component2">
-            <a>{% trans 'Members'%}:</a>
-            <input type="text" disabled value="{%for mem in group.members.all%}mem{%endfor%}" style="width:100%">
-            {%if user == group.author%}<input name="btn_mem" type="submit" value="{% trans 'Modify' %}">{%endif%}
-            {%if user == group.author and group.members_pending.all|length%}<a class="notification">{{group.members_pending.all|length}}</a>{%endif%}
-        </div>
-
 
         <div class="flex">
-            <div class="flex-col component2" style="width: 50%">               
-                <textarea style="width: 100%; resize: vertical; height: 200px" disabled=true>{{group.description}}</textarea>
+            <div class="component2" style="width: 50%">
+                <a>{% trans 'Members' %}</a>
+                <div class="flex-col">
+                    {% for mem in group.members.all %}
+                    <div class="flex component2">
+                        <input value="{{mem}}" style="width: 40%" disabled>
+                        <input name="btn_mem_del_{{mem}}" type="submit" value="✖" style="width: 21px">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
 
-            <div class="flex-col component2" style="width: 50%">
-                
+            <div class="component2" style="width: 50%">
+                <a>{% trans 'Pending' %}</a>
+                <div class="flex-sb">
+                    {% for mem in group.members_pending.all %}
+                    <div class="flex component2">
+                        <input value="{{mem}}" style="width: 40%" disabled>
+                        <input name="btn_mem_add_{{mem}}" type="submit" value="✔" style="width: 21px">
+                        <input name="btn_mem_rem_{{mem}}" type="submit" value="✖" style="width: 21px">
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
-    
+
         <br>
 
-        {% if group.author == user %}
         <div class="submitbox">
-            <input type="submit" name="btn_edit" value="{% trans 'Edit' %}">
+            <input type="submit" name="btn_edit" value="{% trans 'Ok' %}">
         </div>
-        {% elif user in group.members_pending.all %}
-        <div class="submitbox">
-            <input type="text" value="{% trans 'Join request pending' %}" disabled style="text-align: center">
-        </div>
-        {% elif user not in group.members.all %}
-        <div class="submitbox">
-            <input type="submit" name="btn_join" value="{% trans 'Join' %}">
-        </div>
-        {% endif %}
-    
+
     </form>
 </div>
 {% endblock %}
