@@ -14,3 +14,5 @@ class Module(models.Model):
     # key
     id              = models.CharField(max_length=16, unique=True, primary_key=True)
     
+class Task(models.Model):
+    pass

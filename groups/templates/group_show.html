@@ -17,7 +17,7 @@
         <div class="flex component2">
             <a>{% trans 'Members'%}:</a>
             <input type="text" disabled value="{%for mem in group.members.all%}mem{%endfor%}" style="width:100%">
-            {%if user == group.author%}<input name="btn_mem" type="submit" value="{% trans 'Modify' %}">{%endif%}
+            {%if user == group.author%}<input name="btn_edit_mem" type="submit" value="{% trans 'Modify' %}">{%endif%}
             {%if user == group.author and group.members_pending.all|length%}<a class="notification">{{group.members_pending.all|length}}</a>{%endif%}
         </div>
 
@@ -27,8 +27,29 @@
                 <textarea style="width: 100%; resize: vertical; height: 200px" disabled=true>{{group.description}}</textarea>
             </div>
 
-            <div class="flex-col component2" style="width: 50%">
-                
+            <div class="flex-col componentNone" style="width: 50%">
+                <div class="flex-col component2">
+                    <a style="text-align:center">{% trans 'Active modules' %}</a>
+                    <div class="flex-col">
+                        <a>asdasd</a>
+                        <a>asdasd</a>
+                        <a>asdasd</a>
+                    </div>
+                </div>
+                <div class="flex-col component2">
+                    <a style="text-align:center">{% trans 'Old modules' %}</a>
+                    <div class="flex-col">
+                        <a>asdasd</a>
+                        <a>asdasd</a>
+                        <a>asdasd</a>
+                        <a>asdasd</a>
+                        <a>asdasd</a>
+                        <input type="button" value="{% trans 'Load more' %}">
+                    </div>
+                </div>
+                <div style="text-align: center">
+                    <input name="btn_edit_mod" type="submit" value="{% trans 'Modify' %}">
+                </div>
             </div>
         </div>
 

@@ -51,8 +51,10 @@ def ShowView(request, id):
         return render(request, 'group_show.html', context)
     
     # what request
-    if "btn_mem" in request.POST:
+    if "btn_edit_mem" in request.POST:
         return redirect(f'/groups/{id}/users/')
+    if "btn_edit_mod" in request.POST:
+        return redirect(f'/groups/{id}/moduls/')
     if "btn_edit" in request.POST:
         return redirect(f'/groups/{id}/edit/')
     if "btn_join" in request.POST:
