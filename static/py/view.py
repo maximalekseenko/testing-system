@@ -19,8 +19,8 @@ def is_user_authenticated(request):
 
 
 def get_element_by_starts_with(start,request):
-    element=list(filter(lambda e:e.startswith(start), request.POST))
-    if element: return element[0].split(start)[1]
+    elements=list(filter(lambda e:e.startswith(start), request.POST))
+    if elements: return elements[0].split(start)[1]
     else: return False
 
 

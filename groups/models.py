@@ -6,14 +6,16 @@ from tasks.models import Module
 
     
 class UserMark(models.Model):
-    user            = models.ManyToManyField(User, related_name="user_mark")
+    user            = models.ManyToManyField(User, related_name="user")
     mark            = models.IntegerField()
+    creation_date   = models.DateTimeField(default=timezone.now())
+    is_before_deadline = models.BooleanField(default=True)
 
 
 class ModuleData(models.Model):
-    module          = models.ForeignKey(Module, related_name="module_data", on_delete=models.CASCADE, blank=True)
-    user_marks      = models.ManyToManyField(UserMark, related_name="module_data", blank=True)
-    expiration_data = models.DateTimeField(default=timezone.now())
+    module          = models.ForeignKey(Module, related_name="module", on_delete=models.CASCADE, blank=True)
+    user_marks      = models.ManyToManyField(UserMark, related_name="user_marks", blank=True)
+    deadline        = models.DateTimeField(default=timezone.now())
 
 
 class Group(models.Model):
@@ -23,7 +25,7 @@ class Group(models.Model):
     creation_date   = models.DateTimeField(default=timezone.now())
     id              = models.CharField(max_length=16, unique=True, primary_key = True)
     # moduls
-    moduls_data     = models.ManyToManyField(ModuleData, related_name="group_member", blank=True)
+    moduls_data     = models.ManyToManyField(ModuleData, related_name="moduls_data", blank=True)
     # memers
-    members         = models.ManyToManyField(User, related_name="group_member", blank=True)
-    members_pending = models.ManyToManyField(User, related_name="group_member_pending", blank=True)
+    members         = models.ManyToManyField(User, related_name="members", blank=True)
+    members_pending = models.ManyToManyField(User, related_name="member_pending", blank=True)
