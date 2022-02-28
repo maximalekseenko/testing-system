@@ -6,39 +6,40 @@
     <h1>{% trans 'Group' %} {{group.name}}</h1>
     <form method="POST" id="form"> {% csrf_token %}
 
-
         <div class="flex-col">
             <a style=" width:100%; text-align: center;">{% trans 'Moduls' %}</a>
-            <div class="flex-col">
-                {% for moduledata in group.moduls_data.all|dictsortreversed:"deadline" %}
-                <div class="flex-sb component2">
-                    <div  style="width:max-content;">
-                        <a href="/tasks/{{moduledata.module.id}}/">{{moduledata.module.name}}</a>
-                    </div>
-                    <div class="flex">
-                        <div class="flex componentNone" style="width:min-content;">
-                            <a style="color: {% if moduledata.deadline|date:'Y-m-d H:i'|inpast:'%Y-%m-%d %H:%M' %} grey {% else %} green {% endif %};">{% trans 'deadline:' %}</a>
-                            <input type="datetime-local" value="{{moduledata.deadline|date:'Y-m-d'}}T{{moduledata.deadline|time:'H:i'}}" onchange="deadline_change(this, '{{moduledata.module.id}}');">
-                        </div>
-                        <div class="flex-col" style="width:min-content;">
-                            <input type="submit" name="btn_res_{{moduledata.module.id}}" value="{% trans 'Watch results' %}">
-                            <input type="submit" name="btn_rem_{{moduledata.module.id}}" value="{% trans 'Remove' %}" onclick="return btn_del_check('{% trans 'module' %} '+document.getElementById('name').value)">
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
         </div>
-        
-        <div class="flex component2">
-            <input type="text" name="add_mod_id">
-            <input type="submit" name="add_mod" value="{% trans 'Add' %}">
+
+        <div class="flex-sb component2">
+            <div>
+                <input type="text" name="add_mod_id">
+                <input type="submit" name="add_mod" value="{% trans 'Add' %}">
+            </div>
+            <div>
+                <input type="submit" name="btn_back" value="{% trans 'Ok' %}">
+            </div>
         </div>
 
         <br>
 
-        <div class="submitbox">
-            <input type="submit" name="btn_edit" value="{% trans 'Ok' %}">
+        <div class="flex-col">
+            {% for moduledata in group.moduls_data.all|dictsortreversed:"deadline" %}
+            <div class="flex-sb component2">
+                <div  style="width:max-content;">
+                    <a href="/tasks/{{moduledata.module.id}}/">{{moduledata.module.name}}</a>
+                </div>
+                <div class="flex">
+                    <div class="flex componentNone" style="width:min-content;">
+                        <a style="color: {% if moduledata.deadline|inpast %} grey {% else %} green {% endif %};">{% trans 'deadline:' %}</a>
+                        <input type="datetime-local" value="{{moduledata.deadline|date:'Y-m-d'}}T{{moduledata.deadline|time:'H:i'}}" onchange="deadline_change(this, '{{moduledata.module.id}}');">
+                    </div>
+                    <div class="flex-col" style="width:min-content;">
+                        <input type="submit" name="btn_res_{{moduledata.module.id}}" value="{% trans 'Watch results' %}">
+                        <input type="submit" name="btn_rem_{{moduledata.module.id}}" value="{% trans 'Remove' %}" onclick="return btn_del_check('{% trans 'module' %} '+document.getElementById('name').value)">
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
         </div>
 
     </form>

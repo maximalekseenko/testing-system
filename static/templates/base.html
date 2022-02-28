@@ -32,4 +32,13 @@
             {% endblock %}
         </footer>
     </body>
+    <script type="text/javascript">
+        {% include './js.js' %}
+        {% block js %}
+        {% endblock %}
+    
+        {% block script %}
+        {% endblock %}
+    </script>
+
 </html>

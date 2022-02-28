@@ -5,12 +5,10 @@ from static.py.view import get_base_context
 #to be anihilated
 from .forms import AccountForm
 
-def LoginView(request, red=""):
-
+def LoginView(request):
     # render page
     if request.method != 'POST':
         context = get_base_context(request)
-        context['redirect'] = red
         return render(request, 'registration/login.html', context)
 
     # scrap data
@@ -20,22 +18,20 @@ def LoginView(request, red=""):
 
     # validation
     if user is None:
-        return redirect(f'/accounts/login/{red}')
+        return redirect(f'/accounts/login/')
 
     # login
     login(request, user)
-
-    # proceed
-    return redirect(f'/{"/".join(red.split("_"))}')
+ 
+    # return to previous page
+    return redirect(request.COOKIES['before_sign_page'])
 # LoginView - end
 
         
-def RegisterView(request, red=""):
-
+def RegisterView(request):
     # render page
     if request.method != 'POST':
         context = get_base_context(request)
-        context['redirect'] = red
         context['form'] = UserCreationForm()
         response=render(request, 'registration/register.html', context)
         return response
@@ -45,7 +41,7 @@ def RegisterView(request, red=""):
     
     # validation
     if not form.is_valid():
-        return redirect(f'/accounts/register/{red}')
+        return redirect(f'/accounts/register/')
 
     # save
     form.save()
@@ -56,8 +52,8 @@ def RegisterView(request, red=""):
     user = authenticate(username=username, password=password)
     login(request, user)
 
-    # proceed
-    return redirect(f'/{"/".join(red.split("_"))}')
+    # return to previous page
+    return redirect(request.COOKIES['before_sign_page'])
 # RegisterView - end
 
 

@@ -11,7 +11,7 @@
                 <a>{% trans 'Members' %}</a>
                 <div class="flex-col">
                     {% for mem in group.members.all %}
-                    <div class="flex component2">
+                    <div class="flex">
                         <input value="{{mem}}" style="width: 40%" disabled>
                         <input name="btn_mem_del_{{mem}}" type="submit" value="✖" style="width: 21px">
                     </div>
@@ -23,7 +23,7 @@
                 <a>{% trans 'Pending' %}</a>
                 <div class="flex-sb">
                     {% for mem in group.members_pending.all %}
-                    <div class="flex component2">
+                    <div class="flex">
                         <input value="{{mem}}" style="width: 40%" disabled>
                         <input name="btn_mem_add_{{mem}}" type="submit" value="✔" style="width: 21px">
                         <input name="btn_mem_rem_{{mem}}" type="submit" value="✖" style="width: 21px">
@@ -37,7 +37,7 @@
         <br>
 
         <div class="submitbox">
-            <input type="submit" name="btn_edit" value="{% trans 'Ok' %}">
+            <input type="submit" name="btn_back" value="{% trans 'Ok' %}">
         </div>
 
     </form>

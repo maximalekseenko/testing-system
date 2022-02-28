@@ -8,7 +8,7 @@
     {% for group in my_groups %}
         <div class="flex">
             {% if group.1 != 0 %}<a class="component">{{group.1}}</a>{% endif %}
-            <a class="component2" href="/groups/{{group.id}}">{{group.name}}</a>
+            <a class="component2" href="/groups/?id={{group.id}}">{{group.name}}</a>
         </div>
     {% endfor %}
 </div>
@@ -22,7 +22,7 @@
     {% endif %}
     {% for module in my_modules %}
         <div class="flex-col box">
-            <a class="component2" href="/tasks/{{module.id}}">{{module.name}}</a>
+            <a class="component2" href="/tasks/?id={{module.id}}">{{module.name}}</a>
         </div>
     {% endfor %}
 </div>
@@ -34,9 +34,9 @@
     {% endif %}
     {% for group, modules in modules_groups.items %}
     <div class="flex-col box">
-        <a class="component2" href="/groups/{{group.id}}">{{group.name}}:</a>
+        <a class="component2" href="/groups/?id={{group.id}}">{{group.name}}:</a>
         {% for module in modules %}
-            <a class="component" href="/tasks/{{module.id}}">{{module.name}}</a>
+            <a class="component" href="/tasks/?id={{module.id}}">{{module.name}}</a>
         {% endfor %}
     </div>
     {% endfor %}

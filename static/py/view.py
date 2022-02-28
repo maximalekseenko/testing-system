@@ -14,25 +14,22 @@ def get_new_key(length=16):
     return "".join(sample(all,length))
 
 
-def is_user_authenticated(request):
-    return request.user.is_authenticated
-
-
 def get_element_by_starts_with(start,request):
     elements=list(filter(lambda e:e.startswith(start), request.POST))
     if elements: return elements[0].split(start)[1]
     else: return False
 
 
-def get_base_context(request, **kwargs):
-    context = {}
-    # cookie cleanup
+def get_base_context(request, page_name='⚠', **kwargs):
+    context = {'page_name': page_name}
+    # session cleanup
     for c_name, c_value in list(filter(lambda c:c[0].startswith('temp'), request.session.items())):
         if 'keep_cookies' in kwargs and c_name in kwargs['keep_cookies']: continue
         del request.session[c_name]
-    for s in request.session.items():print(s)
-    # context['all_modules'] = Module.objects.filter(is_public=True, is_active=True)
-    #sider context
+    # log cookies and session data for debug
+    for cookie_name, cookie_value in request.COOKIES.items():print('🍪',cookie_name, '-=-', cookie_value)
+    for session in request.session.items():print('🖥️ ',session)
+    #sider context MAKE THIS MEET ITS FINAL DOOM
     if request.user.is_authenticated:
         context['my_modules']    = Module.objects.all()
         context['my_groups']     = Group.objects.all()

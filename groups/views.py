@@ -1,238 +1,248 @@
 from django.shortcuts import render, redirect
-from static.py.view import get_base_context, is_user_authenticated, get_new_key, get_element_by_starts_with, get_user_by_name
+from static.py.view import get_base_context, get_new_key, get_element_by_starts_with, get_user_by_name
+from static.py.decorators import check_auntification, check_object_exist, check_author
 from .models import Group, ModuleData
 from tasks.models import Module
 #
 from datetime import datetime
+from re import split
 # errors
 from django.db.utils import IntegrityError
-from django.http import Http404
 
 
 def HomeView(request): pass
 def InviteView(request): pass
 
-def CreateView(request):
-    if not is_user_authenticated(request):
-        return redirect("/accounts/register/groups_create/")
 
+
+@check_auntification
+def CreateView(request):
     # render page
     if request.method != 'POST':
         context = get_base_context(request)
         return render(request, 'group_create.html', context)
 
-    # scrap data
-    name        = request.POST['name']
-    description = request.POST['description']
-    author      = request.user
-        
-    # creation
-    try: new_group = Group.objects.create(
-            name        = name,
-            author      = author,
-            description = description,
-            id          = get_new_key())
-    except IntegrityError: pass
+
+    # create
+    while True:
+        try: 
+            new_group = Group.objects.create(
+                name        = request.POST['name'],
+                description = request.POST['description'],
+                author      = request.user,
+                id          = get_new_key())
+            break
+        except IntegrityError: continue
+
 
     # save
     new_group.save()  
     
+
     # proceed
-    return redirect(f'/groups/{new_group.id}/')
+    return redirect(f'/groups/?id={new_group.id}')
 # CreateGroupView - end
 
 
-def ShowView(request, id):
-    # does id exist
-    try: cur_group = Group.objects.get(id=id)
-    except Group.DoesNotExist: raise Http404
+
+@check_object_exist(Group)
+def ShowView(request, cur_group):
+    # get mod_count for page
+    mod_count = int(request.GET.get('q')) if request.GET.get('q') else 3
         
+
     # render page
     if request.method != 'POST':
+        ## content
         context = get_base_context(request)
+        ## mod show on page
+        context['mod_count'] = ':' + str(mod_count)
+        context['can_mod_load'] = len(cur_group.moduls_data.all()) > mod_count
+        ## group
         context['group'] = cur_group
+        ## render
         return render(request, 'group_show.html', context)
     
+ 
     # what request
-    if "btn_edit_mem" in request.POST:
-        return redirect(f'/groups/{id}/members/')
+    ## load more old moduls for preview
+    if "btn_mod_load" in request.POST: 
+        return redirect(f'/groups/?id={cur_group.id}&q={mod_count+3}')
+    ## redirect to moduls editor
     if "btn_edit_mod" in request.POST:
-        return redirect(f'/groups/{id}/moduls/')
+        return redirect(f'/groups/moduls/?id={cur_group.id}')
+    ## redirect to members editor
+    if "btn_edit_mem" in request.POST:
+        return redirect(f'/groups/members/?id={cur_group.id}')
+    ## redirect to editor
     if "btn_edit" in request.POST:
-        return redirect(f'/groups/{id}/edit/')
+        return redirect(f'/groups/edit/?id={cur_group.id}')
+    ## join group
     if "btn_join" in request.POST:
-        if request.user not in cur_group.members.all():
-            if request.user not in cur_group.members_pending.all():
-                cur_group.members_pending.add(request.user)
+        if request.user not in cur_group.members.all() and \
+            request.user not in cur_group.members_pending.all() and \
+            request.user != cur_group.author:
+            cur_group.members_pending.add(request.user)
+    ## leave group
     if "btn_leave" in request.POST:
         if request.user in cur_group.members.all():
             cur_group.members.remove(request.user)
+    ## cancel join request
     if "btn_cancel_join" in request.POST:
         if request.user in cur_group.members_pending.all():
             cur_group.members_pending.remove(request.user)
+    
 
-    # what?
-    return redirect(f'/groups/{id}/')
+    # reload
+    return redirect(f'/groups/?id={cur_group.id}')
 # ShowView - end
 
 
-def EditView(request, id):
-    # does id exist
-    try: cur_group = Group.objects.get(id=id)
-    except Group.DoesNotExist: raise Http404
 
-    # is user author 
-    if cur_group.author != request.user: raise Http404
-        
+@check_object_exist(Group)
+@check_author
+def ModulsView(request, cur_group):
     # render page
     if request.method != 'POST':
+         # context
         context = get_base_context(request)
         context['group'] = cur_group
-        return render(request, 'group_edit.html', context)
-    
-    # cancel
-    if "cancel_btn" in request.POST:
-        return redirect(f'/groups/{id}/')
-
-    # delete module
-    if 'btn_del' in request.POST:
-        cur_group.delete()
-        return redirect(f'/')
-
-    # scrap data
-    name            = request.POST['name']
-    description     = request.POST['description']
-
-    # save module
-    if 'btn_save' in request.POST:
-        cur_group.name = name
-        cur_group.description = description
-        cur_group.save()
-        return redirect(f'/groups/{id}/') 
-# EditView - end
-
-
-def ModulsView(request, id):
-    # does id exist
-    try: cur_group = Group.objects.get(id=id)
-    except Group.DoesNotExist: raise Http404
-
-    # is user author 
-    if cur_group.author != request.user: raise Http404
-        
-    # render page
-    if request.method != 'POST':
-        context = get_base_context(request)
-        context['group'] = cur_group
+         # render
         return render(request, 'group_moduls.html', context)
 
-    # scrap data
-    deadline = get_element_by_starts_with("deadline_",request)
-    if 'add_mod' in request.POST: add_mod_id=request.POST['add_mod_id']
-    else: add_mod_id = -1
 
     # what request
+    ## back
+    if 'btn_back' in request.POST:
+        return redirect(f'/groups/?id={cur_group.id}')
+    ## remove module
     rem_mod_id = get_element_by_starts_with("btn_rem_",request)
-    res_mod_id = get_element_by_starts_with("btn_res_",request)
-
-    # remove module
     if rem_mod_id:
         ModuleData.objects.get(module__id__exact=rem_mod_id).delete()
-        # cur_group.moduls_data.remove(ModuleData.objects.get(module__id__exact=rem_mod_id))
-        # cur_group.save()
-        return redirect(f'/groups/{id}/moduls/')
-
-    # change deadline
+    ## change deadline
+    deadline = get_element_by_starts_with("deadline_",request)
     if deadline:
         changed = cur_group.moduls_data.get(module__id__exact=deadline)
         changed.deadline = datetime.strptime(request.POST["deadline_"+deadline], '%Y-%m-%dT%H:%M')
         changed.save()
-        return redirect(f'/groups/{id}/moduls/')
-
-    # add module
-    if add_mod_id!=-1:
-        for mod_id in add_mod_id.split('/'):
+    ## add module
+    if 'add_mod' in request.POST:
+        for mod_id in split('=|&', request.POST['add_mod_id']):
+            ## check id for existance
             try:mod = Module.objects.get(id=mod_id)
             except:continue
-            try:
-                moduleData = ModuleData.objects.get(module__exact=mod)
+
+            if cur_group.moduls_data.filter(module__exact=mod):
+                moduleData = cur_group.moduls_data.get(module__exact=mod)
                 moduleData.clean()
                 moduleData.deadline = datetime.now()
                 moduleData.save()
-            except:
+            else:
                 new_ModuleData = ModuleData.objects.create(module = mod, deadline = datetime.now())
                 new_ModuleData.save()
                 cur_group.moduls_data.add(new_ModuleData)
                 cur_group.save()
-        return redirect(f'/groups/{id}/moduls/')
+    
 
-    # what the fuck?
-    return redirect(f'/groups/{id}/')
+    # reload
+    return redirect(f'/groups/moduls/?id={cur_group.id}')
 # ModulsView - end
 
 
-def MembersView(request, id):
-    # does id exist
-    try: cur_group = Group.objects.get(id=id)
-    except Group.DoesNotExist: raise Http404
 
-    # is user author 
-    if cur_group.author != request.user: raise Http404
-        
+@check_object_exist(Group)
+@check_author
+def EditView(request, cur_group): 
     # render page
     if request.method != 'POST':
+        ## content
         context = get_base_context(request)
         context['group'] = cur_group
+        ## render
+        return render(request, 'group_edit.html', context)
+    
+
+    # what request
+    ## cancel
+    if "cancel_btn" in request.POST:
+        return redirect(f'/groups/?id={cur_group.id}')
+    ## delete module
+    if 'btn_del' in request.POST:
+        cur_group.delete()
+        return redirect(f'/')
+    ## save module
+    if 'btn_save' in request.POST:
+        cur_group.name = request.POST['name']
+        cur_group.description = request.POST['description']
+        cur_group.save()
+        return redirect(f'/groups/?id={cur_group.id}')
+    
+
+    # reload
+    return redirect(f'/groups/edit/?id={cur_group.id}')
+# EditView - end
+
+
+
+@check_object_exist(Group)
+@check_author
+def MembersView(request, cur_group): 
+    # render page
+    if request.method != 'POST':
+        ## context
+        context = get_base_context(request)
+        context['group'] = cur_group
+        ## render
         return render(request, 'group_members.html', context)
 
     # what request
+    ## back
+    if 'btn_back' in request.POST:
+        return redirect(f'/groups/?id={cur_group.id}')
+    ## add user
     mem_add = get_element_by_starts_with("btn_mem_add_",request)
-    mem_rem = get_element_by_starts_with("btn_mem_rem_",request)
-    mem_del = get_element_by_starts_with("btn_mem_del_",request)
-
-    # add user
     if mem_add:
+        ### get user
         mem_add = get_user_by_name(mem_add)
-        if mem_add not in cur_group.members_pending.all():
-            return Http404
+        ### raise if user not pending
+        if mem_add not in cur_group.members_pending.all(): return
+        ### raise if user not pending
         cur_group.members_pending.remove(mem_add)
         cur_group.members.add(mem_add)
-        return redirect(f'/groups/{id}/members/')
-
-    # remove (from pending) user
+    ## remove (from pending) user
+    mem_rem = get_element_by_starts_with("btn_mem_rem_",request)
     if mem_rem:
+        ### get user
         mem_rem = get_user_by_name(mem_rem)
+        ### remove if pending
         if mem_rem in cur_group.members_pending.all():
             cur_group.members_pending.remove(mem_rem)
-        return redirect(f'/groups/{id}/members/')
-
-    # delete (from members) user
+    ## delete (from members) user
+    mem_del = get_element_by_starts_with("btn_mem_del_",request)
     if mem_del:
+        ### get user
         mem_del = get_user_by_name(mem_del)
+        ### delete if in group
         if mem_del in cur_group.members.all():
             cur_group.members.remove(mem_del)
-        return redirect(f'/groups/{id}/members/')
-    
-    # what
-    return redirect(f'/groups/{id}/')
+
+
+    # reload
+    return redirect(f'/groups/members/?id={cur_group.id}')
 # MembersView - end
 
 
-def JoinView(request, id):
-    # does id exist
-    try: cur_group = Group.objects.get(id=id)
-    except Group.DoesNotExist: raise Http404
+@check_auntification
+@check_object_exist(Group)
+def JoinView(request, cur_group):
+    # validation 
+    if cur_group.author == request.user: return
+    if request.user in cur_group.members.all(): return
+    if request.user in cur_group.members_pending.all(): return
 
-    # is not user author 
-    if cur_group.author == request.user: raise Http404
-    
-    print(cur_group.members.all())
-    if request.user in cur_group.members.all(): raise Http404
-    if request.user in cur_group.members_pending.all(): raise Http404
-
-    print("DIE SCUM ("+request.user.username+")")
-
+    # add user to pending list
     cur_group.members_pending.add(request.user)
     cur_group.save()
 
+    # return 
     return redirect(f'/groups/{id}/') 

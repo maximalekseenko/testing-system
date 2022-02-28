@@ -1,80 +1,75 @@
 from django.shortcuts import render, redirect
-from static.py.view import get_base_context, is_user_authenticated, get_new_key
+from static.py.view import get_base_context, get_new_key
+from static.py.decorators import check_auntification, check_object_exist, check_author
 from .models import Module
 # errors
 from django.db.utils import IntegrityError
 from django.http import Http404
 
 
-def CreateView(request):
-    if not is_user_authenticated(request):
-        return redirect("/accounts/register/tasks_create")
 
+@check_auntification
+def CreateView(request):
     # render page
     if request.method != 'POST':
         context = get_base_context(request)
         return render(request, 'module_create.html', context)
 
-    # scrap data
-    name        = request.POST['name']
-    description = request.POST['description']
-    author      = request.user
 
-    # validation
-    if len(Module.objects.filter(name=name, author=author)):
-        return redirect('/tasks/create/')
-        
     # create
-    try:
-        new_module = Module.objects.create(
-            name        = name,
-            author      = author,
-            description = description,
-            id          = get_new_key()
-        )
-    except IntegrityError: pass
+    while True:
+        try:
+            new_module = Module.objects.create(
+                name        = request.POST['name'],
+                description = request.POST['description'],
+                author      = request.user,
+                id          = get_new_key())
+            break
+        except IntegrityError: continue
     
+
     # save
     new_module.save()
+
+    
     # proceed
     return redirect(f'/tasks/{new_module.id}/')
 # CreateView - end
 
 
-def ShowView(request, id):
 
-    context = get_base_context(request)
-
-    # does id exist
-    try: context['module'] = Module.objects.get(id=id)
-    except Module.DoesNotExist: raise Http404
-
+@check_object_exist(Module)
+def ShowView(request, cur_module):
     # render page
     if request.method != 'POST':
-        
+        ## get context
+        context = get_base_context(request)
+        context['module'] = cur_module
+        ## render
         return render(request, 'module_show.html', context) 
     
-    # what request
-    if "btn_edit" in request.POST:
-        return redirect(f'/tasks/{id}/edit')
-    if "btn_pass" in request.POST:
-        return redirect(f'/tasks/{id}/pass')
 
-    # what?
-    return redirect(f'/tasks/{id}/')    
+    # what request
+    ## edit
+    if "btn_edit" in request.POST:
+        return redirect(f'/tasks/edit/?id={cur_module.id}')
+    ## pass
+    if "btn_pass" in request.POST:
+        return redirect(f'/tasks/pass/?id={cur_module.id}')
+
+
+    # reload
+    return redirect(f'/tasks/?id={cur_module.id}')    
 # ShowView - end
 
 
-def EditView(request, id):
-    # does id exist
-    try: cur_module = Module.objects.get(id=id)
-    except Module.DoesNotExist: raise Http404
 
-    # is user author 
-    if cur_module.author != request.user: raise Http404
-
+@check_object_exist(Module)
+@check_author
+def EditView(request, cur_module):
     # render page
     if request.method != 'POST':
+        ## get context
         context = get_base_context(request, keep_cookies=[f"temp_edit_tasks_data_{cur_module.id}", f"temp_edit_module_{cur_module.id}"])
         # imoprt module from cookies
         if f'temp_edit_module_{cur_module.id}' not in request.session: context['module'] = cur_module

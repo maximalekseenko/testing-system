@@ -5,7 +5,8 @@
 <div class="bigbox">
     <h1>{% trans 'Group' %} {{group.name}}</h1>
     <form method="POST" id="form"> {% csrf_token %}
-
+        
+        <!-- header with author -->
         <div class="flex flex-sb component2">
             <div></div>
             <div>
@@ -15,40 +16,57 @@
         </div>
 
 
+        <!-- header with members -->
         <div class="flex component2">
+            <!-- title -->
             <a>{% trans 'Members'%}:</a>
-            <input type="text" disabled value="{%for mem in group.members.all%}mem{%endfor%}" style="width:100%">
+            <!-- list of members -->
+            <input type="text" disabled value="{{group.members.all|maplist:'x.username'|join:', '}}" style="width:100%">
+            <!-- edit members button and notification icon if needed -->
             {%if user == group.author%}<input name="btn_edit_mem" type="submit" value="{% trans 'Modify' %}">{%endif%}
             {%if user == group.author and group.members_pending.all|length%}<a class="notification">{{group.members_pending.all|length}}</a>{%endif%}
         </div>
 
 
+        <!-- center -->
         <div class="flex">
+            <!-- left: description -->
             <div class="flex-col component2" style="width: 50%">               
                 <textarea style="width: 100%; resize: vertical; height: 200px" disabled=true>{{group.description}}</textarea>
             </div>
+
+            <!-- right: moduls -->
             <div class="flex-col componentNone" style="width: 50%">
+                <!-- active moduls -->
                 <div class="flex-col component2">
+                    <!-- title -->
                     <a style="text-align:center">{% trans 'Active modules' %}</a>
+                    <!-- active moduls -->
                     <div class="flex-col">
-                        {%for mod in group.moduls_data.all|dictsortreversed:"deadline"%}
-                        {%if not mod.deadline|date:'Y-m-d H:i'|inpast:'%Y-%m-%d %H:%M'%}
-                        <a>{{mod.module.name}}</a>
-                        {%endif%}
+                        {%for mod in group.moduls_data.all|filterlist:"not inpast(x.deadline)"|dictsortreversed:"deadline"%}
+                        <a href="/tasks/?id={{mod.module.id}}">{{mod.module.name}}</a>
                         {%endfor%}
                     </div>
                 </div>
+
+                <!-- old moduls -->
                 <div class="flex-col component2">
+                    <!-- title -->
                     <a style="text-align:center">{% trans 'Old modules' %}</a>
+                    <!-- old moduls -->
                     <div class="flex-col">
-                        {%for mod in group.moduls_data.all|dictsortreversed:"deadline"|slice:':3'%}
-                        {%if mod.deadline|date:'Y-m-d H:i'|inpast:'%Y-%m-%d %H:%M'%}
-                        <a>{{mod.module.name}}</a>
-                        {%endif%}
+                        <!-- list of old moduls -->
+                        {%for mod in group.moduls_data.all|filterlist:"inpast(x.deadline)"|dictsortreversed:"deadline"|slice:mod_count%}
+                        <a href="/tasks/?id={{mod.module.id}}">{{mod.module.name}}</a>
                         {%endfor%}
-                        <input type="button" value="{% trans 'Load more' %}">
+                        <!-- load more button if can -->
+                        {%if can_mod_load%}
+                        <input type="submit" name="btn_mod_load" value="{% trans 'Load more' %}">
+                        {%endif%}
                     </div>
                 </div>
+
+                <!-- modify moduls button -->
                 <div style="text-align: center">
                     <input name="btn_edit_mod" type="submit" value="{% trans 'Modify' %}">
                 </div>
@@ -57,17 +75,22 @@
 
         <br>
 
+        <!-- bottom buttons -->
         <div class="submitbox">
-        {% if group.author == user %}
+            <!-- edit -->
+            {% if group.author == user %}
             <input type="submit" name="btn_edit" value="{% trans 'Edit' %}">
-        {% elif user in group.members_pending.all %}
+            <!-- cancel join -->
+            {% elif user in group.members_pending.all %}
             <input type="text" value="{% trans 'Join request pending' %}" disabled style="text-align: center">
             <input type="submit" name="btn_cancel_join" value="{% trans 'Cancel' %}">
-        {% elif user in group.members.all %}
+            <!-- leave -->
+            {% elif user in group.members.all %}
             <input type="submit" name="btn_leave" value="{% trans 'Leave' %}">
-        {% elif user not in group.members.all %}
+            <!-- join -->
+            {% elif user not in group.members.all %}
             <input type="submit" name="btn_join" value="{% trans 'Join' %}">
-        {% endif %}
+            {% endif %}
         </div>
         
     </form>
