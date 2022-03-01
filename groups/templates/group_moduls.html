@@ -26,7 +26,7 @@
             {% for moduledata in group.moduls_data.all|dictsortreversed:"deadline" %}
             <div class="flex-sb component2">
                 <div  style="width:max-content;">
-                    <a href="/tasks/{{moduledata.module.id}}/">{{moduledata.module.name}}</a>
+                    <a href="/tasks/?id={{moduledata.module.id}}">{{moduledata.module.name}}</a>
                 </div>
                 <div class="flex">
                     <div class="flex componentNone" style="width:min-content;">

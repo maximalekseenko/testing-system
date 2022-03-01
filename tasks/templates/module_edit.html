@@ -4,35 +4,47 @@
 <div class="bigbox">
     <h1>{% trans 'Module editor' %}</h1>
     <form method="POST" id="form"> {% csrf_token %}
-
+        <!-- header -->
         <div class="flex-sb component2">
+            <!-- name -->
             <input id="name" name="name" type="text" value="{{module.name}}" placeholder="{% trans 'module name' %}" maxlength="32" style="width: 50%"/>
+            <!-- author -->
             <div>
                 {% trans 'author' %}: 
                 <input value="{{user}}" disabled=true/>
             </div>
         </div>
         
+        <!-- center -->
         <div class="flex">
-            <div class="flex-col component2" style="width: 50%; height: auto;">               
+            <!-- left -->
+            <div class="flex-col component2" style="width: 50%; height: auto;">    
+                <!-- description -->
                 <textarea name="description" placeholder="{% trans 'description' %}" maxlength="1024" style="width: 100%; resize: vertical; min-height: -webkit-fill-available;">{{module.description}}</textarea>
             </div>
 
+            <!-- right -->
             <div class="flex-col componentNone" style="width: 50%; overflow-y: scroll; height:100%;">
+                <!-- tasks -->
                 <div class="flex-col component2">
+                    <!-- title -->
                     <a style="text-align: center; width: 100%;">{% trans 'Edit tasks' %}</a>
+                    <!-- task list -->
                     <div id="tasks_div">
-                        {% for task in tasks_data %}
+                        {% for task in module.tasks.all %}
                         <div class="flex">
-                            <input name="btn_task_{{forloop.counter|add:-1}}/del" type="submit" value={% trans 'Delete' %} onclick="return btn_del_check('{% trans 'task' %} {{task.name}}')">
-                            <input name="btn_task_{{forloop.counter|add:-1}}" type="submit" value='{{task.name}}' style="width: 100%;">
+                            <!-- button delete -->
+                            <input type="submit" name="btn_task_delete_{{forloop.counter|add:-1}}" value="{% trans 'Delete' %}">
+                            <!-- button edit  -->
+                            <input type="submit" name="btn_task_edit_{{forloop.counter|add:-1}}" value='{{task.name}}' style="width: 100%;">
                         </div>
                         {% endfor %}
                     </div>
-                    
-                    <input id="btn_task_new" name="btn_task_{{tasks_data|length}}" type="submit" value="{% trans 'New task' %}">
+                    <!-- button create -->
+                    <input type="submit" name="btn_task_create" value="{% trans 'New task' %}">
                 </div>
-                
+
+                <!-- ckeckbox is_random -->
                 <div class="flex component2">
                     <input name="is_tasks_rnd" type="checkbox" {% if module.is_tasks_rnd %}checked{% endif %}>
                     <a style="font-size: 15px">{% trans 'In random order' %}</a>

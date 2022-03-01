@@ -5,117 +5,124 @@
 <div class="bigbox">
     <h1>{% trans 'Task editor' %}</h1>
     <form method="POST" id="form"> {% csrf_token %}
-
+        <!-- header -->
         <div class="flex-sb component2"> 
-            <input id="name" name="name" type="text" value="{{task_data.name}}" placeholder="{% trans 'task name' %}" maxlength="32" style="width: 50%"/>
+            <!-- name -->
+            <input type="text" name="name" value="{{task.name}}" placeholder="{% trans 'task name' %}" maxlength="32" style="width: 50%"/>
+            <!-- task type -->
             <div>
                 <a>{% trans 'type' %}:</a>
-                <select id="ans_type" name="ans_type" onchange="set_answers_div()">
-                    <option value="one_answer">{% trans 'one answer' %}</option>
-                    <option value="text_answer">{% trans 'text answers' %}</option>
-                    <option value="multi_answer">{% trans 'multiple answers' %}</option>
+                <select id="task_type" name="task_type" onchange="set_answers_div()">
+                    <option value="one" {% if task.type == 'one' %}selected{% endif %}>{% trans 'one answer' %}</option>
+                    <option value="multy" {% if task.type == 'multy' %}selected{% endif %}>{% trans 'multiple answers' %}</option>
+                    <option value="text" {% if task.type == 'text' %}selected{% endif %}>{% trans 'text answers' %}</option>
                 </select>
             </div>
         </div>
 
-
+        <!-- center -->
         <div class="flex">
-            <div class="flex-col component2" style="width: 50%; height: auto;">               
-                <textarea id="condition" name="condition" placeholder="{% trans 'condition' %}" maxlength="1024" style="width: 100%; resize: vertical; min-height: -webkit-fill-available;">{{task_data.condition}}</textarea>
+            <!-- right -->
+            <div class="flex-col component2" style="width: 50%; height: auto;">       
+                <!-- condition -->
+                <textarea name="condition" placeholder="{% trans 'condition' %}" maxlength="1024" style="width: 100%; resize: vertical; min-height: -webkit-fill-available;">{{task.condition}}</textarea>
             </div>
-
+            <!-- left -->
             <div class="flex-col componentNone" style="width: 50%; overflow-y: scroll;">
+                <!-- options -->
                 <div class="flex-col component2">
+                    <!-- title -->
                     <a style="text-align: center; width: 100%;">{% trans 'Answer options' %}</a>
+                    <!-- anster options -->
                     <div id="answers_div"></div>
+                    <!-- buttons -->
                     <div class="flex">
-                        <input type="button" onclick="set_answers_div('add')" value="{% trans 'Add field' %}" style="width:50%">
-                        <input type="button" onclick="set_answers_div('rem')" value="{% trans 'Remove field' %}" style="width:50%">
+                        <input type="button" onclick="set_answers_div(1)" name="btn_answer_add" value="{% trans 'Add field' %}" style="width:50%">
+                        <input type="button" onclick="set_answers_div(-1)" name="btn_answer_rem" value="{% trans 'Remove field' %}" style="width:50%">
                     </div>
                 </div>
-
-                <div class="flex component2">
-                    <input name="ans_rnd" type="checkbox" {% if task_data.ans_rnd %}checked{% endif %}>
+                <!-- checkbox is_random -->
+                <div id="is_random" class="flex component2">
+                    <input name="is_random" type="checkbox" {% if task.is_answer_rnd %}checked{% endif %}>
                     <a style="font-size: 15px">{% trans 'In random order' %}</a>
                 </div>
             </div>
         </div>
 
         <br>
-        
-        <div class="flex">
-            <div class="submitbox" style="width: 50%;">
-                <input name="btn_save" type="submit" value="{% trans 'Save' %}">
-            </div>
 
-            <div class="submitbox" style="width: 50%;">
-                <input name="cancel_btn" type="submit" value="{% trans 'Cancel' %}">
-            </div>
+        <!-- bottom -->
+        <div class="submitbox">
+            <!-- button save -->
+            <input name="btn_save" type="submit" value="{% trans 'Save' %}">
         </div>
     </form>
 </div>
 
-
 <script type="text/javascript">
     // tasks data
-    var task_data = JSON.parse("{{task_data|tojson|escapejs}}")
-    console.log(task_data)
-    
+    var task_data = {{task.answers.all|maplist:"[1 if x.is_correct else 0, x.value]"|safe}}
     // element vars
     var answers_div = document.getElementById("answers_div")
-    var ans_type = document.getElementById('ans_type')
-    
-    // fill data
-    ans_type.value = task_data['ans_type']
-    set_answers_div('new')
+    var task_type = document.getElementById('task_type')
+    // inital
+    _fill_answers_div()
 
-    // data
-    function ans_opt_change(event){
-        event.target.parentElement.children[0].value = event.target.parentElement.children[1].value
+
+
+    function set_answers_div(modify=0){
+        _retrive_values_from_answers_div()
+        // modify
+        if(modify>0) task_data.push([false,''])
+        if(modify<0) task_data.pop()
+        _fill_answers_div()
     }
 
-    
-    function set_answers_div(req=''){
-        // get current answer options
-        if (req != 'new'){
-            task_data['ans_opt'] = Array.from(document.getElementsByName("ans_opt"),el=>el.value)
-            task_data['ans_cor'] = Array.from(document.getElementsByName("ans_cor")).filter(el=>el.checked||ans_type.value=='text_answer').map(el=>el.value)
-        }
-        console.log(task_data['ans_opt'],task_data['ans_cor'])
 
-        // add/remove if requaired
-        if (req=='add') task_data['ans_opt'].push("")
-        if (req=='rem') task_data['ans_opt'].pop()
+    function _retrive_values_from_answers_div(){
+        // retrive data
+        inputs = [...document.getElementsByTagName("input")]
+        corrects = Array.from(inputs.filter(el => el.name.startsWith('correct_answer_')),el=>el.checked)
+        answers = Array.from(inputs.filter(el => el.name.startsWith('answer_value_')),el=>el.value)
+        // cleanse old data
+        task_data = []
+        // fill new data
+        for(var i=0;i<answers.length;i++) 
+            task_data.push([corrects[i], answers[i]])
+    }
 
+
+    function _fill_answers_div(){
+        // random
+        if(task_type.value == 'text') document.getElementById('is_random').style.visibility = 'hidden'
+        else document.getElementById('is_random').style.visibility = 'visible'
         // cleanse answers_div
         answers_div.textContent = ''
-
         // fill answers_div
-        task_data['ans_opt'].forEach(answer => {
-            var answer_div = document.createElement("div")
-            answer_div.classList.add("flex")
-            // ans_opt setup
-            var ans_opt_inp = document.createElement("input")
-            ans_opt_inp.type = "text"
-            ans_opt_inp.name = "ans_opt"
-            ans_opt_inp.value = answer
-            ans_opt_inp.style = "width: 100%"
-            ans_opt_inp.maxLength = 32
-            ans_opt_inp.addEventListener("change", ans_opt_change)
-            // ans_cor setup
-            var ans_cor_inp = document.createElement("input")
-            ans_cor_inp.name = "ans_cor"
-            ans_cor_inp.value = answer
-            if (task_data['ans_cor'].includes(answer)) ans_cor_inp.checked = true
-            if (ans_type.value == 'one_answer') ans_cor_inp.type = "radio"
-            if (ans_type.value == 'multi_answer')ans_cor_inp.type = "checkbox"
-            if (ans_type.value == 'text_answer')ans_cor_inp.type = "hidden"
-            // answer_div setup
-            answer_div.appendChild(ans_cor_inp)
-            answer_div.appendChild(ans_opt_inp)
-            // answers_div setup
-            answers_div.appendChild(answer_div)
-        })
+        for(var i=0;i<task_data.length;i++) {
+            // is_correct
+            var new_correct_answer = document.createElement("input")
+            new_correct_answer.name = "correct_answer_" + i
+            if (task_data[i][0]) new_correct_answer.checked = true
+            if (task_type.value == 'one') new_correct_answer.type = "radio"
+            if (task_type.value == 'multy') new_correct_answer.type = "checkbox"
+            if (task_type.value == 'text') new_correct_answer.type = "hidden"
+            // value
+            var new_answer_value = document.createElement("input")
+            new_answer_value.type = "text"
+            new_answer_value.name = "answer_value_" + i
+            new_answer_value.value = task_data[i][1]
+            new_answer_value.style = "width: 100%"
+            new_answer_value.maxLength = 32
+            // new_answer_value.addEventListener("change", ans_opt_change)
+            // div
+            var new_answer_div = document.createElement("div")
+            new_answer_div.classList.add("flex")
+            new_answer_div.appendChild(new_correct_answer)
+            new_answer_div.appendChild(new_answer_value)
+            // add
+            answers_div.appendChild(new_answer_div)
+        }
     }// set_answers_div - end
 </script>
 {% endblock %}

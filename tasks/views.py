@@ -1,7 +1,8 @@
+from asyncio import tasks
 from django.shortcuts import render, redirect
-from static.py.view import get_base_context, get_new_key
+from static.py.view import get_base_context, get_new_key, get_element_by_starts_with, get_elements_by_starts_with
 from static.py.decorators import check_auntification, check_object_exist, check_author
-from .models import Module
+from .models import Module,Task,Answer
 # errors
 from django.db.utils import IntegrityError
 from django.http import Http404
@@ -33,7 +34,7 @@ def CreateView(request):
 
     
     # proceed
-    return redirect(f'/tasks/{new_module.id}/')
+    return redirect(f'/tasks/?id={new_module.id}')
 # CreateView - end
 
 
@@ -59,7 +60,7 @@ def ShowView(request, cur_module):
 
 
     # reload
-    return redirect(f'/tasks/?id={cur_module.id}')    
+    return redirect(request.get_raw_uri())
 # ShowView - end
 
 
@@ -71,96 +72,99 @@ def EditView(request, cur_module):
     if request.method != 'POST':
         ## get context
         context = get_base_context(request, keep_cookies=[f"temp_edit_tasks_data_{cur_module.id}", f"temp_edit_module_{cur_module.id}"])
-        # imoprt module from cookies
-        if f'temp_edit_module_{cur_module.id}' not in request.session: context['module'] = cur_module
-        else: context['module'] = request.session[f'temp_edit_module_{cur_module.id}']
-        # imoprt tasks from cookies
-        if f'temp_edit_tasks_data_{cur_module.id}' not in request.session: context['tasks_data'] = cur_module.tasks_data
-        else: context['tasks_data'] = request.session[f'temp_edit_tasks_data_{cur_module.id}']
-        # proceed
+        context['module'] = cur_module
+        ## render
         return render(request, 'module_edit.html', context) 
     
-    # cancel
-    if "cancel_btn" in request.POST:
-        return redirect(f'/tasks/{id}/')
 
-    # delete module
+    # what request
+    ## delete
     if 'btn_del' in request.POST:
         cur_module.delete()
         return redirect(f'/')
-
-    # scrap data
-    name            = request.POST['name']
-    description     = request.POST['description']
-    is_tasks_rnd    = 'is_tasks_rnd' in request.POST
-
-    # save module
+    ## save
     if 'btn_save' in request.POST:
-        cur_module.name = name
-        cur_module.description = description
-        cur_module.is_tasks_rnd = is_tasks_rnd
+        cur_module.name = request.POST['name']
+        cur_module.description = request.POST['description']
+        cur_module.is_tasks_rnd = 'is_tasks_rnd' in request.POST
         if f'temp_edit_tasks_data_{cur_module.id}' in request.session:
             cur_module.tasks_data = request.session[f'temp_edit_tasks_data_{cur_module.id}']
         cur_module.save()
-        return redirect(f'/tasks/{id}/') 
-
-    # edit task
-    task_num=list(filter(lambda d:d.startswith("btn_task"), request.POST))
+        return redirect(f'/tasks/?id={cur_module.id}') 
+    ## task create
+    if 'btn_task_create' in request.POST:
+        new_task = Task()
+        new_task.save()
+        cur_module.tasks.add(new_task)
+        return redirect(f'/tasks/edit/task?id={cur_module.id}&t={len(cur_module.tasks.all())-1}') 
+    ## task delete
+    task_num = get_element_by_starts_with("btn_task_delete_",request)
     if task_num:
-        # export module to cookies
-        request.session[f'temp_edit_module_{cur_module.id}']={'name':name,'description':description,'is_tasks_rnd':is_tasks_rnd}
-        # export task to cookies
-        if not f'temp_edit_tasks_data_{cur_module.id}' in request.session:
-            request.session[f'temp_edit_tasks_data_{cur_module.id}'] = cur_module.tasks_data
-        # proceed
-        return redirect(f'/tasks/{id}/edit/{task_num[0][9:]}')
+        cur_module.tasks.all()[int(task_num)].delete()
+    ## task edit
+    task_num = get_element_by_starts_with("btn_task_edit_",request)
+    if task_num:
+        return redirect(f'/tasks/edit/task?id={cur_module.id}&t={task_num}')
+
+
+    # reload
+    return redirect(request.get_raw_uri())
 # EditView - end
 
 
-def EditTaskView(request, id, tn):
-    # does id exist
-    try: cur_module = Module.objects.get(id=id)
-    except Module.DoesNotExist: raise Http404
 
-    # is user author 
-    if cur_module.author != request.user: raise Http404
+@check_object_exist(Module)
+@check_author
+def EditTaskView(request, cur_module):
+    cur_task = cur_module.tasks.all()[int(request.GET['t'])]
 
     # render page
     if request.method != 'POST':
+        ## get context
         context = get_base_context(request, keep_cookies=[f"temp_edit_tasks_data_{cur_module.id}", f"temp_edit_module_{cur_module.id}"])
-        # tasks imoprt
-        if f'temp_edit_tasks_data_{cur_module.id}' not in request.session: tasks_data = cur_module.tasks_data
-        else: tasks_data = request.session[f'temp_edit_tasks_data_{cur_module.id}']
-        # get task
-        if tn < len(tasks_data): context['task_data'] = tasks_data[tn]
-        else: context['task_data'] = {"name":"","condition":"","ans_type":"one_answer","ans_cor":[""],"ans_opt":[""],"ans_rnd":0}
-        # proceed
+        context['task'] = cur_task
+        ## render
         return render(request, 'module_edit_task.html', context) 
 
-    # cancel
-    if "cancel_btn" in request.POST:
-        return redirect(f'/tasks/{id}/edit/')
 
-    # scrap data
-    name        = request.POST['name']
-    condition   = request.POST['condition']
-    ans_type    = request.POST['ans_type']
-    ans_cor     = dict(request.POST)['ans_cor'] if 'ans_cor' in request.POST  else []
-    ans_opt     = dict(request.POST)['ans_opt'] if 'ans_opt' in request.POST  else []
-    ans_rnd     = int('ans_rnd' in request.POST)
+    # correct_answer
+    # answer_value
+    # what request
+    ## 
+    if "btn_save" in request.POST:
+        cur_task.name = request.POST['name']
+        cur_task.condition = request.POST['condition']
+        answers_count = len(list(filter(lambda e:e.startswith('answer_value_'), request.POST)))
+        cur_task.type = request.POST['task_type']
+        cur_task.is_answer_rnd = 'is_random' in request.POST
+        ### add answers if needed
+        for i in range(answers_count-len(cur_task.answers.all())):
+            new_answer = Answer()
+            new_answer.save()
+            cur_task.answers.add(new_answer)
+        ### remove extra
+        for i in range(len(cur_task.answers.all())-answers_count):
+            cur_task.answers.all()[len(cur_task.answers.all())-1].delete()
+        ### fill answers with request data
+        for i in range(answers_count):
+            cur_answer = cur_task.answers.all()[i]
+            cur_answer.is_correct = f'correct_answer_{i}' in request.POST
+            cur_answer.value = request.POST[f'answer_value_{i}']
+            cur_answer.save()
+        ### save
+        cur_task.save()
+        return redirect(f'/tasks/edit/?id={cur_module.id}')
+    ## 
+    if "btn_answer_add" in request.POST:
+        pass
+    ## 
+    if "btn_answer_rem" in request.POST:
+        pass
 
-    # add task to cookies if new
-    if tn == len(request.session[f'temp_edit_tasks_data_{cur_module.id}']):
-        request.session[f'temp_edit_tasks_data_{cur_module.id}'].append({"name":"","condition":"","ans_type":"one_answer","ans_cor":[""],"ans_opt":[""],"ans_rnd":0})
-
-    # save task to cookies
-    task_data = request.session[f'temp_edit_tasks_data_{cur_module.id}']
-    task_data[tn] = {"name":name,"condition":condition,"ans_type":ans_type,"ans_cor":ans_cor,"ans_opt":ans_opt,"ans_rnd":ans_rnd}
-    request.session[f'temp_edit_tasks_data_{cur_module.id}'] = task_data
-    
-    # proceed
-    return redirect(f'/tasks/{id}/edit')    
+    # reload
+    return redirect(request.get_raw_uri())  
 # EditTaskView - end
+
 
 
 def DelTaskView(request,id, tn):
