@@ -19,6 +19,7 @@ urlpatterns = [
     path('groups/',                         groups.ShowView),
     path('groups/edit/',                    groups.EditView),
     path('groups/moduls/',                  groups.ModulsView),
+    path('groups/moduls/results/',          groups.ModulesResultsView),
     path('groups/members/',                 groups.MembersView),
     path('groups/join/',                    groups.JoinView),
 #tasks
@@ -26,8 +27,8 @@ urlpatterns = [
     path('tasks/',                          tasks.ShowView),
     path('tasks/edit/',                     tasks.EditView),
     path('tasks/edit/task/',                tasks.EditTaskView),
-    path('tasks/<str:id>/edit/<int:tn>/del/',tasks.DelTaskView),
-    path('tasks/<str:id>/pass',             tasks.PassView),
+    path('tasks/pass/',                     tasks.PassView),
+    path('tasks/result/',                   tasks.ResultView),
 #main
     path('' ,                               main.HomeView),
 

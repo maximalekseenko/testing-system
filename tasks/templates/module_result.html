@@ -1,0 +1,70 @@
+{% extends './base.html' %}
+{% block content %}
+{% load i18n %}
+{% load DWP %}
+<div class="bigbox">
+    <h1>{% trans 'Module' %} {{module.name}}</h1>
+    <form method="POST" id="form">{% csrf_token %}
+        <!-- header -->
+        <div class="flex-jc" style="width: 100%;"> 
+            <!-- name -->
+            <a>{%trans 'your result'%}:</a>
+        </div>
+
+        <!-- center -->
+        <div class="flex-col">
+            <!-- titles -->
+            <div class="flex-sb componentNone">
+                <div class="flex-jc" style="width: 50%;">
+                    {%trans 'task'%}:
+                </div>
+                <div class="flex-jc" style="width: 50%;">
+                    {%trans 'your answer'%}:
+                </div>
+            </div>
+            <!-- task - answer -->
+            <div class="flex-col" style="height:100%;">
+                {%for tastk_num, user_answers in given_answers%}
+                {%with module.tasks.all|index:tastk_num as task%}
+                <div class="flex-sb component2">
+                    <div class="flex-jc" style="width:50%; border-right: 1px grey solid;">
+                        {{task.name}}
+                    </div>
+                    <div class="flex-jc" style="width:50%;">
+                        {%with user_answers|dictsort:0 as given_answers%}
+                        {%with task.answers.all|filterlist:'x.is_correct'|maplist:'x.value'|dictsort:0 as correct_answer%}
+                        {%if task.type == 'one'%}
+                        <input disabled value="{{user_answers|join:', '}}" style="width: 80%; background-color: {%if given_answers == correct_answer%}green{%else%}red{%endif%}">
+                        {%elif task.type == 'multy'%}
+                        <input disabled value="{{user_answers|join:', '}}" style="width: 80%; background-color: {%if given_answers == correct_answer%}green{%else%}red{%endif%};">
+                        {%elif task.type == 'text'%}
+                        <input disabled value="{{user_answers|join:', '}}" style="width: 80%; background-color: {%if given_answers.0 in correct_answer%}green{%else%}red{%endif%};">
+                        {%endif%}
+                        {%endwith%}
+                        {%endwith%}
+                    </div>
+                </div>
+                {%endwith%}
+                {%endfor%}
+            </div>
+        </div>
+
+        <br>
+
+        <!-- bottom -->
+        <div class="flex">
+            <!-- button next -->
+            <div class="submitbox" style="width: 100%;">
+                <input name="btn_ok" type="submit" value="{% trans 'Ok' %}">
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+    function save_answer_to_cookies(){
+        document.cookie = 'module_pass_task_num=' + ({{module_pass_task_num}} + 1) + ';path=/'}
+</script>
+{% endblock %}

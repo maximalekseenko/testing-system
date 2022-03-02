@@ -91,10 +91,15 @@ def ShowView(request, cur_group):
     if "btn_cancel_join" in request.POST:
         if request.user in cur_group.members_pending.all():
             cur_group.members_pending.remove(request.user)
-    
+    ## pass module
+    pass_module_id = get_element_by_starts_with('btn_pass_',request)
+    if pass_module_id:
+        request.session[f'module_{pass_module_id}_group'] = cur_group.id
+        return redirect(f'/tasks/pass/?id={pass_module_id}')
+
 
     # reload
-    return redirect(f'/groups/?id={cur_group.id}')
+    return redirect(request.get_raw_uri())
 # ShowView - end
 
 
@@ -119,6 +124,10 @@ def ModulsView(request, cur_group):
     rem_mod_id = get_element_by_starts_with("btn_rem_",request)
     if rem_mod_id:
         ModuleData.objects.get(module__id__exact=rem_mod_id).delete()
+    ## results of module
+    res_mod_id = get_element_by_starts_with("btn_res_",request)
+    if res_mod_id:
+        return redirect(f'/groups/moduls/results/?id={cur_group.id}&m={res_mod_id}')
     ## change deadline
     deadline = get_element_by_starts_with("deadline_",request)
     if deadline:
@@ -145,7 +154,34 @@ def ModulsView(request, cur_group):
     
 
     # reload
-    return redirect(f'/groups/moduls/?id={cur_group.id}')
+    return redirect(request.get_raw_uri())
+# ModulsView - end
+
+
+
+@check_object_exist(Group)
+@check_author
+def ModulesResultsView(request, cur_group):
+    cur_module_data = cur_group.moduls_data.get(module__id=request.GET['m'])
+
+
+    # render page
+    if request.method != 'POST':
+         # context
+        context = get_base_context(request)
+        context['module_data'] = cur_module_data
+         # render
+        return render(request, 'group_moduls_results.html', context)
+
+
+    # what request
+    ## back
+    if 'btn_back' in request.POST:
+        return redirect(f'/groups/moduls/?id={cur_group.id}')
+    
+
+    # reload
+    return redirect(request.get_raw_uri())
 # ModulsView - end
 
 
@@ -179,7 +215,7 @@ def EditView(request, cur_group):
     
 
     # reload
-    return redirect(f'/groups/edit/?id={cur_group.id}')
+    return redirect(request.get_raw_uri())
 # EditView - end
 
 
@@ -228,7 +264,7 @@ def MembersView(request, cur_group):
 
 
     # reload
-    return redirect(f'/groups/members/?id={cur_group.id}')
+    return redirect(request.get_raw_uri())
 # MembersView - end
 
 

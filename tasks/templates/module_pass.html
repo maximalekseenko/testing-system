@@ -1,0 +1,90 @@
+{% extends './base.html' %}
+{% block content %}
+{% load i18n %}
+{% load DWP %}
+<div class="bigbox">
+    <h1>{% trans 'Task passing' %}</h1>
+    <form method="POST" id="form" onsubmit="save_answer_to_cookies()">{% csrf_token %}
+        <!-- header -->
+        <div class="flex-sb component2"> 
+            <!-- name -->
+            <div></div>
+            <div>
+                {%trans 'Name'%}:
+                <input value="{{task.name}}" disabled=true/>
+            </div>
+        </div>
+
+        <!-- center -->
+        <div class="flex">
+            <!-- right -->
+            <div class="flex-col component2" style="width: 50%; height:auto;">
+                <!-- title -->
+                <div>
+                    {%trans 'condition'%}:
+                </div>
+                <!-- condition -->
+                <div class="flex-col" style="height:100%;">
+                    <textarea style="width: 100%; resize: vertical; min-height: -webkit-fill-available;" disabled="true">{{task.condition}}</textarea>
+                </div>
+            </div>
+            <!-- left -->
+            <div class="flex-col componentNone" style="width: 50%; overflow-y: scroll;">
+                <!-- options -->
+                <div class="flex-col component2">
+                    <!-- title -->
+                    {%if task.type == 'one'%}<a style="text-align: center; width: 100%;">{% trans 'Select one correct answer' %}</a>
+                    {%elif task.type == 'multy'%}<a style="text-align: center; width: 100%;">{% trans 'Select all correct answers' %}</a>
+                    {%elif task.type == 'text'%}<a style="text-align: center; width: 100%;">{% trans 'Write your answer' %}</a>
+                    {%endif%}
+                    <!-- anster options -->
+                    <div id="answers_div">
+                        {%if task.type == 'one'%}
+                        {%for answer in task.answers.all|shufflelist:task.is_answer_rnd%}
+                        <div class="flex">
+                            <input name="selected_answer" value="{{answer.value}}" type="radio" {%if answer.value in given_answers%}checked{%endif%}>
+                            <input value="{{answer.value}}", style="width: 100%;" disabled>
+                        </div>
+                        {%endfor%}
+                        {%elif task.type == 'multy'%}
+                        {%for answer in task.answers.all|shufflelist:task.is_answer_rnd%}
+                        <div class="flex">
+                            <input name="selected_answer_{{forloop.counter0}}" value="{{answer.value}}" type="checkbox" {%if answer.value in given_answers%}checked{%endif%}>
+                            <input value="{{answer.value}}", style="width: 100%;" disabled>
+                        </div>
+                        {%endfor%}
+                        {%elif task.type == 'text'%}
+                        <div class="flex">
+                            <input name="selected_answer" style="width: 100%;" value="{{given_answers.0}}">
+                        </div>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+
+        <!-- bottom -->
+        <div class="flex">
+            <!-- button previous -->
+            <div class="submitbox" style="width: 100%;">
+                {%if not is_first%}<input name="btn_previous" type="submit" value="{% trans 'Previous' %}">{%endif%}
+                {%if is_first%}<input name="btn_previous" type="submit" value="{% trans 'Cancel' %}">{%endif%}
+            </div>
+            <!-- button next -->
+            <div class="submitbox" style="width: 100%;">
+                {%if not is_last%}<input name="btn_next" type="submit" value="{% trans 'Next' %}">{%endif%}
+                {%if is_last%}<input name="btn_next" type="submit" value="{% trans 'Finish' %}">{%endif%}
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+    function save_answer_to_cookies(){
+        document.cookie = 'module_pass_task_num=' + ({{module_pass_task_num}} + 1) + ';path=/'}
+</script>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends './base.html' %}
+{% block content %}
+{% load i18n %}
+{% load DWP %}
+<div class="bigbox">
+    <h1>{% trans 'Module' %} {{module_data.module.name}}</h1>
+    <form method="POST" id="form">{% csrf_token %}
+        <!-- header -->
+        <div class="flex-jc" style="width: 100%;"> 
+            <!-- name -->
+            <a>{%trans 'results'%}:</a>
+        </div>
+
+        <!-- center -->
+        <div class="flex-col">
+            <!-- titles -->
+            <div class="flex-sb componentNone">
+                <div class="flex-jc" style="width: 50%;">
+                    {%trans 'user'%}:
+                </div>
+                <div class="flex-jc" style="width: 50%;">
+                    {%trans 'mark'%}:
+                </div>
+            </div>
+            <!-- task - answer -->
+            <div class="flex-col" style="height:100%;">
+                {%for user_mark in module_data.user_marks.all|dictsortreversed:"creation_date"%}
+                <div class="flex-sb component2">
+                    <div class="flex-jc" style="width:50%; border-right: 1px grey solid;">
+                        {{user_mark.user.username}}
+                    </div>
+                    <div class="flex-jc" style="width:50%;">
+                        <div class="flex-jc" style="width: 80%; background-color:  {%if user_mark.is_before_deadline%}green{%else%}red{%endif%}">
+                            {{user_mark.mark}}
+                        </div>
+                    </div>
+                </div>
+                {%endfor%}
+            </div>
+        </div>
+
+        <br>
+
+        <!-- bottom -->
+        <div class="flex">
+            <!-- button next -->
+            <div class="submitbox" style="width: 100%;">
+                <input name="btn_back" type="submit" value="{% trans 'Back' %}">
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<script type="text/javascript">
+    function save_answer_to_cookies(){
+        document.cookie = 'module_pass_task_num=' + ({{module_pass_task_num}} + 1) + ';path=/'}
+</script>
+{% endblock %}

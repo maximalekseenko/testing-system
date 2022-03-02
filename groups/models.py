@@ -6,7 +6,7 @@ from tasks.models import Module
 
     
 class UserMark(models.Model):
-    user            = models.ManyToManyField(User, related_name="user")
+    user            = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE, null=True)
     mark            = models.IntegerField()
     creation_date   = models.DateTimeField(default=timezone.now())
     is_before_deadline = models.BooleanField(default=True)

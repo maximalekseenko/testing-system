@@ -34,9 +34,9 @@
                         {% for task in module.tasks.all %}
                         <div class="flex">
                             <!-- button delete -->
-                            <input type="submit" name="btn_task_delete_{{forloop.counter|add:-1}}" value="{% trans 'Delete' %}">
+                            <input type="submit" name="btn_task_delete_{{forloop.counter0}}" value="{% trans 'Delete' %}">
                             <!-- button edit  -->
-                            <input type="submit" name="btn_task_edit_{{forloop.counter|add:-1}}" value='{{task.name}}' style="width: 100%;">
+                            <input type="submit" name="btn_task_edit_{{forloop.counter0}}" value='{{task.name}}' style="width: 100%;">
                         </div>
                         {% endfor %}
                     </div>

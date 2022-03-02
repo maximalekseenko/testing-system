@@ -102,7 +102,9 @@
         for(var i=0;i<task_data.length;i++) {
             // is_correct
             var new_correct_answer = document.createElement("input")
-            new_correct_answer.name = "correct_answer_" + i
+            new_correct_answer.name = "correct_answer_"
+            if(task_type.value != 'one')new_correct_answer.name+=i
+            new_correct_answer.value = i
             if (task_data[i][0]) new_correct_answer.checked = true
             if (task_type.value == 'one') new_correct_answer.type = "radio"
             if (task_type.value == 'multy') new_correct_answer.type = "checkbox"
@@ -114,7 +116,6 @@
             new_answer_value.value = task_data[i][1]
             new_answer_value.style = "width: 100%"
             new_answer_value.maxLength = 32
-            // new_answer_value.addEventListener("change", ans_opt_change)
             // div
             var new_answer_div = document.createElement("div")
             new_answer_div.classList.add("flex")

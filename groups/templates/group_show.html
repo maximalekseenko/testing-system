@@ -42,9 +42,9 @@
                     <!-- title -->
                     <a style="text-align:center">{% trans 'Active modules' %}</a>
                     <!-- active moduls -->
-                    <div class="flex-col">
+                    <div class="flex-wrap">
                         {%for mod in group.moduls_data.all|filterlist:"not inpast(x.deadline)"|dictsortreversed:"deadline"%}
-                        <a href="/tasks/?id={{mod.module.id}}">{{mod.module.name}}</a>
+                        <input type="submit" name="btn_pass_{{mod.module.id}}" value="{{mod.module.name}}" style="width: 50%;">
                         {%endfor%}
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                     <div class="flex-col">
                         <!-- list of old moduls -->
                         {%for mod in group.moduls_data.all|filterlist:"inpast(x.deadline)"|dictsortreversed:"deadline"|slice:mod_count%}
-                        <a href="/tasks/?id={{mod.module.id}}">{{mod.module.name}}</a>
+                        <input type="submit" name="btn_pass_{{mod.module.id}}" value="{{mod.module.name}}" style="width: 50%;">
                         {%endfor%}
                         <!-- load more button if can -->
                         {%if can_mod_load%}

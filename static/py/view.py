@@ -44,12 +44,8 @@ def get_elements_by_starts_with(start:str,request) -> list:
 
 
 
-def get_base_context(request, page_name='⚠', **kwargs):
-    context = {'page_name': page_name}
-    # session cleanup
-    for c_name, c_value in list(filter(lambda c:c[0].startswith('temp'), request.session.items())):
-        if 'keep_cookies' in kwargs and c_name in kwargs['keep_cookies']: continue
-        del request.session[c_name]
+def get_base_context(request):
+    context = {}
     # log cookies and session data for debug
     for cookie_name, cookie_value in request.COOKIES.items():print('🍪',cookie_name, '-=-', cookie_value)
     for session in request.session.items():print('🖥️ ',session)
