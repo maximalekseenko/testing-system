@@ -10,7 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'u3ngg!ph*(pru(l_$c+wd@dze9^f1btuk+72wfdi*3+t6gjupv'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-ALLOWED_HOSTS = ['localhost', 'harmonica.ru']
+ALLOWED_HOSTS = ['localhost', 'max.harmonica.ru']
 
 
 # Application definition
