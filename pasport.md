@@ -78,7 +78,9 @@
 
 accounts:
 
-- UserProfile - расширяет стандартный объект User
+```
+UserProfile - расширяет стандартный объект User
+```
 
 groups:
 
