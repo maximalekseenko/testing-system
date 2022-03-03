@@ -51,9 +51,9 @@ def get_base_context(request):
     for session in request.session.items():print('🖥️ ',session)
     #sider context MAKE THIS MEET ITS FINAL DOOM
     if request.user.is_authenticated:
-        context['my_modules']    = Module.objects.all()
-        context['my_groups']     = Group.objects.all()
-        context['new_modules']    = Module.objects.filter(author=request.user)
+        context['groups_you_in'] = Group.objects.filter(members__username=request.user.username)
+        context['your_groups'] = Group.objects.filter(author=request.user)
+        context['your_moduls'] = Module.objects.filter(author=request.user)
         # context['my_groups']      = [[group, getattr(group,'moduls').count()] for group in Group.objects.filter(members__id=request.user.id)]
         # context['new_modules']    = Module.objects.filter(author=request.user)
     return context

@@ -67,9 +67,11 @@
                 </div>
 
                 <!-- modify moduls button -->
+                {%if user == group.author%}
                 <div style="text-align: center">
                     <input name="btn_edit_mod" type="submit" value="{% trans 'Modify' %}">
                 </div>
+                {%endif%}
             </div>
         </div>
 

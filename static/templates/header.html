@@ -1,26 +1,27 @@
+{% load i18n %}
+
 <div class="box flex-wrap">
-    <a class="component" href="/">Домашняя страница</a>
+    <a class="component" href="/">{%trans 'Home page'%}</a>
 </div>
 
 <div class="box flex-wrap">
-    <a class="component2">Модули:</a>
-    <a class="component" href="/tasks/create">Создать Модуль</a>
-    <a class="component" href="/tasks/">Найти Модуль</a>
+    <a class="component2">{%trans 'Create'%}:</a>
+    <a class="component" href="/tasks/create">{%trans 'module'%}</a>
+    <a class="component" href="/groups/create">{%trans 'group'%}</a>
 </div>
 
 <div class="box flex-wrap">
-    <a class="component2">Группы:</a>
-    <a class="component" href="/groups/create">Создать группу</a>
-    <!-- <a class="component" href="/groups/">Войти в группу</a> -->
+    <a class="component2">{%trans 'progect source'%}:</a>
+    <a class="component" href="https://github.com/maximalekseenko/testing-system">github</a>
 </div>
 
 <div class="box flex-wrap">
-    <a class="component2">Аккаунт:</a>
+    <a class="component2">{%trans 'Account'%}:</a>
         {% if request.user.is_authenticated %}
         <a class="component" href="/accounts/">{{user}}</a>
-        <a class="component" href="/accounts/logout/">Выйти</a>
+        <a class="component" href="/accounts/logout/">{%trans 'loguot'%}</a>
         {% else %}
-        <a class="component" href="/accounts/login/">Войти</a>
-        <a class="component" href="/accounts/register/">Регистрация</a>
+        <a class="component" href="/accounts/login/">{%trans 'login'%}</a>
+        <a class="component" href="/accounts/register/">{%trans 'register'%}</a>
         {% endif %}
 </div>

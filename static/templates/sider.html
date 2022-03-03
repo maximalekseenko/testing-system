@@ -1,43 +1,49 @@
+{% load i18n %}
+{% load DWP %}
+<!-- groups you in -->
 <div class="box flex-col">
-    Ваши Группы:
-    {% if not my_groups %}
-    <div class="component2">
-        У вас нет групп <a href="/groups/create">создать</a>
+    <div class="flex-jc">
+        {%trans 'groups you in'%}:
     </div>
-    {% endif %}
-    {% for group in my_groups %}
-        <div class="flex">
-            {% if group.1 != 0 %}<a class="component">{{group.1}}</a>{% endif %}
-            <a class="component2" href="/groups/?id={{group.id}}">{{group.name}}</a>
-        </div>
-    {% endfor %}
+    {%for group in groups_you_in%}
+    <div class="flex">
+        <input type="button" style="width: 100%;" onclick="window.location.href = '/groups/?id={{group.id}}'" value="{{group.name}}">
+        {%with group.moduls_data.all|filterlist:'not inpast(x.deadline)'|length as moduls_not_passed_num%}
+        {%if moduls_not_passed_num%}<a class="notification">{{moduls_not_passed_num}}</a>{%endif%}
+        {%endwith%}
+    </div>
+    {%endfor%}
 </div>
 
+<br>
+
+<!-- your groups -->
 <div class="box flex-col">
-    Активные Модули:
-    {% if not my_modules %}
-    <div class="component2">
-        У вас нет модулей <a href="/tasks/create">создать</a>
+    <div class="flex-jc">
+        {%trans 'your groups'%}:
     </div>
-    {% endif %}
-    {% for module in my_modules %}
-        <div class="flex-col box">
-            <a class="component2" href="/tasks/?id={{module.id}}">{{module.name}}</a>
-        </div>
-    {% endfor %}
+    {%for group in your_groups%}
+    <div class="flex">
+        <input type="button" style="width: 100%;" onclick="window.location.href = '/groups/?id={{group.id}}'" value="{{group.name}}">
+        {%if user == group.author and group.members_pending.all|length%}<a class="notification">{{group.members_pending.all|length}}</a>{%endif%}
+    </div>
+    {%endfor%}
+    <div class="flex-jc">
+        <a href="/groups/create/">+</a>
+    </div>
 </div>
 
-<div class="flex-col box">
-    Модули по группам:
-    {% if not modules_groups %}
-        <p class="component2">Вы не состоите ни в одной группе!</p>
-    {% endif %}
-    {% for group, modules in modules_groups.items %}
-    <div class="flex-col box">
-        <a class="component2" href="/groups/?id={{group.id}}">{{group.name}}:</a>
-        {% for module in modules %}
-            <a class="component" href="/tasks/?id={{module.id}}">{{module.name}}</a>
-        {% endfor %}
+<!-- your moduls -->
+<div class="box flex-col">
+    <div class="flex-jc">
+        {%trans 'your moduls'%}:
     </div>
-    {% endfor %}
+    {%for module in your_moduls%}
+    <div class="flex">
+        <input type="button" style="width: 100%;" onclick="window.location.href = '/tasks/?id={{module.id}}'" value="{{module.name}}">
+    </div>
+    {%endfor%}
+    <div class="flex-jc">
+        <a href="/tasks/create/">+</a>
+    </div>
 </div>
