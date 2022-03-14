@@ -7,6 +7,8 @@ env = environ.Env(
     DEBUG=(bool, True),
     DB_ENGINE=(str, 'django.db.backends.sqlite3'),
     DB_NAME=(str, '../db.sqlite3'),
+    DB_USER=(str, ''),
+    DB_PASSWORD=(str, ''),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
