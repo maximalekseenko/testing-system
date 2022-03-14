@@ -1,3 +1,5 @@
 fabric # Для деплоя на сервер
 termcolor # Для цветного вывода в консоль
 django # Это Django
+pytz
+django-environ

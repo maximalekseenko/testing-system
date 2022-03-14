@@ -1,15 +1,22 @@
 from pathlib import Path
 import os
+import environ
 
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'u3ngg!ph*(pru(l_$c+wd@dze9^f1btuk+72wfdi*3+t6gjupv'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['localhost', 'max.harmonica.ru']
 
 
@@ -78,9 +85,12 @@ USE_TZ = True
 
 
 # Static files
-STATIC_URL = '/static/'
-# STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
-STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATIC_URL = 'static/'
+
+if not DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR,'static')
+
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # login urls
 LOGIN_URL = 'login/'
