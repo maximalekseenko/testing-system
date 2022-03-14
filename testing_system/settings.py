@@ -87,10 +87,11 @@ USE_TZ = True
 # Static files
 STATIC_URL = 'static/'
 
-if not DEBUG:
+if DEBUG:
+    STATICFILES_DIRS = [BASE_DIR / 'static']
+else:
     STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
-STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # login urls
 LOGIN_URL = 'login/'
