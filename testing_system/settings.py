@@ -4,7 +4,9 @@ import environ
 
 env = environ.Env(
     # set casting, default value
-    DEBUG=(bool, False)
+    DEBUG=(bool, True),
+    DB_ENGINE=(str, 'django.db.backends.sqlite3'),
+    DB_NAME=(str, '../db.sqlite3'),
 )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -62,8 +64,10 @@ WSGI_APPLICATION = 'testing_system.wsgi.application'
 # Database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': env('DB_ENGINE'),
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
     }}
 
 
