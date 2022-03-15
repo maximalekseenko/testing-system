@@ -3,3 +3,4 @@ termcolor # Для цветного вывода в консоль
 django # Это Django
 pytz
 django-environ
+mysqlclient
